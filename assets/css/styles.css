@@ -1,0 +1,44 @@
+@font-face {
+  font-family: "Viking_shit_like";
+  src: url("../fonts/MasonSerifBold.ttf");
+}
+body, html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Viking_shit_like;
+  color: #FFFFFF;
+  background-color: #000000;
+}
+
+.main-wrapper {
+  text-align: center;
+}
+.main-wrapper .main_image {
+  width: 100%;
+}
+.main-wrapper .valhalla-lane-moto p {
+  font-size: 50px;
+}
+.main-wrapper .sections-section .navigation li {
+  margin: 1.5%;
+  list-style: none;
+}
+.main-wrapper .sections-section .navigation a {
+  font-size: 50px;
+  color: #FFFFFF;
+  padding: 0.5%;
+  text-decoration: none;
+  border: 1px solid #FFFFFF;
+}
+.main-wrapper .sections-section .navigation a:hover {
+  color: #b8b4b5;
+  border: 1px solid #b8b4b5;
+}
+
+.gallery_img {
+  width: 500px;
+}
+
+/*# sourceMappingURL=styles.css.map */
