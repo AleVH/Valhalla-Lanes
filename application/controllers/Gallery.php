@@ -1,6 +1,5 @@
 <?php
 
-
 class Gallery extends CI_Controller {
 
     public function index(){
@@ -10,22 +9,27 @@ class Gallery extends CI_Controller {
             // Whoops, we don't have a page for that!
             show_404();
         }
-//        $this->load->library('image_lib');
+        $this->load->library('image_lib');
+		$this->load->helper('directory');
 
-        $config['image_library'] = 'gd2';
-        $config['source_image'] = '/assets/images/gallery/1.jpg';
-        $config['create_thumb'] = TRUE;
-        $config['maintain_ratio'] = TRUE;
-        $config['width'] = 75;
-        $config['height'] = 50;
+        $map_uploads = directory_map('./assets/media/gallery');
 
-        $this->load->library('image_lib', $config);
+//		$images = scandir('./assets/media/gallery/');
+
+//        $config['image_library'] = 'gd2';
+//        $config['source_image'] = '/assets/media/gallery/1.jpg';
+//        $config['create_thumb'] = TRUE;
+//        $config['maintain_ratio'] = TRUE;
+//        $config['width'] = 75;
+//        $config['height'] = 50;
+
+//        $this->load->library('image_lib', $config);
 
         $this->image_lib->resize();
 
 
         $data['title'] = 'Gallery';
-        $data['image'] = $config;
+		$data['gallery'] = $map_uploads;
 
         $this->load->helper('url');
         $this->load->view('templates/header', $data);

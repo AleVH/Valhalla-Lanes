@@ -36,9 +36,8 @@ body, html {
   color: #b8b4b5;
   border: 1px solid #b8b4b5;
 }
-
-.gallery_img {
-  width: 500px;
+.main-wrapper .gallery_wrapper .image_wrapper .gallery_img {
+  max-width: 900px;
 }
 
 /*# sourceMappingURL=styles.css.map */

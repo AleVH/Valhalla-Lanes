@@ -1,0 +1,94 @@
+// SCSS
+@import '../../node_modules/susy/sass/susy';
+@import '../../node_modules/susy/sass/susy-prefix';
+
+
+// settings and variables
+
+// susy map
+// 6 symmetrical, fluid columns…
+// gutters are static, triggering calc()…
+// elements span equal columns & gutters…
+// containers span equal columns & gutters…
+$susy: (
+        'columns': susy-repeat(6),
+        'gutters': 0.5em,
+        'spread': 'wide',
+        'container-spread': 'wide',
+);
+
+$main_text_color: #FFFFFF;
+$secondary_text_color:rgb(184,180,181);
+$main_color: #000000;
+$font-size-huge: 100px;
+$font-size-big: 50px;
+$font-size-normal: 25px;
+$font-size-small: 10px;
+
+@font-face {
+  font-family: "Viking_shit_like";
+  src: url('../fonts/MasonSerifBold.ttf');
+}
+
+// the actual styling
+
+body, html {
+  //position: fixed;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Viking_shit_like;
+  color: $main_text_color;
+  background-color: $main_color;
+}
+
+.main-wrapper {
+  text-align: center;
+
+  .logo {
+  }
+
+  .main_image {
+    //object-fit: contain;
+    width:100%;
+  }
+
+  .valhalla-lane-moto {
+    p {
+      font-size: $font-size-big;
+    }
+  }
+
+  .sections-section {
+    .navigation {
+      li {
+        margin: 1.5%;
+        list-style: none;
+      }
+      a {
+        font-size: $font-size-big;
+        color: $main_text_color;
+        padding: .5%;
+        text-decoration: none;
+        border: 1px solid $main_text_color;
+      }
+      a:hover {
+        color: $secondary_text_color;
+        border: 1px solid $secondary_text_color;
+      }
+    }
+  }
+
+  .gallery_wrapper {
+	.image_wrapper {
+	  .gallery_img {
+		max-width: 900px;
+	  }
+	}
+  }
+
+}
+
+
+

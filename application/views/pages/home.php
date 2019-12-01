@@ -1,5 +1,5 @@
 <div class="logo">
-    <img class="main_image" src="<?= base_url() ?>assets/images/main_no_background.png">
+    <img class="main_image" src="<?= base_url() ?>assets/media/main_no_background.png">
 </div>
 <div class="valhalla-lane-moto">
     <p>Unleash your inner viking at Valhalla Lanes</p>
