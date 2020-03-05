@@ -1,0 +1,57 @@
+/*
+this are the admin styles, there are some common config things but all the rest should be specific to the admin section
+the command to "compile" the styles is sass --watch scss/admin_styles.scss css/admin_styles.css (just so you don't have to
+look it up on internet every time), replace the names with the correct ones.
+*/
+
+@import "styles_conf";
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Viking_shit_like;
+  background: var(--main_color);
+  color: var(--main_text_color);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+
+  .main-wrapper {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 35vw;
+	height: 40vh;
+
+	.admin__login {
+	  &.wrapper {
+		width: 100%;
+	  }
+	}
+
+	#admin__login {
+	  //background-image: linear-gradient(to bottom right, red, yellow);
+	  background-image: radial-gradient(rgb(70, 70, 70), rgb(10, 10, 10));
+	  .admin__login {
+		&.login__form {
+		  //display: grid;
+		  //grid-template-columns: 1fr 3fr;
+		  //grid-template-rows: 1fr 1fr;
+		  display: flex;
+		  flex-direction: column;
+		  //justify-content: center;
+		  input {
+			margin: 2% auto 2% auto;
+			width: 75%;
+			&.login__submit {
+			  width: 40%;
+			}
+		  }
+		}
+	  }
+	}
+  }
+}

@@ -1,0 +1,3 @@
+<div>
+	Rules content
+</div>

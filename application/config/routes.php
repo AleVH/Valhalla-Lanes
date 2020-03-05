@@ -54,7 +54,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 //$route['translate_uri_dashes'] = FALSE;
 
 // the way it works -> $route['uri'] = 'controller/method/params';
+$route['test'] = 'pages/test'; // use this one to test shit, uncomment when necessary
 $route['gallery'] = 'gallery';
-$route['admin'] = 'pages/test';
+$route['admin'] = 'Backend/admin';
+$route['admin/login'] = 'Backend/admin/login';
+$route['admin/(:any)'] = 'Backend/$1';
+//$route['admin/dashboard'] = 'Backend/dashboard';
+//$route['admin/dashboard/upload'] = 'Backend/upload';
+//$route['admin/dashboard/upload/doupload'] = 'Backend/upload/doupload';
+$route['upload/doupload'] = 'Backend/upload/doupload';
 $route['default_controller'] = 'pages/view';
 $route['(:any)'] = 'pages/view/$1';

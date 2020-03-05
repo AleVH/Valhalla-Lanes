@@ -1,0 +1,3 @@
+<div>
+	Merchandise content
+</div>

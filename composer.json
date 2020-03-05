@@ -3,11 +3,11 @@
 	"name": "Valhalla Lanes",
 	"type": "project",
 	"authors": [{
-	  "name":"Alejandro Van Houtte",
-	  "email": "alevanhoutte@gmail.com",
-	  "role": "Developer"
+		"name":"Alejandro Van Houtte",
+		"email": "alevanhoutte@gmail.com",
+		"role": "Developer"
 	}],
-	"homepage": "valhalla-lanes.co.uk",
+	"homepage": "http://valhalla-lanes.co.uk",
 	"license": "MIT",
 	"support": {
 		"forum": "http://forum.codeigniter.com/",
@@ -16,7 +16,7 @@
 		"source": "https://github.com/bcit-ci/CodeIgniter"
 	},
 	"require": {
-		"php": ">=5.3.7"
+		"php": ">=5.5"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

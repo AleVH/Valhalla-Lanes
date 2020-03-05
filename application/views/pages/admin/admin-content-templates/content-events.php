@@ -1,0 +1,3 @@
+<div>
+	Events content
+</div>

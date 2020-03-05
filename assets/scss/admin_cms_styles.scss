@@ -1,0 +1,88 @@
+/*
+This style sheet is for the admin cms. the login is handled by the admin_styles.scss
+*/
+
+@import "styles_conf";
+
+body {
+  padding: 0;
+  margin: 0;
+  height: 100vh;
+  min-height: 600px;
+  font-family: Viking_shit_like;
+  //width: 100vw; // with this, forces the scroll bar to the sides
+  min-width: 800px;
+  header {
+	height: 40px;
+	border-bottom: 1px solid black;
+	.admin__header {
+	  height: 100%;
+	  background-color: red;
+	  display: flex;
+	  flex-direction: row;
+	  .header__date {
+		width: 16%;
+		display: flex;
+		flex-direction: column;
+		span {
+		  margin: auto;
+		}
+	  }
+	  .header__userlogged {
+		border-left: 1px solid black;
+		width: 76%;
+		display: flex;
+		flex-direction: row;
+		span {
+		  margin: auto 0 auto 15px;
+		}
+	  }
+	  .header__logout {
+		border-left: 1px solid black;
+		width: 8%;
+		display: flex;
+		flex-direction: column;
+		span {
+		  margin: auto;
+		}
+	  }
+	}
+  }
+  .admin__body {
+	border-bottom: 1px solid black;
+	height: calc((100vh - 40px) - 20px);
+	background-color: blue;
+	display: flex;
+	flex-direction: row;
+	.admin__sidebar {
+	  border-right: 1px solid black;
+	  width: 16%;
+	  display: flex;
+	  flex-direction: column;
+	  .sidebar__item {
+		cursor: pointer;
+		border-bottom: 1px solid black;
+		padding: 5% 0 5% 5%;
+		width: 95%;
+		height: 20px;
+		&:hover {
+		  background-color: #2e8ece;
+		}
+		&:focus {
+		  background-color: #1abc9c;
+		}
+	  }
+	}
+	.admin__content {
+	  background-color: #a5a5a5;
+	  width: 82%;
+	  padding: 1%;
+	}
+  }
+  .admin__footer {
+	height: 20px;
+	background-color: green;
+	display: flex;
+	flex-direction: column;
+  }
+}

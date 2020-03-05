@@ -1,0 +1,3 @@
+<div>
+	Bookings content
+</div>

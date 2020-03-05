@@ -1,0 +1,17 @@
+:root {
+  --main_text_color: #FFFFFF;
+  --secondary_text_color: rgb(184,180,181);
+  --main_color: #000000;
+  --alert_color: rgb(100, 0, 200);
+  --font_size_huge: 100px;
+  --font_size_big: 50px;
+  --font_size_normal: 25px;
+  --font_size_small: 10px;
+}
+
+@font-face {
+  font-family: "Viking_shit_like";
+  src: url("../fonts/MasonSerifBold.ttf");
+}
+
+/*# sourceMappingURL=styles_conf.css.map */
