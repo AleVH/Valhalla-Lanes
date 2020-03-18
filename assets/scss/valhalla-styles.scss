@@ -1,18 +1,3 @@
-/* testing new structure */
-//:root{
-//  --main_text_color: #FFFFFF;
-//  --secondary_text_color: rgb(184,180,181);
-//  --main_color: #000000;
-//  --alert_color: rgb(100, 0, 200);
-//  --font_size_huge: 100px;
-//  --font_size_big: 50px;
-//  --font_size_normal: 25px;
-//  --font_size_small: 10px;
-//}
-//@font-face {
-//  font-family: "Viking_shit_like";
-//  src: url('../fonts/MasonSerifBold.ttf');
-//}
 
 @import "styles_conf";
 
@@ -129,9 +114,9 @@ body{
 	justify-content: center;
 
 	.menu__mask {
-	  background: url('../media/corner-2.png');
-	  background-repeat: no-repeat;
-	  background-position: top right;
+	  background: url('../media/corner-2-tr.png'), url('../media/corner-2-bl.png');
+	  background-repeat: no-repeat, no-repeat;
+	  background-position: top right, bottom left;
 	  background-size: 3% 90%;
 	  height: 100%;
 	  width: 100%;
@@ -168,9 +153,9 @@ body{
 		transform-style: preserve-3d;
 
 		div {
-		  background: url('../media/corner-3.png');
-		  background-repeat: no-repeat;
-		  background-position: top right;
+		  background: url('../media/corner-3-tr.png'), url('../media/corner-3-bl.png');
+		  background-repeat: no-repeat, no-repeat;
+		  background-position: top right, bottom left;
 		  background-size: 15% 90%;
 		  flex-grow: 1; // this keeps the items in the menu using all the width. control the space between them with margin left and right
 		  //margin: 1%;

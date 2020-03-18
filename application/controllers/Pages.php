@@ -1,9 +1,15 @@
 <?php
 
 require __DIR__."/Services/Calendar/Calendar.php";
+require APPPATH."controllers/Services/Admin/Sections.php";
 //use Services\Calendar;
 
 class Pages extends CI_Controller {
+
+	public function __construct(){
+		parent::__construct();
+		$this->load->library('../models/Sections');
+	}
 
     public function view($page = 'home'){
         if ( ! file_exists(APPPATH.'views/pages/'.$page.'.php'))
@@ -12,13 +18,24 @@ class Pages extends CI_Controller {
             show_404();
         }
 
-        $data['title'] = ucfirst($page); // Capitalize the first letter
-		$data['styles'] = "styles";
+        // check sections
+		$sections = new \Sections();
+		$results = $sections->getAllSectionsStatus();
+		foreach ($results->result('Sections') as $section) {
+			$data['menu'][$section->name] = $section->is_enabled;
+		}
 
+
+		$data['title'] = ucfirst($page); // Capitalize the first letter
+		$data['styles'] = "styles";
+		$data['marquee'] = true;
+//var_dump($data);
         $this->load->helper('url');
         $this->load->view('templates/head', $data);
         $this->load->view('templates/header', $data);
-        $this->load->view('pages/'.$page, $data);
+		$this->load->view('templates/menu', $data);
+		$this->load->view('templates/body', $data);
+//        $this->load->view('pages/'.$page, $data);
         $this->load->view('templates/footer', $data);
     }
 

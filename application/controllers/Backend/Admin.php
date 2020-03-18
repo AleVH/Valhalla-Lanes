@@ -4,6 +4,22 @@
 
 Class Admin extends CI_Controller {
 
+	protected $user_logged;
+
+	public function __construct(){
+		parent::__construct();
+		$this->load->library('../models/Admin_Users');
+		$this->load->library('../models/Sections');
+		$this->load->library('session');
+		$this->user_logged = "Ale";
+//		echo 'username: '.$this->session->userdata('name');
+//		echo 'something: '.$this->session->userdata('id');
+//		$this->load->database();
+//		$user_results = $this->db->select("admin_users.id, admin_users.name, admin_users.email, admin_permissions.id as perms, admin_permissions.password ")
+//			->from("admin_users")->join("admin_permissions", "admin_permissions.admin_user_id = admin_users.id")
+//			->where("admin_users.email = '".$user."' AND admin_permissions.password = '".$password."'");
+	}
+
 	public function index(){
 		if ( ! file_exists(APPPATH.'views/pages/admin.php'))
 		{
@@ -14,6 +30,7 @@ Class Admin extends CI_Controller {
 		$data['section'] = 'Admin';
 		$data['title'] = 'Admin Section';
 		$data['styles'] = 'admin_styles';
+		$data['admin_logged'] = $this->user_logged;
 
 		// testing database
 //		$this->load->database();
@@ -49,7 +66,7 @@ Class Admin extends CI_Controller {
 			$password = $this->input->post('password');
 
 			// check with database
-			$this->load->database();
+//			$this->load->database();
 
 			// for debug
 //			echo "QUERY : ".$this->db->select("admin_users.email, admin_permissions.password ")
@@ -84,7 +101,7 @@ Class Admin extends CI_Controller {
 					'user_name' => $admin_user->name,
 					'user_perms' => $admin_user->perms
 				);
-				$this->session->set_tempdata('verified', $new_admin_login, 15);
+				$this->session->set_tempdata('verified', $new_admin_login, 45);
 				echo returnResponse('success', 'admin/dashboard', 'jsonizeResponse');
 //				redirect('/admin/dashboard');
 			}else{
@@ -96,25 +113,27 @@ Class Admin extends CI_Controller {
 		}
 	}
 
-	public function dashboard(){
-//		$this->load->library('session');
-//		$user_logged = $this->session->userdata('verified');
-//		if(isset($user_logged['user_name'])){
-//			echo 'this is the dashboard';
-			$data['styles'] = 'admin_cms_styles';
-			$this->load->view('pages/admin/admin-head', $data);
-			$this->load->view('pages/admin/admin-header', $data);
-			$this->load->view('pages/admin/admin-body-begin', $data);
-			$this->load->view('pages/admin/admin-content/admin-sidebar', $data);
-			$this->load->view('pages/admin/admin-content/admin-content-begin', $data);
-			$this->load->view('pages/admin/admin-content-templates/content-metrics', $data);
-			$this->load->view('pages/admin/admin-content/admin-content-end', $data);
-			$this->load->view('pages/admin/admin-body-end', $data);
-			$this->load->view('pages/admin/admin-footer', $data);
-//		}else{
-//			echo 'need more checking';
-//			redirect('/index.php/admin');
-//		}
-	}
+//	public function dashboard(){
+////		$this->load->library('session');
+////		$user_logged = $this->session->userdata('verified');
+////		if(isset($user_logged['user_name'])){
+//			echo 'this is the dashboard from admin controller';
+////			$data['section'] = 'Dashboard';
+////			$data['status'] = 'Disabled';
+//			$data['styles'] = 'admin_cms_styles';
+//			$this->load->view('pages/admin/admin-head', $data);
+//			$this->load->view('pages/admin/admin-header', $data);
+//			$this->load->view('pages/admin/admin-body-begin', $data);
+//			$this->load->view('pages/admin/admin-content/admin-sidebar', $data);
+//			$this->load->view('pages/admin/admin-content/admin-content-begin', $data);
+//			$this->load->view('pages/admin/admin-content-templates/content-metrics', $data);
+//			$this->load->view('pages/admin/admin-content/admin-content-end', $data);
+//			$this->load->view('pages/admin/admin-body-end', $data);
+//			$this->load->view('pages/admin/admin-footer', $data);
+////		}else{
+////			echo 'need more checking';
+////			redirect('/admin');
+////		}
+//	}
 
 }

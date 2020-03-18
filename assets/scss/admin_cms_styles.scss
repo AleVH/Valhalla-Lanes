@@ -12,77 +12,115 @@ body {
   font-family: Viking_shit_like;
   //width: 100vw; // with this, forces the scroll bar to the sides
   min-width: 800px;
+  background-color: var(--main_color);
+  color: var(--main_text_color);
+
   header {
 	height: 40px;
-	border-bottom: 1px solid black;
+	border-bottom: 1px solid var(--secondary_color);
+
 	.admin__header {
 	  height: 100%;
-	  background-color: red;
+	  //background-color: red;
 	  display: flex;
 	  flex-direction: row;
+
 	  .header__date {
 		width: 16%;
 		display: flex;
 		flex-direction: column;
+
 		span {
 		  margin: auto;
 		}
+
 	  }
+
 	  .header__userlogged {
-		border-left: 1px solid black;
+		border-left: 1px solid var(--secondary_color);
 		width: 76%;
 		display: flex;
 		flex-direction: row;
+
 		span {
 		  margin: auto 0 auto 15px;
 		}
+
 	  }
+
 	  .header__logout {
-		border-left: 1px solid black;
+		border-left: 1px solid var(--secondary_color);
 		width: 8%;
 		display: flex;
 		flex-direction: column;
+
 		span {
 		  margin: auto;
 		}
+
 	  }
+
 	}
+
   }
+
   .admin__body {
-	border-bottom: 1px solid black;
+	border-bottom: 1px solid var(--secondary_color);
 	height: calc((100vh - 40px) - 20px);
-	background-color: blue;
+	//background-color: blue;
 	display: flex;
 	flex-direction: row;
+
 	.admin__sidebar {
-	  border-right: 1px solid black;
+	  border-right: 1px solid var(--secondary_color);
 	  width: 16%;
 	  display: flex;
 	  flex-direction: column;
+
 	  .sidebar__item {
 		cursor: pointer;
-		border-bottom: 1px solid black;
+		border-bottom: 1px solid var(--secondary_color);
 		padding: 5% 0 5% 5%;
 		width: 95%;
 		height: 20px;
+
 		&:hover {
-		  background-color: #2e8ece;
+		  //background-color: #2e8ece;
+		  background-color: rgb(32,32,32);
 		}
-		&:focus {
-		  background-color: #1abc9c;
+
+		&:focus, &.selected {
+		  //background-color: #1abc9c;
+		  background-color: rgb(64,64,64);
 		}
+
 	  }
+
 	}
+
 	.admin__content {
 	  background-color: #a5a5a5;
 	  width: 82%;
 	  padding: 1%;
+	  .section_status {
+		&.disabled {
+		  pointer-events: none;
+		  filter: blur(1px);
+		  -webkit-filter: blur(1.5px);
+		  -moz-filter: blur(1.5px);
+		  -o-filter: blur(1.5px);
+		  -ms-filter: blur(1.5px);
+		}
+	  }
 	}
+
   }
+
   .admin__footer {
 	height: 20px;
-	background-color: green;
+	//background-color: green;
 	display: flex;
 	flex-direction: column;
   }
+
 }

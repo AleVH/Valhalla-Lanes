@@ -4,7 +4,7 @@
 			<span><?= $todays ?></span>
 		</div>
 		<div class="header__userlogged">
-			<span>Username</span>
+			<span><?= $admin_logged ?></span>
 		</div>
 		<div class="header__logout">
 			<span>Logout</span>

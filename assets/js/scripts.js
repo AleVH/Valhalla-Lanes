@@ -27,7 +27,7 @@ $(document).ready(function(){
 		console.log('pw: ' + password);
 		$.ajax({
 				method : "POST",
-				url : base_url + "/CodeIgniter-3.1.11-test/index.php/admin/login",
+				url : base_url + "/admin/login",
 				data : {
 					user : user,
 					password : password
@@ -36,8 +36,11 @@ $(document).ready(function(){
 			}
 		).done(function (response) {
 			if(response.status === 'success'){
+				console.log('success');
+				console.log('resp: ' + response.message);
 				window.location.replace(response.message);
 			}else{
+				console.log('error');
 				// this is for when something is wrong with the credentials
 				$('.admin__login.error').html(response.message).css({'display' : 'block', 'opacity' : '1', 'color' : 'red'});
 				$('.admin__login.error').fadeOut(3200, function(){

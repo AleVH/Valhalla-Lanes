@@ -7,7 +7,7 @@
 	<div class="sidebar__item upload" tabindex="1">Uploads</div>
 	<div class="sidebar__item promotions" tabindex="1">Promotions</div>
 	<div class="sidebar__item bookings" tabindex="1">Bookings</div>
-	<div class="sidebar__item social_media" tabindex="1">Social Media</div>
+	<div class="sidebar__item socialmedia" tabindex="1">Social Media</div>
 	<div class="sidebar__item events" tabindex="1">Events</div>
 	<div class="sidebar__item others" tabindex="1">Others</div>
 </div>

@@ -1,9 +1,9 @@
-/* testing new structure */
 :root {
   --main_text_color: #FFFFFF;
   --secondary_text_color: rgb(184,180,181);
   --main_color: #000000;
-  --alert_color: rgb(100, 0, 200);
+  --secondary_color: grey;
+  --alert_color: rgb(255, 0, 0);
   --font_size_huge: 100px;
   --font_size_big: 50px;
   --font_size_normal: 25px;
@@ -115,9 +115,9 @@ body .menu {
   justify-content: center;
 }
 body .menu .menu__mask {
-  background: url("../media/corner-2.png");
-  background-repeat: no-repeat;
-  background-position: top right;
+  background: url("../media/corner-2-tr.png"), url("../media/corner-2-bl.png");
+  background-repeat: no-repeat, no-repeat;
+  background-position: top right, bottom left;
   background-size: 3% 90%;
   height: 100%;
   width: 100%;
@@ -152,9 +152,9 @@ body .menu .menu__unmask .menu__navigation {
   transform-style: preserve-3d;
 }
 body .menu .menu__unmask .menu__navigation div {
-  background: url("../media/corner-3.png");
-  background-repeat: no-repeat;
-  background-position: top right;
+  background: url("../media/corner-3-tr.png"), url("../media/corner-3-bl.png");
+  background-repeat: no-repeat, no-repeat;
+  background-position: top right, bottom left;
   background-size: 15% 90%;
   flex-grow: 1;
   margin-left: 0.5%;
@@ -257,4 +257,4 @@ body .footer {
   text-align: center;
 }
 
-/*# sourceMappingURL=test.css.map */
+/*# sourceMappingURL=valhalla-styles.css.map */

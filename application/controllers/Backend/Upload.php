@@ -1,11 +1,15 @@
 <?php
 
+require APPPATH."controllers/Backend/Admin.php";
+require APPPATH."controllers/Services/Admin/Sections.php";
 
-class Upload extends CI_Controller {
+//class Upload extends CI_Controller {
+class Upload extends Admin {
 
 	public function __construct(){
 		parent::__construct();
 		$this->load->helper(array('form', 'url'));
+		$this->load->library('../models/Sections');
 	}
 
 	public function index(){
@@ -13,14 +17,22 @@ class Upload extends CI_Controller {
 //		$this->load->library('session');
 //		$user_logged = $this->session->userdata('verified');
 //		if(isset($user_logged['user_name'])){
+
+			$sections = new Sections();
+			$results = $sections->getSectionStatus('upload');
+			$section = $results->row(0,'Sections');
+
 			$data['error'] = '';
 			$data['form_attr'] = array('class' => 'admin_files');
+			$data['status'] = ($section->is_enabled)?'Enabled':"Disabled";
+			$data['disabled'] = ($section->is_enabled)?'':'disabled';
+			$data['admin_logged'] = $this->user_logged;
 
 			// i only load the section selected
 			$load_section = $this->load->view('pages/admin/admin-content-templates/content-upload2', $data, true);
 //		}else{
 			// this would mean that somebody is trying to access this url without being logged in, so redirect to log in area
-//			redirect('/index.php/admin');
+//			redirect('/admin');
 //		}
 
 		echo json_encode($load_section);
@@ -56,11 +68,11 @@ class Upload extends CI_Controller {
 		$data['form_attr'] = array('class' => 'admin_files');
 		$data['error'] = '';
 		// Check form submit or not
-		var_dump($_POST);
+//		var_dump($_POST);
 
-		$countfiles = count($_FILES['files']['name']);
-		echo 'count files: '. $countfiles;
-		if($this->input->post('upload') != NULL ){echo 'nonononono';
+//		$countfiles = count($_FILES['files']['name']);
+//		echo 'count files: '. $countfiles;
+		if($this->input->post('upload') != NULL ){//echo 'nonononono';
 
 			$data = array();
 
@@ -86,10 +98,10 @@ class Upload extends CI_Controller {
 					$config['file_name'] = $_FILES['files']['name'][$i];
 
 					//Load upload library
-					$this->load->library('upload',$config);
+					$this->load->library('upload', $config);
 
-					// File upload
-					if($this->upload->do_upload('files')){
+					// File upload - the 'file' between brackets makes reference to the 'file' in $_FILES['file'] so needs to match and can't be plural
+					if($this->upload->do_upload('file')){
 						// Get data about the file
 						$uploadData = $this->upload->data();
 						$filename = $uploadData['file_name'];

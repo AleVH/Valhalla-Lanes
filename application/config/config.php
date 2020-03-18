@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 //$config['base_url'] = 'http://valhalla-lanes.co.uk/';
-$config['base_url'] = 'http://localhost/CodeIgniter-3.1.11-test/';
+$config['base_url'] = 'http://test.valhalla-lanes.co.uk/';
 /*
 |--------------------------------------------------------------------------
 | Index File
