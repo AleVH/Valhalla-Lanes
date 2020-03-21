@@ -1,8 +1,9 @@
-$(document).ready(function(){
-	console.log('loading Valhalla-Lanes admin javascript');
+let base_url = window.location.origin;
 
+$(document).ready(function(){
+
+	console.log('loading Valhalla-Lanes admin javascript');
 	let content_wrapper = $('.content');
-	let base_url = window.location.origin;
 	console.log('base url: ' + base_url);
 
 	// Sidebar Section - This checks what button was clicked
@@ -14,7 +15,7 @@ $(document).ready(function(){
 		console.log(loadSection[1] + ' section clicked');
 		e.preventDefault();
 		$.ajax({
-			method: "GET",
+			method: "POST",
 			url: base_url + "/admin/" + loadSection[1],
 			dataType: "json"
 		}).done(function(response){
@@ -23,179 +24,6 @@ $(document).ready(function(){
 			binder[loadSection[1]]();
 		});
 	});
-
-	// // Metrics Section
-	// $('.sidebar__item.metrics').on('click', function (e) {
-	// 	$(this).toggleClass('selected');
-	// 	let classes = $(this).attr('class');
-	// 	console.log('class: ' + classes);
-	// 	let loadSection = classes.split(" ");
-	// 	console.log('test: ' + loadSection[1]);
-	// 	console.log('metrics section clicked');
-	// 	e.preventDefault();
-	// 	$.ajax({
-	// 		method: "GET",
-	// 		url: base_url + "/admin/dashboard",
-	// 		dataType: "json"
-	// 	}).done(function(response){
-	// 		content_wrapper.html(response);
-	// 	});
-	// });
-	//
-	// // Gallery Section
-	// $('.sidebar__item.gallery').on('click', function (e) {
-	// 	$(this).toggleClass('selected');
-	// 	console.log('gallery section clicked');
-	// 	e.preventDefault();
-	// 	$.ajax({
-	// 		method: "GET",
-	// 		url: base_url + "/admin/gallery",
-	// 		dataType: "json"
-	// 	}).done(function(response){
-	// 		content_wrapper.html(response);
-	// 	});
-	// });
-	//
-	// // Rules Section
-	// $('.sidebar__item.rules').on('click', function (e) {
-	// 	$(this).toggleClass('selected');
-	// 	console.log('rules section clicked');
-	// 	e.preventDefault();
-	// 	$.ajax({
-	// 		method: "GET",
-	// 		url: base_url + "/admin/rules",
-	// 		dataType: "json"
-	// 	}).done(function(response){
-	// 		content_wrapper.html(response);
-	// 	});
-	// });
-	//
-	// // Ranking Section
-	// $('.sidebar__item.rankings').on('click', function (e) {
-	// 	$(this).toggleClass('selected');
-	// 	console.log('rankings section clicked');
-	// 	e.preventDefault();
-	// 	$.ajax({
-	// 		method: "GET",
-	// 		url: base_url + "/admin/rankings",
-	// 		dataType: "json"
-	// 	}).done(function(response){
-	// 		content_wrapper.html(response);
-	// 	});
-	// });
-	//
-	// // Merchandise Section
-	// $('.sidebar__item.merchandise').on('click', function(e){
-	// 	$(this).toggleClass('selected');
-	// 	console.log('merchandise section clicked');
-	// 	e.preventDefault();
-	// 	$.ajax({
-	// 		method: "GET",
-	// 		url: base_url + "/admin/merchandise",
-	// 		dataType: "json"
-	// 	}).done(function(response){
-	// 		content_wrapper.html(response);
-	// 	});
-	// });
-	//
-	// Upload Section
-	// $('.sidebar__item.upload').on('click', function(e){
-	// 	$(this).toggleClass('selected');
-	// 	console.log('upload section clicked');
-	// 	e.preventDefault();
-	// 	$.ajax({
-	// 			method : "GET",
-	// 			url : base_url + "/admin/upload",
-	// 			dataType : "json"
-	// 		}
-	// 	).done(function (response) {
-	// 		console.log('response: ' + response);
-	// 		content_wrapper.html(response);
-	// 		// $('.content').html(response);
-	// 		bindUploadSectionScripts(); // this is crucial to make the javascript work
-	// 		if(response.status === 'success'){
-	// 			console.log('success response');
-	// 			// window.location.replace(response.message);
-	// 		}else{
-	// 			console.log('error response');
-	// 			// this is for when something is wrong with the credentials
-	// 			// $('.admin__login.error').html(response.message).css({'display' : 'block', 'opacity' : '1', 'color' : 'red'});
-	// 			// $('.admin__login.error').fadeOut(3200, function(){
-	// 			// 	$(this).html('&nbsp;').css('display', '');
-	// 			// });
-	// 		}
-	// 	});
-	// });
-	//
-	// // Promotions Section
-	// $('.sidebar__item.promotions').on('click', function (e) {
-	// 	$(this).toggleClass('selected');
-	// 	console.log('promotions section clicked');
-	// 	e.preventDefault();
-	// 	$.ajax({
-	// 		method: "GET",
-	// 		url: base_url + "/admin/promotions",
-	// 		dataType: "json"
-	// 	}).done(function(response){
-	// 		content_wrapper.html(response);
-	// 	});
-	// });
-	//
-	// // Bookings Section
-	// $('.sidebar__item.bookings').on('click', function (e) {
-	// 	$(this).toggleClass('selected');
-	// 	console.log('bookings section clicked');
-	// 	e.preventDefault();
-	// 	$.ajax({
-	// 		method: "GET",
-	// 		url: base_url + "/admin/bookings",
-	// 		dataType: "json"
-	// 	}).done(function(response){
-	// 		content_wrapper.html(response);
-	// 	});
-	// });
-	//
-	// // Social Media Setion
-	// $('.sidebar__item.social_media').on('click', function (e) {
-	// 	$(this).toggleClass('selected');
-	// 	console.log('social media section clicked');
-	// 	e.preventDefault();
-	// 	$.ajax({
-	// 		method: "GET",
-	// 		url: base_url + "/admin/socialmedia",
-	// 		dataType: "json"
-	// 	}).done(function(response){
-	// 		content_wrapper.html(response);
-	// 	});
-	// });
-	//
-	// // Events Section
-	// $('.sidebar__item.events').on('click', function (e) {
-	// 	$(this).toggleClass('selected');
-	// 	console.log('events section clicked');
-	// 	e.preventDefault();
-	// 	$.ajax({
-	// 		method: "GET",
-	// 		url: base_url + "/admin/events",
-	// 		dataType: "json"
-	// 	}).done(function(response){
-	// 		content_wrapper.html(response);
-	// 	});
-	// });
-	//
-	// // Others Section
-	// $('.sidebar__item.others').on('click', function (e) {
-	// 	$(this).toggleClass('selected');
-	// 	console.log('others section clicked');
-	// 	e.preventDefault();
-	// 	$.ajax({
-	// 		method: "GET",
-	// 		url: base_url + "/admin/others",
-	// 		dataType: "json"
-	// 	}).done(function(response){
-	// 		content_wrapper.html(response);
-	// 	});
-	// });
 
 	// //clicks behaviour
 	// // Upload Section
@@ -223,97 +51,147 @@ $(document).ready(function(){
 	// 	// });
 	// });
 
-
 });
 
-// let bindMetricsSectionScripts = function(){
-// 	console.log('metrics scripts binded');
-// }
-//
-// let bindGallerySectionScripts = function(){}
-//
-// let bindRulesSectionScripts = function(){}
-//
-// let bindRankingSectionScripts = function(){}
-//
-// let bindMerchandiseSectionScripts = function(){}
-//
-// let bindUploadSectionScripts = function(){
-//
-// 	let content_wrapper = $('.content');
-// 	let base_url = window.location.origin;
-//
-// 	// Miscellaneous
-// 	$('.admin_files .add_more').on('click', function(e){
-// 		console.log('add more files clicked');
-// 		// e.stopPropagation();
-// 		e.preventDefault();
-// 		$(this).before("<input type='file' name='files[]' multiple/>");
-// 	});
-//
-// 	console.log('new js');
-// 	$('form.admin_files').submit(function(e){
-// 		console.log('upload file clicked');
-// 		e.preventDefault();
-// 		// e.stopPropagation();
-//
-// 		// create the formdata element
-// 		let formdata = new FormData();
-// 		// get all the files attached
-// 		let totalfiles = $("input[name^='files']")[0].files.length;
-//
-// 		for (let index = 0; index < totalfiles; index++) {
-// 			formdata.append("files[]", $("input[name^='files']")[0].files[index]);
-// 		}
-// 		formdata.append("upload",true);
-//
-// 		console.log('formdata: ', totalfiles);
-// 		$.ajax({
-// 				method : "POST",
-// 				url : base_url + "/upload/doupload",
-// 				data: formdata,
-// 				processData: false,
-// 				contentType: false,
-// 				dataType : "json"
-// 			}
-// 		).done(function (response) {
-// 			if(response.status === 'success'){
-// 				console.log('success response');
-// 				window.location.replace(response.message);
-// 			}else{
-// 				console.log('error response');
-// 				// this is for when something is wrong with the credentials
-// 				// $('.admin__login.error').html(response.message).css({'display' : 'block', 'opacity' : '1', 'color' : 'red'});
-// 				// $('.admin__login.error').fadeOut(3200, function(){
-// 				// 	$(this).html('&nbsp;').css('display', '');
-// 				// });
-// 			}
-// 		});
-// 	});
-// }
-//
-// let bindPromotionsSectionScripts = function(){}
-//
-// let bindBookingsSectionScripts = function(){}
-//
-// let bindSocialMediaSectionScripts = function(){}
-//
-// let bindEventsSectionScripts = function(){}
-//
-// let bindOthersSectionScripts = function(){}
-
 let binder = {
+	bookings : function(){
+		console.log('bookings scripts binded');
+	},
+	events : function(){
+		console.log('events scripts binded');
+	},
+	front_menu : function(){
+		console.log('front menu scripts binded');
+		$(".front-menu__content li input").click(function(){
+			let is_enabled = 0;
+			let menu_section_id = $(this).val();
+			let server_response, font_color;
+			if ($(this).is(":checked")) {
+				// it is checked
+				is_enabled = 1;
+			}
+			$.ajax({
+					method : "POST",
+					url : base_url + "/menusections/updatestatus",
+					data: {
+						'id':menu_section_id,
+						'is_enabled':is_enabled
+					},
+					dataType : "json"
+				}
+			).done(function (response) {
+				if(response.status === 'success'){
+					server_response = 'Updated';
+					font_color = 'green';
+				}else{
+					server_response = "Error updating. Please refresh the page";
+					font_color = 'red';
+				}
+			}).fail(function(response){
+				server_response = "Error connecting to server. Please refresh the page";
+				font_color = 'red';
+			}).always(function(){
+				// this will execute no matter what
+				$("#menu-section-" + menu_section_id + " span").html(server_response).css('color', font_color);
+				$("#menu-section-" + menu_section_id + " span").fadeOut(1200, function(){
+					$(this).html('').css('display', '');
+				});
+			});
+		});
+	},
+	front_sections : function(){
+		console.log('front sections scripts binded');
+	},
+	gallery : function(){
+		console.log('gallery scripts binded');
+	},
+	merchandise : function(){
+		console.log('merchandise scripts binded');
+	},
 	metrics : function(){
 		console.log('metrics scripts binded');
 	},
-	gallery : function(){},
-	rules : function(){},
-	rankings : function(){},
-	merchandise : function(){},
+	news : function(){
+		console.log('news scripts binded');
+
+		$('form.admin_news').submit(function(e){
+			e.preventDefault();
+			// e.stopPropagation();
+			let title = $('form.admin_news input[name="news_title"]').val();
+			let text = $('form.admin_news textarea[name="news_text"]').val();
+			$.ajax({
+				method: 'POST',
+				url: base_url + '/news/savenews',
+				data: {
+					title: title,
+					text: text
+				},
+				dataType: 'json'
+			}).done(function(response){
+				if(response.status === 'success'){
+					console.log('success response');
+					let visibility, checkbox;
+					if(response.message.is_enabled === true){
+						visibility = 'enabled-news';
+						checkbox = 'checked';
+					}else{
+						visibility = "disabled-news";
+						checkbox = '';
+					};
+					let newNews = '<div id="news-' + response.message.id + '" class="news__wrapper ' + visibility + '">'+
+						'<div class="news__header">' +
+						'<div class="news__header-firstline">' +
+						'<div class="news__date">' + response.message.created + '</div>' +
+						'<div class="news__title">' + response.message.news_title + '</div>' +
+						'<div class="news__visibility"><span class="news__update-status"></span><input type="checkbox" name="news__checkbox" value="' + response.message.id + '" ' + checkbox + '></div>' +
+						'</div>' +
+						'<div class="news__header-secondline">' +
+						'<div class="news__author">' + response.message.author + '</div>' +
+						'</div>' +
+						'</div>' +
+						'<div class="news__text">' +
+						'<p>' + response.message.news_text + '</p>' +
+						'</div>' +
+						'</div>';
+
+					// append the new news to the beginning of the list
+					$(".news__articles-all").prepend(newNews);
+
+					// empty title and text area
+					$('form.admin_news input[name="news_title"]').val('');
+					$('form.admin_news textarea[name="news_text"]').val('');
+
+					// bin the new news to its script
+					commonLayerBinder['news']();
+
+				}else{
+					console.log('error response');
+				}
+			})
+		});
+
+		commonLayerBinder['news']();
+
+	},
+	others : function(){
+		console.log('others scripts binded');
+	},
+	promotions : function(){
+		console.log('promotions scripts binded');
+	},
+	rankings : function(){
+		console.log('ranking scripts binded');
+	},
+	rules : function(){
+		console.log('rules scripts binded');
+	},
+	socialmedia : function(){
+		console.log('social media scripts binded');
+	},
 	upload : function(){
-		console.log('upload scripts binded - object');
+		console.log('upload scripts binded');
 		let content_wrapper = $('.content');
-		let base_url = window.location.origin;
+		// let base_url = window.location.origin;
 
 		// Miscellaneous
 		$('.admin_files .add_more').on('click', function(e){
@@ -326,7 +204,6 @@ let binder = {
 		$('form.admin_files').submit(function(e){
 			console.log('upload file clicked');
 			e.preventDefault();
-			// e.stopPropagation();
 
 			// create the formdata element
 			let formdata = new FormData();
@@ -339,6 +216,7 @@ let binder = {
 			formdata.append("upload",true);
 
 			console.log('formdata: ', totalfiles);
+
 			$.ajax({
 					method : "POST",
 					url : base_url + "/upload/doupload",
@@ -361,10 +239,53 @@ let binder = {
 				}
 			});
 		});
-	},
-	promotions : function(){},
-	bookings : function(){},
-	socialmedia : function(){},
-	events : function(){},
-	others : function(){}
-}
+	}
+};
+
+let commonLayerBinder =  {
+	news: function(){
+		console.log('news second layer binder');
+		$(".admin__news .news__articles .news__articles-all .news__wrapper input[name='news__checkbox']").click(function(){
+			console.log('news checkbox clicked second binder');
+			let news_id = $(this).val();
+			let news_visibility = 0;
+			let server_response, font_color;
+			if($(this).is(":checked")){
+				news_visibility = 1;
+			}
+			$.ajax({
+				method: 'POST',
+				url: base_url + '/news/updatenewsstatus',
+				data: {
+					id: news_id,
+					is_enabled: news_visibility
+				},
+				dataType: 'json'
+			}).done(function (response) {
+				if(response.status === 'success'){
+					server_response = 'Updated';
+					font_color = 'black';
+				}else{
+					server_response = "Error updating. Please refresh the page";
+					font_color = 'black';
+				}
+			}).fail(function(response){
+				server_response = "Error connecting to server. Please refresh the page";
+				font_color = 'black';
+			}).always(function(){
+				// this will execute no matter what
+				$("#news-" + news_id + " .news__visibility span").html(server_response).css('color', font_color);
+				$("#news-" + news_id + " .news__visibility span").fadeOut(1200, function(){
+					$(this).html('').css('display', '');
+					if(news_visibility){
+						$("#news-" + news_id).removeClass('disabled-news');
+						$("#news-" + news_id).addClass('enabled-news');
+					}else{
+						$("#news-" + news_id).removeClass('enabled-news');
+						$("#news-" + news_id).addClass('disabled-news');
+					}
+				});
+			});
+		});
+	}
+};

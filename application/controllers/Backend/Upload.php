@@ -1,26 +1,26 @@
 <?php
 
 require APPPATH."controllers/Backend/Admin.php";
-require APPPATH."controllers/Services/Admin/Sections.php";
+require APPPATH."controllers/Services/Calendar/Calendar.php";
 
-//class Upload extends CI_Controller {
 class Upload extends Admin {
 
 	public function __construct(){
 		parent::__construct();
 		$this->load->helper(array('form', 'url'));
-		$this->load->library('../models/Sections');
 	}
 
+	/**
+	 * this method will load the upload section in the admin dashboard
+	 */
 	public function index(){
 		// need to check if there is a user logged in
-//		$this->load->library('session');
-//		$user_logged = $this->session->userdata('verified');
-//		if(isset($user_logged['user_name'])){
+		$user_logged = $this->session->userdata('verified');
 
-			$sections = new Sections();
-			$results = $sections->getSectionStatus('upload');
-			$section = $results->row(0,'Sections');
+		if(isset($user_logged['user_name'])){
+			// this bit is to check if the sections is enabled or disabled
+			$results = $this->sections->getSectionStatus('upload');
+			$section = $results->row(0,'sections_entity');
 
 			$data['error'] = '';
 			$data['form_attr'] = array('class' => 'admin_files');
@@ -28,14 +28,38 @@ class Upload extends Admin {
 			$data['disabled'] = ($section->is_enabled)?'':'disabled';
 			$data['admin_logged'] = $this->user_logged;
 
-			// i only load the section selected
-			$load_section = $this->load->view('pages/admin/admin-content-templates/content-upload2', $data, true);
-//		}else{
-			// this would mean that somebody is trying to access this url without being logged in, so redirect to log in area
-//			redirect('/admin');
-//		}
+			// then i check if it's an ajax request, if it's not means the user just logged in
+			if($this->input->is_ajax_request()){
+				// i only load the section selected
+				$load_section = $this->load->view('pages/admin/admin-content-templates/content-upload2', $data, true);
+				echo json_encode($load_section);
+			}else{
+				// this is when it loads the whole page, coming from the login area
+				$todays = new Calendar();
 
-		echo json_encode($load_section);
+				$data['todays'] = $todays->getDay()." ".$todays->getDate()." ".$todays->getMonthShortName()." ".$todays->getYear();
+				$data['styles'] = 'admin_cms_styles'; // load styles
+				$data['section'] = 'Upload';
+
+				$sidebar = $this->sections->getAllSectionsStatus();
+				$data['sidebar'] = $sidebar->result_array();
+
+				$data['admin_logged'] = $this->user_logged;
+
+				$this->load->view('pages/admin/admin-head', $data);
+				$this->load->view('pages/admin/admin-header', $data);
+				$this->load->view('pages/admin/admin-body-begin', $data);
+				$this->load->view('pages/admin/admin-content/admin-sidebar', $data);
+				$this->load->view('pages/admin/admin-content/admin-content-begin', $data);
+				$this->load->view('pages/admin/admin-content-templates/content-upload2', $data);
+				$this->load->view('pages/admin/admin-content/admin-content-end', $data);
+				$this->load->view('pages/admin/admin-body-end', $data);
+				$this->load->view('pages/admin/admin-footer', $data);
+			}
+		}else{
+			// this would mean that somebody is trying to access this url without being logged in, so redirect to log in area
+			redirect('/admin');
+		}
 	}
 
 //	public function doUpload(){
@@ -67,12 +91,11 @@ class Upload extends Admin {
 
 		$data['form_attr'] = array('class' => 'admin_files');
 		$data['error'] = '';
-		// Check form submit or not
-//		var_dump($_POST);
 
+		// Check form submit or not
 //		$countfiles = count($_FILES['files']['name']);
 //		echo 'count files: '. $countfiles;
-		if($this->input->post('upload') != NULL ){//echo 'nonononono';
+		if($this->input->post('upload') != NULL ){
 
 			$data = array();
 

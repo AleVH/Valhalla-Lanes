@@ -5,19 +5,25 @@
 Class Admin extends CI_Controller {
 
 	protected $user_logged;
+//	protected $sections;
 
 	public function __construct(){
 		parent::__construct();
-		$this->load->library('../models/Admin_Users');
-		$this->load->library('../models/Sections');
+		$this->load->model('admin_users_model', 'admin_users', true);
+		$this->load->model('sections_model', 'sections', true);
 		$this->load->library('session');
-		$this->user_logged = "Ale";
+		$this->load->library('../entities/Sections_entity');
+//		$this->user_logged = "Ale";
 //		echo 'username: '.$this->session->userdata('name');
 //		echo 'something: '.$this->session->userdata('id');
-//		$this->load->database();
+		$this->load->database();
 //		$user_results = $this->db->select("admin_users.id, admin_users.name, admin_users.email, admin_permissions.id as perms, admin_permissions.password ")
 //			->from("admin_users")->join("admin_permissions", "admin_permissions.admin_user_id = admin_users.id")
 //			->where("admin_users.email = '".$user."' AND admin_permissions.password = '".$password."'");
+	}
+
+	protected function getProtectedSections(){
+//		return $this->sections;
 	}
 
 	public function index(){
@@ -47,11 +53,12 @@ Class Admin extends CI_Controller {
 //		echo "</pre>";
 //		$this->db->close();
 
+		// this loads the 'login' form to access the admin section
 		$this->load->helper('url');
-		$this->load->view('templates/head', $data);
-		$this->load->view('templates/header', $data);
+		$this->load->view('templates/admin-templates/head-old', $data);
+		$this->load->view('templates/admin-templates/header-old', $data);
 		$this->load->view('pages/admin', $data);
-		$this->load->view('templates/footer', $data);
+		$this->load->view('templates/admin-templates/footer-old', $data);
 	}
 
 	public function test(){
@@ -92,17 +99,17 @@ Class Admin extends CI_Controller {
 					'user_name' => $admin_user->name,
 					'user_perms' => $admin_user->perms
 				);
-				$_SERVER['user_name2'] = 'testing';
-//				$this->session->set_userdata($new_admin_login); // this way the data is set permanent
+//				$_SERVER['user_name2'] = 'testing';
+				$this->session->set_userdata('verified', $new_admin_login); // this way the data is set permanent
 
-				$session_data = $this->session->userdata('verified');
-				$session_data = array(
-					'user_id' => $admin_user->id,
-					'user_name' => $admin_user->name,
-					'user_perms' => $admin_user->perms
-				);
-				$this->session->set_tempdata('verified', $new_admin_login, 45);
-				echo returnResponse('success', 'admin/dashboard', 'jsonizeResponse');
+//				$session_data = $this->session->userdata('verified');
+//				$session_data = array(
+//					'user_id' => $admin_user->id,
+//					'user_name' => $admin_user->name,
+//					'user_perms' => $admin_user->perms
+//				);
+//				$this->session->set_tempdata('verified', $new_admin_login, 45);
+				echo returnResponse('success', 'admin/metrics', 'jsonizeResponse');
 //				redirect('/admin/dashboard');
 			}else{
 				// this means some credentials are wrong
@@ -112,28 +119,5 @@ Class Admin extends CI_Controller {
 			}
 		}
 	}
-
-//	public function dashboard(){
-////		$this->load->library('session');
-////		$user_logged = $this->session->userdata('verified');
-////		if(isset($user_logged['user_name'])){
-//			echo 'this is the dashboard from admin controller';
-////			$data['section'] = 'Dashboard';
-////			$data['status'] = 'Disabled';
-//			$data['styles'] = 'admin_cms_styles';
-//			$this->load->view('pages/admin/admin-head', $data);
-//			$this->load->view('pages/admin/admin-header', $data);
-//			$this->load->view('pages/admin/admin-body-begin', $data);
-//			$this->load->view('pages/admin/admin-content/admin-sidebar', $data);
-//			$this->load->view('pages/admin/admin-content/admin-content-begin', $data);
-//			$this->load->view('pages/admin/admin-content-templates/content-metrics', $data);
-//			$this->load->view('pages/admin/admin-content/admin-content-end', $data);
-//			$this->load->view('pages/admin/admin-body-end', $data);
-//			$this->load->view('pages/admin/admin-footer', $data);
-////		}else{
-////			echo 'need more checking';
-////			redirect('/admin');
-////		}
-//	}
 
 }

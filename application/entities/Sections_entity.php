@@ -1,6 +1,6 @@
 <?php
 
-class Sections {
+class Sections_entity {
 
 	public $id;
 	public $admin_user_id;

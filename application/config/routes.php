@@ -55,13 +55,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 // the way it works -> $route['uri'] = 'controller/method/params';
 $route['test'] = 'pages/test'; // use this one to test shit, uncomment when necessary
+$route['home'] = 'home';
 $route['gallery'] = 'gallery';
 $route['admin'] = 'Backend/admin';
 $route['admin/login'] = 'Backend/admin/login';
-$route['admin/dashboard'] = 'Backend/Metrics';
+$route['admin/dashboard'] = 'Backend/Metrics'; // this is the default landing page after login in the admin
 $route['admin/(:any)'] = 'Backend/$1';
 //$route['admin/dashboard/upload'] = 'Backend/upload';
 //$route['admin/dashboard/upload/doupload'] = 'Backend/upload/doupload';
+// AJAX REQUESTS BEGIN
 $route['upload/doupload'] = 'Backend/upload/doupload';
+$route['menusections/updatestatus'] = 'Backend/front_menu/updatemenusectionstatus';
+$route['news/savenews'] = 'Backend/news/savenews';
+$route['news/updatenewsstatus'] = 'Backend/news/updatenewsstatus';
+// AJAX REQUESTS END
 $route['default_controller'] = 'pages/view';
 $route['(:any)'] = 'pages/view/$1';

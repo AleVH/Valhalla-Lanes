@@ -6,11 +6,17 @@ This style sheet is for the admin cms. the login is handled by the admin_styles.
   --secondary_text_color: rgb(184,180,181);
   --main_color: #000000;
   --secondary_color: grey;
-  --alert_color: rgb(255, 0, 0);
+  --third_color: rgb(46, 64, 83 );
+  --alert_color: rgb(192, 57, 43 );
   --font_size_huge: 100px;
   --font_size_big: 50px;
   --font_size_normal: 25px;
   --font_size_small: 10px;
+  --list_items_color1: rgb(97, 106, 107);
+  --list_items_color2: rgb(112, 123, 124);
+  --list_items_color3: rgb(127, 140, 141 );
+  --enabled_section: rgb(29, 131, 72 );
+  --disabled_section: rgb(148, 49, 38);
 }
 
 @font-face {
@@ -67,6 +73,7 @@ body .admin__body {
   height: calc((100vh - 40px) - 20px);
   display: flex;
   flex-direction: row;
+  min-height: 700px;
 }
 body .admin__body .admin__sidebar {
   border-right: 1px solid var(--secondary_color);
@@ -91,6 +98,84 @@ body .admin__body .admin__content {
   background-color: #a5a5a5;
   width: 82%;
   padding: 1%;
+  overflow: auto;
+}
+body .admin__body .admin__content .admin__news .news__articles .news__articles-reference {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1%;
+  align-items: center;
+}
+body .admin__body .admin__content .admin__news .news__articles .news__articles-reference .color-ref {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 125px;
+  margin-right: 1%;
+  margin-left: 0.5%;
+}
+body .admin__body .admin__content .admin__news .news__articles .news__articles-reference .color-ref .color-sample {
+  padding-right: 20px;
+  padding-top: 20px;
+}
+body .admin__body .admin__content .admin__news .news__articles .news__articles-reference .color-ref .color-sample.enabled-news {
+  background-color: var(--enabled_section);
+}
+body .admin__body .admin__content .admin__news .news__articles .news__articles-reference .color-ref .color-sample.disabled-news {
+  background-color: var(--disabled_section);
+}
+body .admin__body .admin__content .admin__news .news__articles .news__articles-reference .color-ref .color-meaning {
+  width: 100%;
+  padding-left: 3%;
+}
+body .admin__body .admin__content .admin__news .news__articles .news__articles-all .news__wrapper {
+  margin-top: 3px;
+  padding: 5px;
+}
+body .admin__body .admin__content .admin__news .news__articles .news__articles-all .news__wrapper.enabled-news {
+  background-color: var(--enabled_section);
+}
+body .admin__body .admin__content .admin__news .news__articles .news__articles-all .news__wrapper.disabled-news {
+  background-color: var(--disabled_section);
+}
+body .admin__body .admin__content .admin__news .news__articles .news__articles-all .news__wrapper .news__header {
+  width: 100%;
+}
+body .admin__body .admin__content .admin__news .news__articles .news__articles-all .news__wrapper .news__header .news__header-firstline {
+  display: flex;
+  flex-direction: row;
+  align-content: stretch;
+}
+body .admin__body .admin__content .admin__news .news__articles .news__articles-all .news__wrapper .news__header .news__header-firstline .news__date {
+  flex-basis: 15%;
+}
+body .admin__body .admin__content .admin__news .news__articles .news__articles-all .news__wrapper .news__header .news__header-firstline .news__title {
+  flex-basis: 30%;
+}
+body .admin__body .admin__content .admin__news .news__articles .news__articles-all .news__wrapper .news__header .news__header-firstline .news__visibility {
+  flex-grow: 1;
+  flex-basis: 55%;
+  display: flex;
+  justify-content: flex-end;
+}
+body .admin__body .admin__content .admin__news .news__articles .news__articles-all .news__wrapper .news__header .news__header-firstline .news__visibility input {
+  align-self: flex-end;
+}
+body .admin__body .admin__content .admin__news .news__form .news__form-row {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1%;
+  margin-top: 1%;
+}
+body .admin__body .admin__content .admin__news .news__form .news__form-row textarea {
+  resize: none;
+}
+body .admin__body .admin__content .admin__news .news__form .news__form-row .news__form-submit {
+  margin-left: 50px;
+}
+body .admin__body .admin__content .admin__news .news__form .news__form-label {
+  width: 50px;
 }
 body .admin__body .admin__content .section_status.disabled {
   pointer-events: none;
