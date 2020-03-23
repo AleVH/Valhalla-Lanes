@@ -12,7 +12,9 @@
 			<div class="news-article__title"><?= $eachNewsArticle['title'] ?></div>
 			<div class="news-article__date">(<?= date('d-m-Y', strtotime($eachNewsArticle['created'])) ?>)</div>
 		</div>
-		<div class="news-article__text"><?= $eachNewsArticle['text'] ?></div>
+		<div class="news-article__text">
+			<?= str_replace("\n", "<br/>", $eachNewsArticle['text']) ?>
+		</div>
 	</div>
 	<?php
 		}
