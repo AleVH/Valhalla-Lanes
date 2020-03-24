@@ -4,15 +4,24 @@ $(document).ready(function(){
 
 	// menu animation
    $(".menu").click(function () {
-   		// this.classList.toggle("revealX"); // this will flip the menu tab so you can see the options, better if this happens without delay
-	   this.classList.add("revealX");// this does the same as the line above but without the toggle, so if you click again on it, doesn't go back to "menu"
-	   let items  = $(".menu__navigation > div");
-	   for(let i = 0; i < items.length; i++){
-		   (function(i){
-			   setTimeout(function(){
-				   $(".menu__navigation > div").eq(i).addClass("revealY");
-			   }, 500 * i);
-		   }(i));
+
+	   let window_width = window.innerWidth;
+
+	   if(window_width >= 1281){
+	   	   // for desktop devices and bigger
+		   // this.classList.toggle("revealX"); // this will flip the menu tab so you can see the options, better if this happens without delay
+		   this.classList.add("revealX");// this does the same as the line above but without the toggle, so if you click again on it, doesn't go back to "menu"
+		   let items  = $(".menu__navigation > div");
+		   for(let i = 0; i < items.length; i++){
+			   (function(i){
+				   setTimeout(function(){
+					   $(".menu__navigation > div").eq(i).addClass("revealY");
+				   }, 500 * i);
+			   }(i));
+		   }
+	   }else{
+	   		// for portable devices
+		   $(".menu__unmask").toggleClass('show_menu');
 	   }
 
    });
