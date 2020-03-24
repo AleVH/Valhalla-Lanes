@@ -134,7 +134,7 @@
     cursor: pointer;
   }
   body .menu .menu__mask span {
-    font-size: var(--font_size_normal);
+    font-size: var(--font_size_big);
   }
   body .menu .menu__unmask {
     height: 0;
@@ -162,7 +162,7 @@
   body .menu .menu__unmask .menu__navigation .menu__item .menu__section-name {
     text-decoration: none;
     color: var(--main_text_color);
-    font-size: var(--font_size_normal);
+    font-size: var(--font_size_big);
   }
   body .body {
     margin-top: 0.5%;
