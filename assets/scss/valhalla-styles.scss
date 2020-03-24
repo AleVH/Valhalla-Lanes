@@ -123,6 +123,7 @@ body{
 	  position: absolute;
 	  //border: 1px solid white;
 	  backface-visibility: hidden;
+	  -webkit-backface-visibility: hidden;
 	  transform: rotateX(0deg);
 	  display: flex;
 	  flex-direction: column;
@@ -142,6 +143,7 @@ body{
 	  position: absolute;
 	  transform: rotateX(180deg);
 	  backface-visibility: hidden;
+	  -webkit-backface-visibility: hidden;
 
 	  .menu__navigation {
 		height: 100%;
@@ -164,6 +166,7 @@ body{
 		  margin-right: .5%;
 		  height: 100%;
 		  backface-visibility: hidden;
+		  -webkit-backface-visibility: hidden;
 		  transform: rotateY(180deg);
 		  //border: 1px solid white;
 		  -webkit-box-shadow: inset 0 0 20px 5px rgb(70, 70, 70);
