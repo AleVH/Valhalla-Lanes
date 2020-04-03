@@ -63,11 +63,17 @@ $route['admin/dashboard'] = 'Backend/Metrics'; // this is the default landing pa
 $route['admin/(:any)'] = 'Backend/$1';
 //$route['admin/dashboard/upload'] = 'Backend/upload';
 //$route['admin/dashboard/upload/doupload'] = 'Backend/upload/doupload';
+
 // AJAX REQUESTS BEGIN
 $route['upload/doupload'] = 'Backend/upload/doupload';
-$route['menusections/updatestatus'] = 'Backend/front_menu/updatemenusectionstatus';
+$route['menusections/updatestatus'] = 'Backend/frontmenu/updatemenusectionstatus';
 $route['news/savenews'] = 'Backend/news/savenews';
 $route['news/updatenewsstatus'] = 'Backend/news/updatenewsstatus';
 // AJAX REQUESTS END
+
+// Protected Image Render Start
+$route['image/(:any)'] = 'Backend/imagerender/renderprotectedimage/$1';
+// Protected Image Render End
+
 $route['default_controller'] = 'pages/view';
 $route['(:any)'] = 'pages/view/$1';

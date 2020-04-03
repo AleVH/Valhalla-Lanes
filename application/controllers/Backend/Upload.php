@@ -3,6 +3,11 @@
 require APPPATH."controllers/Backend/Admin.php";
 require APPPATH."controllers/Services/Calendar/Calendar.php";
 
+/**
+ * This class uploads files, images and videos but could be anything. It will save those files in uploads
+ * or a subfolder. This folder is NOT accessible from outside (chmod 700 or htaccess if it is an apache server)
+ * Class Upload
+ */
 class Upload extends Admin {
 
 	public function __construct(){
@@ -28,8 +33,18 @@ class Upload extends Admin {
 			$data['disabled'] = ($section->is_enabled)?'':'disabled';
 			$data['admin_logged'] = $this->user_logged;
 
+			// get existing media
+			$data['existing'] = $this->getExistingMedia();
+//			var_dump($existing_media);
+
+
+
+
+
+
 			// then i check if it's an ajax request, if it's not means the user just logged in
 			if($this->input->is_ajax_request()){
+				header('Content-Type: image/jpeg');
 				// i only load the section selected
 				$load_section = $this->load->view('pages/admin/admin-content-templates/content-upload2', $data, true);
 				echo json_encode($load_section);
@@ -60,6 +75,14 @@ class Upload extends Admin {
 			// this would mean that somebody is trying to access this url without being logged in, so redirect to log in area
 			redirect('/admin');
 		}
+	}
+
+	public function getExistingMedia(){
+		// load the right helper for the task
+		$this->load->helper('directory');
+		$upload_folder = directory_map('./uploads/');
+
+		return $upload_folder;
 	}
 
 //	public function doUpload(){
@@ -103,7 +126,7 @@ class Upload extends Admin {
 			$countfiles = count($_FILES['files']['name']);
 
 			// Looping all files
-			for($i=0;$i<$countfiles;$i++){
+			for($i = 0; $i < $countfiles; $i++){
 
 				if(!empty($_FILES['files']['name'][$i])){
 

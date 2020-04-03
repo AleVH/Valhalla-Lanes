@@ -36,7 +36,7 @@ Class Admin extends CI_Controller {
 		$data['section'] = 'Admin';
 		$data['title'] = 'Admin Section';
 		$data['styles'] = 'admin_styles';
-		$data['admin_logged'] = $this->user_logged;
+//		$data['admin_logged'] = $this->user_logged;
 
 		// testing database
 //		$this->load->database();
@@ -61,19 +61,13 @@ Class Admin extends CI_Controller {
 		$this->load->view('templates/admin-templates/footer-old', $data);
 	}
 
-	public function test(){
-		$this->load->view('pages/admin');
-	}
-
 	public function login(){
+
 		// first we check if it is an ajax request
 		if($this->input->is_ajax_request()){
 			// fetch form inputs, this also do sanitation
 			$user = $this->input->post('user');
 			$password = $this->input->post('password');
-
-			// check with database
-//			$this->load->database();
 
 			// for debug
 //			echo "QUERY : ".$this->db->select("admin_users.email, admin_permissions.password ")

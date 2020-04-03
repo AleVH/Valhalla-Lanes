@@ -7,11 +7,22 @@ look it up on internet every time), replace the names with the correct ones.
   --main_text_color: #FFFFFF;
   --secondary_text_color: rgb(184,180,181);
   --main_color: #000000;
-  --alert_color: rgb(100, 0, 200);
+  --secondary_color: grey;
+  --third_color: rgb(46, 64, 83 );
+  --alert_color: rgb(192, 57, 43 );
   --font_size_huge: 100px;
+  --font_size_huge_320: 52px;
   --font_size_big: 50px;
+  --font_size_big_320: 30px;
   --font_size_normal: 25px;
+  --font_size_normal_320: 18px;
   --font_size_small: 10px;
+  --font_size_small_320: 8px;
+  --list_items_color1: rgb(97, 106, 107);
+  --list_items_color2: rgb(112, 123, 124);
+  --list_items_color3: rgb(127, 140, 141 );
+  --enabled_section: rgb(29, 131, 72 );
+  --disabled_section: rgb(148, 49, 38);
 }
 
 @font-face {
@@ -54,6 +65,15 @@ body .main-wrapper #admin__login .admin__login.login__form input {
 }
 body .main-wrapper #admin__login .admin__login.login__form input.login__submit {
   width: 40%;
+  border: none;
+  background-color: var(--secondary_color);
+  color: var(--main_text_color);
+  border-radius: 5px;
+  padding: 8px;
+}
+body .main-wrapper #admin__login .admin__login.login__form input.login__submit:hover {
+  background-color: var(--third_color);
+  border: none;
 }
 
 /*# sourceMappingURL=admin_styles.css.map */

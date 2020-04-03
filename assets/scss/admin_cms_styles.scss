@@ -234,6 +234,41 @@ body {
 
 	  }
 
+	  .admin__upload {
+
+		.upload__existing-files {
+
+		  .uploaded_images__wrapper {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+
+			.uploaded_image {
+
+			  &:first-child {
+				padding: 0 1vw 0 0;
+			  }
+
+			  &:last-child {
+				padding: 0 0 0 1vw;
+			  }
+
+			  &:not(:first-child):not(:last-child){
+				padding: 0 1vw 0 1vw;
+			  }
+
+			  img {
+				width: 15vw;
+			  }
+
+			}
+
+		  }
+
+		}
+
+	  }
+
 	  .section_status {
 		&.disabled {
 		  pointer-events: none;
@@ -242,6 +277,17 @@ body {
 		  -moz-filter: blur(1.5px);
 		  -o-filter: blur(1.5px);
 		  -ms-filter: blur(1.5px);
+		}
+	  }
+
+	  .admin__button {
+		border: 1px solid var(--secondary_text_color);
+		background-color: var(--secondary_color);
+		color: var(--main_text_color);
+		border-radius: 5px;
+		padding: 8px;
+		&:hover {
+		  background-color: var(--third_color);
 		}
 	  }
 	}

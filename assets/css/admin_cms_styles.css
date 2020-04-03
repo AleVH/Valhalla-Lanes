@@ -9,9 +9,13 @@ This style sheet is for the admin cms. the login is handled by the admin_styles.
   --third_color: rgb(46, 64, 83 );
   --alert_color: rgb(192, 57, 43 );
   --font_size_huge: 100px;
+  --font_size_huge_320: 52px;
   --font_size_big: 50px;
+  --font_size_big_320: 30px;
   --font_size_normal: 25px;
+  --font_size_normal_320: 18px;
   --font_size_small: 10px;
+  --font_size_small_320: 8px;
   --list_items_color1: rgb(97, 106, 107);
   --list_items_color2: rgb(112, 123, 124);
   --list_items_color3: rgb(127, 140, 141 );
@@ -177,6 +181,23 @@ body .admin__body .admin__content .admin__news .news__form .news__form-row .news
 body .admin__body .admin__content .admin__news .news__form .news__form-label {
   width: 50px;
 }
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image:first-child {
+  padding: 0 1vw 0 0;
+}
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image:last-child {
+  padding: 0 0 0 1vw;
+}
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image:not(:first-child):not(:last-child) {
+  padding: 0 1vw 0 1vw;
+}
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image img {
+  width: 15vw;
+}
 body .admin__body .admin__content .section_status.disabled {
   pointer-events: none;
   filter: blur(1px);
@@ -184,6 +205,16 @@ body .admin__body .admin__content .section_status.disabled {
   -moz-filter: blur(1.5px);
   -o-filter: blur(1.5px);
   -ms-filter: blur(1.5px);
+}
+body .admin__body .admin__content .admin__button {
+  border: 1px solid var(--secondary_text_color);
+  background-color: var(--secondary_color);
+  color: var(--main_text_color);
+  border-radius: 5px;
+  padding: 8px;
+}
+body .admin__body .admin__content .admin__button:hover {
+  background-color: var(--third_color);
 }
 body .admin__footer {
   height: 20px;

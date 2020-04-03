@@ -60,7 +60,7 @@ let binder = {
 	events : function(){
 		console.log('events scripts binded');
 	},
-	front_menu : function(){
+	frontmenu : function(){
 		console.log('front menu scripts binded');
 		$(".front-menu__content li input").click(function(){
 			let is_enabled = 0;
@@ -99,7 +99,7 @@ let binder = {
 			});
 		});
 	},
-	front_sections : function(){
+	frontsections : function(){
 		console.log('front sections scripts binded');
 	},
 	gallery : function(){

@@ -24,31 +24,45 @@ body {
 	justify-content: center;
 	align-items: center;
 	width: 35vw;
+
 	height: 40vh;
 
 	.admin__login {
+
 	  &.wrapper {
 		width: 100%;
 	  }
+
 	}
 
 	#admin__login {
-	  //background-image: linear-gradient(to bottom right, red, yellow);
 	  background-image: radial-gradient(rgb(70, 70, 70), rgb(10, 10, 10));
+
 	  .admin__login {
+
 		&.login__form {
-		  //display: grid;
-		  //grid-template-columns: 1fr 3fr;
-		  //grid-template-rows: 1fr 1fr;
 		  display: flex;
 		  flex-direction: column;
-		  //justify-content: center;
+
 		  input {
 			margin: 2% auto 2% auto;
 			width: 75%;
+
 			&.login__submit {
 			  width: 40%;
+			  border: none;
+			  background-color: var(--secondary_color);
+			  color: var(--main_text_color);
+			  border-radius: 5px;
+			  padding: 8px;
+
+			  &:hover {
+				background-color: var(--third_color);
+				border: none;
+			  }
+
 			}
+
 		  }
 		}
 	  }
