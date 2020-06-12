@@ -1,4 +1,7 @@
 <?php
+/**
+ * This class should go in services or something like that since it is not a controller
+ */
 
 require APPPATH."controllers/Backend/Admin.php";
 

@@ -42,7 +42,7 @@ class Events extends Admin {
 				$sidebar = $this->sections->getAllSectionsStatus();
 				$data['sidebar'] = $sidebar->result_array();
 
-				$data['admin_logged'] = $this->user_logged;
+				$data['admin_logged'] = $user_logged['user_name'];
 
 				$this->load->view('pages/admin/admin-head', $data);
 				$this->load->view('pages/admin/admin-header', $data);

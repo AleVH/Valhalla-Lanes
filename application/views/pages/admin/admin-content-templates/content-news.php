@@ -45,7 +45,7 @@
 							<div class="news__header-firstline">
 								<div class="news__date"><?= $eachNews['created'] ?></div>
 								<div class="news__title"><?= $eachNews['title'] ?></div>
-								<div class="news__visibility"><span class="news__update-status"></span><input type="checkbox" name="news__checkbox" value="<?= $newsIndex ?>" <?= ($eachNews['is_enabled'])?'checked':'' ?>></div>
+								<div class="news__visibility"><span class="news__update-status"></span><input id="news-chbx-<?= $newsIndex ?>" type="checkbox" name="news__checkbox" value="<?= $newsIndex ?>" <?= ($eachNews['is_enabled'])?'checked':'' ?>></div>
 							</div>
 							<div class="news__header-secondline">
 								<div class="news__author"><?= $eachNews['author'] ?></div>

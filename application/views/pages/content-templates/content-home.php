@@ -5,7 +5,8 @@
 	?>
 	<h2>News</h2>
 	<?php
-	foreach($news as $eachNewsArticle){
+		$i = 1; // this is to add something to separate news (when there is more than 1)
+		foreach($news as $eachNewsArticle){
 	?>
 	<div class="news-article__wrapper">
 		<div class="news-article__header">
@@ -17,6 +18,14 @@
 		</div>
 	</div>
 	<?php
+			if($i < count($news)){
+				?>
+				<div class="viking-line-break">
+						<img class="front-img" src="<?= base_url() ?>assets/media/top-1.png" />
+				</div>
+	<?php
+			}
+			$i++;
 		}
 	}else{
 	?>

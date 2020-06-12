@@ -7,7 +7,7 @@
 			<span><?= $admin_logged ?></span>
 		</div>
 		<div class="header__logout">
-			<span>Logout</span>
+			<span><a class="logout_user" href="/admin/logout">Logout</a></span>
 		</div>
 	</div>
 </header>

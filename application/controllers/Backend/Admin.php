@@ -5,7 +5,6 @@
 Class Admin extends CI_Controller {
 
 	protected $user_logged;
-//	protected $sections;
 
 	public function __construct(){
 		parent::__construct();
@@ -13,6 +12,7 @@ Class Admin extends CI_Controller {
 		$this->load->model('sections_model', 'sections', true);
 		$this->load->library('session');
 		$this->load->library('../entities/Sections_entity');
+//		$this->load->helper('cookie');
 //		$this->user_logged = "Ale";
 //		echo 'username: '.$this->session->userdata('name');
 //		echo 'something: '.$this->session->userdata('id');
@@ -85,6 +85,12 @@ Class Admin extends CI_Controller {
 			if(!empty($results->row())){
 //				var_dump($results->row());
 				$admin_user = $results->row();
+				//var_dump($admin_user->name);
+
+				// the following line is to have the name available for all the other controllers of the admin section. some other information could
+				// be required like permissions, but for now, the name
+				$this->user_logged = $this->session->userdata('name');//ucfirst($admin_user->name);
+
 				// this means the user exists and all matches
 				// so we redirect to the dashboard
 				$this->load->library('session');
@@ -95,6 +101,23 @@ Class Admin extends CI_Controller {
 				);
 //				$_SERVER['user_name2'] = 'testing';
 				$this->session->set_userdata('verified', $new_admin_login); // this way the data is set permanent
+//				set_cookie('test_cookie_ci', 'valextodo', null);
+
+				$this->load->helper('cookie');
+				$cookie = [
+					'name'   => 'Valhalla-Lanes-Admin-Session',
+					'value'  => 'Valhalla Lanes Session Value', // this is the string of letters and numbers very long
+					'expire' => '86500',
+					'domain' => 'test.valhalla-lanes.co.uk',
+					'path'   => '/',
+					'prefix' => 'admin_sess-',
+					'secure' => FALSE,
+					'httponly' => FALSE
+				];
+
+//				$this->response->setCookie($cookie);
+				$this->input->set_cookie($cookie);
+
 
 //				$session_data = $this->session->userdata('verified');
 //				$session_data = array(
@@ -103,7 +126,9 @@ Class Admin extends CI_Controller {
 //					'user_perms' => $admin_user->perms
 //				);
 //				$this->session->set_tempdata('verified', $new_admin_login, 45);
+
 				echo returnResponse('success', 'admin/metrics', 'jsonizeResponse');
+//				echo $this->response->returnResponse('success', 'admin/metrics', 'jsonizeResponse');
 //				redirect('/admin/dashboard');
 			}else{
 				// this means some credentials are wrong
@@ -112,6 +137,15 @@ Class Admin extends CI_Controller {
 				echo returnResponse('error', 'Wrong Credentials', 'jsonizeResponse');
 			}
 		}
+	}
+
+	public function logout(){
+		$this->session->sess_destroy();
+		redirect('/admin');
+	}
+
+	protected function getLoggedUser(){
+		return $this->user_logged;
 	}
 
 }

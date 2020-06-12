@@ -59,6 +59,7 @@ $route['home'] = 'home';
 $route['gallery'] = 'gallery';
 $route['admin'] = 'Backend/admin';
 $route['admin/login'] = 'Backend/admin/login';
+$route['admin/logout'] = 'Backend/admin/logout';
 $route['admin/dashboard'] = 'Backend/Metrics'; // this is the default landing page after login in the admin
 $route['admin/(:any)'] = 'Backend/$1';
 //$route['admin/dashboard/upload'] = 'Backend/upload';
@@ -69,6 +70,12 @@ $route['upload/doupload'] = 'Backend/upload/doupload';
 $route['menusections/updatestatus'] = 'Backend/frontmenu/updatemenusectionstatus';
 $route['news/savenews'] = 'Backend/news/savenews';
 $route['news/updatenewsstatus'] = 'Backend/news/updatenewsstatus';
+$route['ranking/create'] = 'Backend/ranking/create';
+$route['ranking/getranktoedit/(:num)'] = 'Backend/ranking/getranktoedit/$1';
+$route['ranking/undaterankingstatus'] = 'Backend/ranking/updaterankingstatus';
+$route['users/saveuser'] = 'Backend/users/saveuser';
+$route['users/delete'] = 'Backend/users/deleteuser';
+$route['users/dropdowns'] = 'Backend/users/dropdowns';
 // AJAX REQUESTS END
 
 // Protected Image Render Start

@@ -45,7 +45,7 @@ class News extends Admin {
 				$sidebar = $this->sections->getAllSectionsStatus();
 				$data['sidebar'] = $sidebar->result_array();
 
-				$data['admin_logged'] = $this->user_logged;
+				$data['admin_logged'] = $user_logged['user_name'];
 
 				$this->load->view('pages/admin/admin-head', $data);
 				$this->load->view('pages/admin/admin-header', $data);
@@ -111,12 +111,16 @@ class News extends Admin {
 	}
 
 	public function updateNewsStatus(){
-		$this->load->helpers('response');
 
-		if($this->news->updateNews($this->input->post('id'), 'is_enabled',$this->input->post('is_enabled'))){
-			echo returnResponse('success', 'OK', 'jsonizeResponse');
+		if($this->input->is_ajax_request()){
+			$this->load->helpers('response');
+			if($this->news->updateNews($this->input->post('id'), 'is_enabled',$this->input->post('is_enabled'))){
+				echo returnResponse('success', 'OK', 'jsonizeResponse');
+			}else{
+				echo returnResponse('error', 'ERROR', 'jsonizeResponse');
+			}
 		}else{
-			echo returnResponse('error', 'ERROR', 'jsonizeResponse');
+			echo 'shit';
 		}
 	}
 

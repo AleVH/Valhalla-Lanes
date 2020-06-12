@@ -31,16 +31,11 @@ class Upload extends Admin {
 			$data['form_attr'] = array('class' => 'admin_files');
 			$data['status'] = ($section->is_enabled)?'Enabled':"Disabled";
 			$data['disabled'] = ($section->is_enabled)?'':'disabled';
-			$data['admin_logged'] = $this->user_logged;
+			$data['admin_logged'] = $user_logged['user_name'];
 
 			// get existing media
 			$data['existing'] = $this->getExistingMedia();
 //			var_dump($existing_media);
-
-
-
-
-
 
 			// then i check if it's an ajax request, if it's not means the user just logged in
 			if($this->input->is_ajax_request()){
