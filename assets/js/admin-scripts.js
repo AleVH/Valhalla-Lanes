@@ -508,7 +508,6 @@ let commonLayerBinder =  {
 				dataType: 'json'
 			}).done(function(response){
 
-				let name_dd_options;
 				// this bit is to handle the title
 				$(".subcontent.edit .ranking-title").val(response.message.title);
 
@@ -529,48 +528,46 @@ let commonLayerBinder =  {
 				$(".subcontent.edit .ranking-tops option:selected").removeAttr("selected");
 				$(".subcontent.edit .ranking-tops option[value='" + response.message.tops + "']").attr('selected', 'selected');
 
+				// clean players list if any
+				$(".ranking-players").empty();
+
 				// this bit is to handle the players
 				if(response.message.players === null){
 					// this first bit is when the players haven't been assigned yet
-					$(".ranking-players").empty();
 
 					for(let i = 0; i < response.message.tops; i++){
-						let player_details = '<label for="player-' + (1 + i) + '">Player ' + (1 + i) + ':</label>' +
+						let player_details = '<label for="player-' + (1 + i) + '">Player ' + (1 + i) + ': <span class="player-' + (1 + i) + ' display-name"></span></label>' +
 							'<div class="player-' + (1 + i) + ' details">' +
 							'<label for="user-name">Name:</label>' +
-							'<select class="user-name" name="user-name"> + name_dd_options + </select>' +
-							// '<input type="text" name="player-name" placeholder="Player\'s ' + (1 + i) + ' name" required>' +
-							// '<label for="player-lastname">Lastname:</label>' +
-							// '<input type="text" name="player-lastname" placeholder="Player\'s ' + (1 + i) + ' lastname" required>' +
-							// '<label for="player-nickname">Nickname:</label>' +
-							// '<input type="text" name="player-nickname" placeholder="Player\' ' + (1 + i) + ' nickname">' +
-							// '<label for="player-score">Score:</label>' +
-							// '<input type="number" name="player-score" placeholder="Player\'s ' + (1 + i) + ' score" required>' +
+							'<select class="user-name" name="user-name" required></select>' +
+							'<label class="hide-detail" for="user-lastname">Lastname:</label>' +
+							'<select class="user-lastname hide-detail" name="user-lastname" required><option>Select a user name to unlock</option></select>' +
+							'<label class="hide-detail" for="user-nickname">Nickname:</label>' +
+							'<select class="user-nickname hide-detail" name="user-nickname"><option>Select a user lastname to unlock</option></select>' +
+							'<label class="hide-detail" for="user-score">Score:</label>' +
+							'<input type="number" class="user-score hide-detail" name="user-score" placeholder="Player\'s ' + (1 + i) + ' score" required>' +
+							'<label class="hide-detail" for="user-display">Display name options:</label>' +
+							'<div class="user-display hide-detail">' +
+							'<div class="display-option">' +
+							'<input type="radio" name="user-name-display" value="name">' +
+							'<label for="name">Only name</label>' +
+							'</div>' +
+							'<div class="display-option">' +
+							'<input type="radio" name="user-name-display" value="combined">' +
+							'<label for="combined">Combined</label>' +
+							'</div>' +
+							'<div class="display-option">' +
+							'<input type="radio" name="user-name-display" value="nickname">' +
+							'<label fro="nickname">Only nickname</label>' +
+							'</div>' +
+							'</div>' +
 							'</div>';
 
 						$(".ranking-players").append(player_details);
 					}
-					$.ajax({
-						method: "POST",
-						url: base_url + "/users/dropdowns",
-						data: {
-							field: 'name'
-						},
-						dataType: "json",
-					}).done(function(response) {
-						console.log('dd: ' + response);
-						if (response.status === 'success') {
-							let dd_options = '<option>Select a user name</option>';
-							$.each(response.message, function (key, value) {
-								// console.log('key: ' + key + '- value: ' + value);
-								dd_options += '<option value="' + value + '">' + value + '</option>';
-							});
-							$(".user-name").html(dd_options);
-						}
-					});
+
 				}else{
 					// this second bit is when the player were assigned and the admin wants to do some editing
-					$(".ranking-players").empty();
 
 					for(let i = 0; i < Object.keys(response.message.players).length; i++){
 						let player_details = '<label for="player-' + (1 + i) + '">Player ' + (1 + i) + ':</label>' +
@@ -593,31 +590,31 @@ let commonLayerBinder =  {
 
 				}
 				// then complete the dropdown
-				// $.ajax({
-				// 	method: "POST",
-				// 	url: base_url + "/users/dropdowns",
-				// 	data: {
-				// 		field: 'name'
-				// 	},
-				// 	dataType: "json",
-				// }).done(function(response) {
-				// 	console.log('dd: ' + response);
-				// 	if (response.status === 'success') {
-				// 		let dd_options = '<option>Select a user name</option>';
-				// 		$.each(response.message, function (key, value) {
-				// 			// console.log('key: ' + key + '- value: ' + value);
-				// 			dd_options += '<option value="' + value + '">' + value + '</option>';
-				// 		});
-				// 		$(".user-name").val(dd_options);
-				// 	}
-				// });
+				$.ajax({
+					method: "POST",
+					url: base_url + "/users/dropdowns",
+					data: {
+						field: 'name'
+					},
+					dataType: "json",
+				}).done(function(response) {
+					if (response.status === 'success') {
+						let dd_options = '<option value="">Select a user name</option>';
+						$.each(response.message, function (key, value) {
+							// console.log('key: ' + key + '- value: ' + value);
+							dd_options += '<option value="' + value + '">' + value + '</option>';
+						});
+						$(".user-name").html(dd_options);
+					}
+				});
+
 				// i will have to bind two different options depending on if there are users selected or if they need to be selected
 				// this is when you select the user for the first time
-				thirdLayerBinder['ranking']();
+				specializedLayerBinder.ranking['userNameSelectClick']();
 
 			});
 
-		// this last bit is top leave out the buttons from the clicking
+		// this last bit is to leave out the buttons from the clicking
 		}).children().not(".rank-actions.item, .status-modifier, .rank-delete");
 
 		// this bit is to manage the modification of the status of a ranking
@@ -626,7 +623,7 @@ let commonLayerBinder =  {
 			e.stopPropagation();
 			let rank_id = $(this).closest(".ranking-wrapper.item").data('rank-id');
 			let status_value = $(this).attr("future-rank-stat");
-			console.log('status modificer clicked for rank ' + rank_id);
+			console.log('status modifier clicked for rank ' + rank_id);
 			// console.log('status value: ' + status_value)
 			let server_response;
 
@@ -639,7 +636,7 @@ let commonLayerBinder =  {
 				},
 				dataType: "json"
 			}).done(function(response){
-				console.log('status update response: ' + response);
+				console.log('status update response: ' + response.message);
 				if(response.status === 'success'){
 					server_response = 'Updated';
 				}else{
@@ -723,87 +720,100 @@ let commonLayerBinder =  {
 	}
 };
 
+// this might not necessary
 let thirdLayerBinder = {
 	ranking: function(){
-		$(".user-name").change(function(){
-			let user_name = $(this).val();
+		$(".user-lastname").change(function(){
+			let player_details = $(this).closest("div.details");
+			let player_index = player_details.attr('class').match(/player-\d+/);
+			let user_lastname = $(this).val();
+			let user_name = $(this).prev().prev("select.user-name").find(":selected").val(); // with only 1 "prev()" it would check the label instead of the select
+			let control_field = ['name', 'lastname'];
+			let control_value = [user_name, user_lastname];
+			console.log('player index: ' + player_index);
 			console.log('user name selected: ' + user_name);
+			console.log('user lastname selected: ' + user_lastname);
 			$.ajax({
 				method: "POST",
 				url: base_url + "/users/dropdowns",
 				data: {
-					field: 'lastname',
-					user_name: user_name
+					field: 'nickname',
+					control_field: control_field,
+					control_value: control_value
 				},
-				dataType: 'json',
-				async: false
-			})
+				dataType: 'json'
+			}).done(function(response){
+				console.log('resp2: ' + response.message);
+				if(response.status === 'success'){
+					let dd_options = '<option value="">Select a user nickname</option>';
+					$.each(response.message, function(key,value){
+						// should print something like 'k: 0 - v: Strang'
+						// console.log('k: ' + key + ' - v: ' + value);
+						dd_options += '<option value="' + value + '">' + value + '</option>';
+					});
+					$("." + player_index).find(".user-nickname").html(dd_options);
+					// to show the rest of the fields
+					$("." + player_index).find(' > label.hide-detail[for="user-nickname"]').removeClass('hide-detail');
+					$("." + player_index).find(' > select.user-nickname').removeClass('hide-detail');
+					$("." + player_index).find(' > label.hide-detail[for="user-score"]').removeClass('hide-detail');
+					$("." + player_index).find(' > input.user-score').removeClass('hide-detail');
+					$("." + player_index).find(' > label.hide-detail[for="user-display"]').removeClass('hide-detail');
+					$("." + player_index).find(' > div.user-display').removeClass('hide-detail');
+				}
+			});
 		})
 	}
-
 }
 
 let specializedLayerBinder = {
 
 	ranking: {
-		constructPlayerNameDropdown: function(){
-			let name_dd;
-			// $.ajax({
-			// 	method: "POST",
-			// 	url: base_url + "/users/dropdowns",
-			// 	data: {
-			// 		field: 'name'
-			// 	},
-			// 	dataType: "json",
-			// 	// async: false
-			// }).done(function(response){
-			// 	// console.log('dd: ' + response);
-			// 	if(response.status === 'success'){
-			// 		let dd_options = '<option>Select a user name</option>';
-			// 		$.each(response.message, function(key, value){
-			// 			// console.log('key: ' + key + '- value: ' + value);
-			// 			dd_options += '<option value="' + value + '">' + value + '</option>';
-			// 		});
-			//
-			// 		name_dd = '<select class="user-name" name="user-name">' + dd_options + '</select>';
-			//
-			// 	}
-			// 	return name_dd;
-			// });
-			return $.ajax({
-				method: "POST",
-				url: base_url + "/users/dropdowns",
-				data: {
-					field: 'name'
-				},
-				dataType: "json",
-				// async: false
-				success: function (response) {
-					if(response.status === 'success'){
-						let dd_options = '<option>Select a user name</option>';
-						$.each(response.message, function(key, value){
-							// console.log('key: ' + key + '- value: ' + value);
-							dd_options += '<option value="' + value + '">' + value + '</option>';
-						});
-
-						name_dd = '<select class="user-name" name="user-name">' + dd_options + '</select>';
-
-					}
-					return name_dd;
-				}
-			});
-
-
-		},
-		constructPlayerLastnameDropdown: function(){
-
-		},
-		constructPlayerNicknameDropdown: function(){
-
-		},
 		userNameSelectClick: function(){
 			$(".user-name").change(function(){
-				console.log('just checking 3 ...');
+				let user_name = $(this).val();
+				let player_details = $(this).closest("div.details");
+				// i'm keeping this here just to remember :P
+				// let player_index = $.grep(player_details.attr('class').split(" "), function(key, value){
+				// 	return "key: " + key + " - value: " + value;
+				// });
+				// this line is to then enable or disable dropdowns for this player and not all of them at the same time
+				let player_index = player_details.attr('class').match(/player-\d+/);
+				console.log("player index: " + player_index);
+				console.log("player details classes: " + player_details.attr('class'));
+				// only show the other dropdown when a name is selected
+				if(user_name !== ''){
+					console.log('user name selected: ' + user_name);
+					$.ajax({
+						method: "POST",
+						url: base_url + "/users/dropdowns",
+						data: {
+							field: 'lastname',
+							control_field: 'name',
+							control_value: user_name
+						},
+						dataType: "json"
+					}).done(function (response){
+						console.log('resp: ' + response.message);
+						if(response.status === 'success'){
+							let dd_options = '<option value="">Select a user lastname</option>';
+							$.each(response.message, function(key,value){
+								// should print something like 'k: 0 - v: Strang'
+								// console.log('k: ' + key + ' - v: ' + value);
+								dd_options += '<option value="' + value + '">' + value + '</option>';
+							});
+							$("." + player_index).find(".user-lastname").html(dd_options);
+							// to show the field lastname
+							$("." + player_index).find(' > label.hide-detail[for="user-lastname"]').removeClass('hide-detail');
+							$("." + player_index).find(' > select.user-lastname').removeClass('hide-detail');
+						}
+					});
+					// this.userLastnameSelectClick();
+					thirdLayerBinder['ranking']();
+				}else{
+					// if the name drop down gets selected to "Select user name", then remove the lastname drop down until a name is selected
+					$("." + player_index).find(' > label[for="user-lastname"]').addClass('hide-detail');
+					$("." + player_index).find(' > select.user-lastname').addClass('hide-detail');
+				}
 			});
 		}
 	},
@@ -837,9 +847,5 @@ let specializedLayerBinder = {
 		}
 
 	}
-
-}
-
-function testfunction(data) {
 
 }

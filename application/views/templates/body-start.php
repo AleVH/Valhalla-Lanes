@@ -1,1 +1,1 @@
-<div class="body">
+<div class="vl_body">

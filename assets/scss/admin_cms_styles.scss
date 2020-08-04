@@ -315,7 +315,7 @@ body {
 			&.edit {
 
 			  form {
-				width: 60%;
+				width: 85%;
 				padding: 2%;
 				border: 1px solid var(--fifth_color);
 				border-radius: 3px;
@@ -327,14 +327,44 @@ body {
 				  .ranking-players {
 					margin-top: 10px;
 
+					.display-name {
+					  color: var(--main_color);
+					}
+
 					.details {
 					  margin-bottom: 10px;
+					  display: flex;
+					  align-items: center;
+
+					  .hide-detail {
+						visibility: hidden;
+						opacity: 0;
+						transition: visibility 2s linear 300ms, opacity 300ms;
+					  }
+
+					  .show-detail {
+						visibility: visible;
+						opacity: 1;
+						transition: visibility 2s linear 0s, opacity 300ms;
+					  }
+
+					  select {
+						margin-right: 15px;
+						margin-left: 5px;
+					  }
 
 					  input {
 						margin-right: 10px;
 					  }
+
+					  .user-display {
+						width: 15%;
+					  }
+
 					}
+
 				  }
+
 				}
 
 				input[type="submit"] {
