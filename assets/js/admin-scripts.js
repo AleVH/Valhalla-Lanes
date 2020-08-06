@@ -122,7 +122,6 @@ let binder = {
 				dataType: 'json'
 			}).done(function(response){
 				if(response.status === 'success'){
-					console.log('success response');
 					let visibility, checkbox;
 					if(response.message.is_enabled === true){
 						visibility = 'enabled-news';
@@ -182,7 +181,6 @@ let binder = {
 		$('.admin__rankings .tab').click(function(){
 			$('.tab').removeClass('active');
 			let tab_name = $(this).text().toLowerCase();
-			// console.log('tab title is: ' + tab_name);
 			$(this).addClass('active');
 			$(".tab-content").removeClass('active');
 			$(".tab-content.ranking-" + tab_name).addClass('active');
@@ -205,7 +203,6 @@ let binder = {
 				contentType: false,
 				dataType: "json"
 			}).done(function (response) {
-				console.log('response from server: ' + response);
 				// i need to add the newly created ranking to the list of existing ones and bind the script so it can be edited, otherwise the page requires a refresh
 				if(response.status === 'success'){
 					// message of success
@@ -260,7 +257,24 @@ let binder = {
 
 		});
 
-		commonLayerBinder['ranking']();
+		$('form.admin_ranking-edit').submit(function(e){
+			e.preventDefault();
+			let formdata = new FormData($('form.admin_ranking-edit').get(0));
+			console.log(formdata);
+
+			$.ajax({
+				method: "POST",
+				url: base_url + "/ranking/edit",
+				data: formdata,
+				processData: false,
+				contentType: false,
+				dataType: "json"
+			}).done(function (response) {
+				console.log(response);
+			})
+		})
+
+		commonLayerBinder.ranking['editRanking']();
 	},
 
 	rules : function(){
@@ -495,207 +509,206 @@ let commonLayerBinder =  {
 		});
 	},
 
-	ranking: function(){
-		console.log('ranking second layer binder');
+	ranking: {
+		editRanking: function(){
+			// this bit is to manage the selection of the ranking to edit
+			$(".ranking-wrapper.item").click(function () {
+				let rank_id = $(this).data('rank-id');
 
-		// this bit is to manage the selection of the ranking to edit
-		$(".ranking-wrapper.item").click(function () {
-			let rank_id = $(this).data('rank-id');
-
-			$.ajax({
-				method: "GET",
-				url: base_url + "/ranking/getranktoedit/" + rank_id,
-				dataType: 'json'
-			}).done(function(response){
-
-				// this bit is to handle the title
-				$(".subcontent.edit .ranking-title").val(response.message.title);
-
-				// this bit is to handle start and end dates
-				// datepicker deserves a bit of explanation. the first line defines how the format is in the datepicker widget. the second line sets the new date. this is where it gets tricky, specially with the parsing. when parsin a data, the string must have the exact format defined, otherwise will throw errors everywhere. so if the date string is 2020-05-30 12:30:12, the hours minutes and seconds must be removed since datepicker parser doesn't support time, only year, month and date, plus you will see that when adding the hours, minutes and seconds to ("hh:ii:ss") the format definition when parsing a date, will tell you "Uncaught Unexpected literal at position 11" or another number, depending on how many shit you added that is not supported
-				$(".subcontent.edit .ranking-start").datepicker({dateFormat: "yy-mm-dd"});
-				$(".subcontent.edit .ranking-start").datepicker("setDate", $.datepicker.parseDate("yy-mm-dd", response.message.start_date.substring(0, response.message.start_date.indexOf(' '))));
-
-				if(response.message.end_date !== null){
-					$(".subcontent.edit .ranking-end").datepicker({dateFormat: "yy-mm-dd"});
-					$(".subcontent.edit .ranking-end").datepicker("setDate", $.datepicker.parseDate("yy-mm-dd", response.message.end_date.substring(0, response.message.end_date.indexOf(' '))));
-				}else{
-					// if there is not an end date defined, reset the datepicker
-					$(".subcontent.edit .ranking-end").datepicker("setDate", null);
-				}
-
-				// this bit is to handle the select part
-				$(".subcontent.edit .ranking-tops option:selected").removeAttr("selected");
-				$(".subcontent.edit .ranking-tops option[value='" + response.message.tops + "']").attr('selected', 'selected');
-
-				// clean players list if any
-				$(".ranking-players").empty();
-
-				// this bit is to handle the players
-				if(response.message.players === null){
-					// this first bit is when the players haven't been assigned yet
-
-					for(let i = 0; i < response.message.tops; i++){
-						let player_details = '<label for="player-' + (1 + i) + '">Player ' + (1 + i) + ': <span class="player-' + (1 + i) + ' display-name"></span></label>' +
-							'<div class="player-' + (1 + i) + ' details">' +
-							'<label for="user-name">Name:</label>' +
-							'<select class="user-name" name="user-name" required></select>' +
-							'<label class="hide-detail" for="user-lastname">Lastname:</label>' +
-							'<select class="user-lastname hide-detail" name="user-lastname" required><option>Select a user name to unlock</option></select>' +
-							'<label class="hide-detail" for="user-nickname">Nickname:</label>' +
-							'<select class="user-nickname hide-detail" name="user-nickname"><option>Select a user lastname to unlock</option></select>' +
-							'<label class="hide-detail" for="user-score">Score:</label>' +
-							'<input type="number" class="user-score hide-detail" name="user-score" placeholder="Player\'s ' + (1 + i) + ' score" required>' +
-							'<label class="hide-detail" for="user-display">Display name options:</label>' +
-							'<div class="user-display hide-detail">' +
-							'<div class="display-option">' +
-							'<input type="radio" name="user-name-display" value="name">' +
-							'<label for="name">Only name</label>' +
-							'</div>' +
-							'<div class="display-option">' +
-							'<input type="radio" name="user-name-display" value="combined">' +
-							'<label for="combined">Combined</label>' +
-							'</div>' +
-							'<div class="display-option">' +
-							'<input type="radio" name="user-name-display" value="nickname">' +
-							'<label fro="nickname">Only nickname</label>' +
-							'</div>' +
-							'</div>' +
-							'</div>';
-
-						$(".ranking-players").append(player_details);
-					}
-
-				}else{
-					// this second bit is when the player were assigned and the admin wants to do some editing
-
-					for(let i = 0; i < Object.keys(response.message.players).length; i++){
-						let player_details = '<label for="player-' + (1 + i) + '">Player ' + (1 + i) + ':</label>' +
-							'<div class="player-' + (1 + i) + ' details">' +
-							'<input type="hidden" name="player-id" value="' + response.message.players[i].id + '">' +
-							'<label for="player-name">Name:</label>' +
-							'<input type="text" name="player-name" value="' + response.message.players[i].name + '" required>' +
-							'<label for="player-lastname">Lastname:</label>' +
-							'<input type="text" name="player-lastname" value="' + response.message.players[i].lastname + '" required>' +
-							'<label for="player-nickname">Nickname:</label>' +
-							'<input type="text" name="player-nickname" value="' + response.message.players[i].nickname + '">' +
-							'<label for="player-score">Score:</label>' +
-							'<input type="number" name="player-score" value="' + response.message.players[i].player_score + '" required>' +
-							'</div>';
-
-						$(".ranking-players").append(player_details);
-					}
-
-					// in this particular case i also need to complete the rest of the data/dropdowns
-
-				}
-				// then complete the dropdown
 				$.ajax({
-					method: "POST",
-					url: base_url + "/users/dropdowns",
-					data: {
-						field: 'name'
-					},
-					dataType: "json",
-				}).done(function(response) {
-					if (response.status === 'success') {
-						let dd_options = '<option value="">Select a user name</option>';
-						$.each(response.message, function (key, value) {
-							// console.log('key: ' + key + '- value: ' + value);
-							dd_options += '<option value="' + value + '">' + value + '</option>';
-						});
-						$(".user-name").html(dd_options);
+					method: "GET",
+					url: base_url + "/ranking/getranktoedit/" + rank_id,
+					dataType: 'json'
+				}).done(function(response){
+					// this bit is to handle the rank id
+					$(".subcontent.edit .ranking-id").val(rank_id);
+					// this bit is to handle the title
+					$(".subcontent.edit .ranking-title").val(response.message.title);
+
+					// this bit is to handle start and end dates
+					// datepicker deserves a bit of explanation. the first line defines how the format is in the datepicker widget. the second line sets the new date. this is where it gets tricky, specially with the parsing. when parsin a data, the string must have the exact format defined, otherwise will throw errors everywhere. so if the date string is 2020-05-30 12:30:12, the hours minutes and seconds must be removed since datepicker parser doesn't support time, only year, month and date, plus you will see that when adding the hours, minutes and seconds to ("hh:ii:ss") the format definition when parsing a date, will tell you "Uncaught Unexpected literal at position 11" or another number, depending on how many shit you added that is not supported
+					$(".subcontent.edit .ranking-start").datepicker({dateFormat: "yy-mm-dd"});
+					$(".subcontent.edit .ranking-start").datepicker("setDate", $.datepicker.parseDate("yy-mm-dd", response.message.start_date.substring(0, response.message.start_date.indexOf(' '))));
+
+					if(response.message.end_date !== null){
+						$(".subcontent.edit .ranking-end").datepicker({dateFormat: "yy-mm-dd"});
+						$(".subcontent.edit .ranking-end").datepicker("setDate", $.datepicker.parseDate("yy-mm-dd", response.message.end_date.substring(0, response.message.end_date.indexOf(' '))));
+					}else{
+						// if there is not an end date defined, reset the datepicker
+						$(".subcontent.edit .ranking-end").datepicker("setDate", null);
 					}
+
+					// this bit is to handle the select part
+					$(".subcontent.edit .ranking-tops option:selected").prop("selected", false);
+					$(".subcontent.edit .ranking-tops option[value='" + response.message.tops + "']").prop('selected', true);
+
+					// clean players list if any
+					$(".ranking-players").empty();
+
+					// this bit is to handle the players
+					if(response.message.players === null){
+						// this first bit is when the players haven't been assigned yet
+
+						for(let i = 0; i < response.message.tops; i++){
+							let player_number = i + 1;
+							let player_details = '<label for="player-' + player_number + '">Player ' + player_number + ': <span class="player-' + player_number + ' display-name"></span></label>' +
+								'<div class="player-' + player_number + ' details">' +
+								'<label for="user-name">Name:</label>' +
+								'<select class="user-name" name="user-name_player' + player_number + '" required></select>' +
+								'<label class="hide-detail" for="user-lastname">Lastname:</label>' +
+								'<select class="user-lastname hide-detail" name="user-lastname_player' + player_number + '" required><option>Select a user name to unlock</option></select>' +
+								'<label class="hide-detail" for="user-nickname">Nickname:</label>' +
+								'<select class="user-nickname hide-detail" name="user-nickname"><option>Select a user lastname to unlock</option></select>' +
+								'<label class="hide-detail" for="user-score">Score:</label>' +
+								'<input type="number" class="user-score hide-detail" name="user-score_player' + player_number + '" placeholder="Player\'s ' + player_number + ' score" required>' +
+								'<label class="hide-detail" for="user-display">Display name options:</label>' +
+								'<div class="user-display hide-detail">' +
+								'<div class="display-option">' +
+								'<input type="radio" name="user-name-display_player' + player_number + '" value="name">' +
+								'<label for="name">Only name</label>' +
+								'</div>' +
+								'<div class="display-option">' +
+								'<input type="radio" name="user-name-display_player' + player_number + '" value="combined">' +
+								'<label for="combined">Combined</label>' +
+								'</div>' +
+								'<div class="display-option">' +
+								'<input type="radio" name="user-name-display_player' + player_number + '" value="nickname">' +
+								'<label fro="nickname">Only nickname</label>' +
+								'</div>' +
+								'</div>' +
+								'</div>';
+
+							$(".ranking-players").append(player_details);
+						}
+
+					}else{
+						// this second bit is when the player were assigned and the admin wants to do some editing
+
+						for(let i = 0; i < Object.keys(response.message.players).length; i++){
+							let player_details = '<label for="player-' + (1 + i) + '">Player ' + (1 + i) + ':</label>' +
+								'<div class="player-' + (1 + i) + ' details">' +
+								'<input type="hidden" name="player-id" value="' + response.message.players[i].id + '">' +
+								'<label for="player-name">Name:</label>' +
+								'<input type="text" name="player-name" value="' + response.message.players[i].name + '" required>' +
+								'<label for="player-lastname">Lastname:</label>' +
+								'<input type="text" name="player-lastname" value="' + response.message.players[i].lastname + '" required>' +
+								'<label for="player-nickname">Nickname:</label>' +
+								'<input type="text" name="player-nickname" value="' + response.message.players[i].nickname + '">' +
+								'<label for="player-score">Score:</label>' +
+								'<input type="number" name="player-score" value="' + response.message.players[i].player_score + '" required>' +
+								'</div>';
+
+							$(".ranking-players").append(player_details);
+						}
+
+						// in this particular case i also need to complete the rest of the data/dropdowns
+
+					}
+					// then complete the dropdown
+					// $.ajax({
+					// 	method: "POST",
+					// 	url: base_url + "/users/dropdowns",
+					// 	data: {
+					// 		field: 'name'
+					// 	},
+					// 	dataType: "json",
+					// }).done(function(response) {
+					// 	if (response.status === 'success') {
+					// 		let dd_options = '<option value="">Select a user name</option>';
+					// 		$.each(response.message, function (key, value) {
+					// 			dd_options += '<option value="' + value + '">' + value + '</option>';
+					// 		});
+					// 		$(".user-name").html(dd_options);
+					// 	}
+					// });
+					specializedLayerBinder.ranking['buildUserNameDropDown'](".user-name");
+
+					// i will have to bind two different options depending on if there are users selected or if they need to be selected
+					// this is when you select the user for the first time
+					secondLayerBinder.ranking['rankingUserName']();
+					secondLayerBinder.ranking['rankingTops']();
 				});
 
-				// i will have to bind two different options depending on if there are users selected or if they need to be selected
-				// this is when you select the user for the first time
-				specializedLayerBinder.ranking['userNameSelectClick']();
+				// this last bit is to leave out the buttons from the clicking
+			}).children().not(".rank-actions.item, .status-modifier, .rank-delete");
+
+			// this bit is to manage the modification of the status of a ranking
+			$(".status-modifier").click(function(e){
+				// this prevents clicking the parent div
+				e.stopPropagation();
+				let rank_id = $(this).closest(".ranking-wrapper.item").data('rank-id');
+				let status_value = $(this).attr("future-rank-stat");
+				console.log('status modifier clicked for rank ' + rank_id);
+				// console.log('status value: ' + status_value)
+				let server_response;
+
+				$.ajax({
+					url: base_url + "/ranking/undaterankingstatus",
+					method: "POST",
+					data: {
+						rank_id: rank_id,
+						status: status_value
+					},
+					dataType: "json"
+				}).done(function(response){
+					console.log('status update response: ' + response.message);
+					if(response.status === 'success'){
+						server_response = 'Updated';
+					}else{
+						server_response = "Error updating. Please refresh the page";
+					}
+				}).fail(function(response){
+					server_response = "Error connecting to server. Please refresh the page";
+				}).always(function(){
+					// this will execute no matter what
+					let parent_ranking_container = $('*[data-rank-id="' + rank_id + '"]');
+					let rank_status_button = $("#rank-" + rank_id + "-stat");
+					if(status_value === "1"){
+						// update row color
+						parent_ranking_container.removeClass('inactive');
+						parent_ranking_container.addClass('active');
+						parent_ranking_container.children(".rank-status").html('Active');
+						// update status button color, text and value
+						rank_status_button.removeClass('active');
+						rank_status_button.addClass('inactive');
+						rank_status_button.attr("future-rank-stat", 0);
+						rank_status_button.html("Deactivate");
+					}else{
+						// update row color
+						parent_ranking_container.removeClass('active');
+						parent_ranking_container.addClass('inactive');
+						parent_ranking_container.children(".rank-status").html('Inactive');
+						// update status button color, text and value
+						rank_status_button.removeClass('inactive');
+						rank_status_button.addClass('active');
+						rank_status_button.attr("future-rank-stat", 1);
+						rank_status_button.html("Activate");
+					}
+
+				});
 
 			});
 
-		// this last bit is to leave out the buttons from the clicking
-		}).children().not(".rank-actions.item, .status-modifier, .rank-delete");
+			// this bit is to manage the deletion of a ranking
+			$(".rank-delete").click(function(e){
+				// this prevents clicking the parent div
+				e.stopPropagation();
+				let rank_id = $(this).closest(".ranking-wrapper.item").data('rank-id');
 
-		// this bit is to manage the modification of the status of a ranking
-		$(".status-modifier").click(function(e){
-			// this prevents clicking the parent div
-			e.stopPropagation();
-			let rank_id = $(this).closest(".ranking-wrapper.item").data('rank-id');
-			let status_value = $(this).attr("future-rank-stat");
-			console.log('status modifier clicked for rank ' + rank_id);
-			// console.log('status value: ' + status_value)
-			let server_response;
-
-			$.ajax({
-				url: base_url + "/ranking/undaterankingstatus",
-				method: "POST",
-				data: {
-					rank_id: rank_id,
-					status: status_value
-				},
-				dataType: "json"
-			}).done(function(response){
-				console.log('status update response: ' + response.message);
-				if(response.status === 'success'){
-					server_response = 'Updated';
-				}else{
-					server_response = "Error updating. Please refresh the page";
-				}
-			}).fail(function(response){
-				server_response = "Error connecting to server. Please refresh the page";
-			}).always(function(){
-				// this will execute no matter what
-				let parent_ranking_container = $('*[data-rank-id="' + rank_id + '"]');
-				let rank_status_button = $("#rank-" + rank_id + "-stat");
-				if(status_value === "1"){
-					// update row color
-					parent_ranking_container.removeClass('inactive');
-					parent_ranking_container.addClass('active');
-					parent_ranking_container.children(".rank-status").html('Active');
-					// update status button color, text and value
-					rank_status_button.removeClass('active');
-					rank_status_button.addClass('inactive');
-					rank_status_button.attr("future-rank-stat", 0);
-					rank_status_button.html("Deactivate");
-				}else{
-					// update row color
-					parent_ranking_container.removeClass('active');
-					parent_ranking_container.addClass('inactive');
-					parent_ranking_container.children(".rank-status").html('Inactive');
-					// update status button color, text and value
-					rank_status_button.removeClass('inactive');
-					rank_status_button.addClass('active');
-					rank_status_button.attr("future-rank-stat", 1);
-					rank_status_button.html("Activate");
-				}
+				console.log('rank delete clicked for rank ' + rank_id);
+				// request confirmation since this can't be undone
+				let confirmation = confirm("This operation cannot be undone.\nAre you sure you want to delete this ranking?");
 
 			});
 
-		});
-
-		// this bit is to manage the deletion of a ranking
-		$(".rank-delete").click(function(e){
-			// this prevents clicking the parent div
-			e.stopPropagation();
-			let rank_id = $(this).closest(".ranking-wrapper.item").data('rank-id');
-
-			console.log('rank delete clicked for rank ' + rank_id);
-			// request confirmation since this can't be undone
-			let confirmation = confirm("This operation cannot be undone.\nAre you sure you want to delete this ranking?");
-
-		});
-
+		},
 	},
 
 	users: function(){
 		console.log('users second layer binder');
 		$(".user-delete").click(function(e){
 			e.preventDefault();
-			// specializedLayerBinder.users['reasignIndex']();
-			console.log('deleting user');
 			let user_id = $(this).val();
-			console.log('user id: ' + user_id);
 			let confirmarion = confirm("This operation cannot be undone.\nAre you sure you want to delete this user?");
 			if(confirmarion){
 				$.ajax({
@@ -706,7 +719,6 @@ let commonLayerBinder =  {
 					},
 					dataType: "json"
 				}).done(function(response){
-					console.log('delete user server response: ' + response);
 					if(response.status === 'success'){
 						$("#user-" + user_id).remove();
 						$("*[data-list-conciliator='" + user_id + "']").remove();
@@ -720,101 +732,276 @@ let commonLayerBinder =  {
 	}
 };
 
-// this might not necessary
+let secondLayerBinder = {
+	ranking: {
+		rankingTops: function(){
+			$(".ranking-tops").change(function(){
+				let new_tops = $(this).val();
+				specializedLayerBinder.ranking['addOrRemovePlayers'](new_tops);
+			})
+		},
+		rankingUserName: function(){
+			$(".user-name").change(function(){
+			let user_name = $(this).val();
+			// i'm keeping this here just to remember :P
+			// let player_index = $.grep(player_details.attr('class').split(" "), function(key, value){
+			// 	return "key: " + key + " - value: " + value;
+			// });
+			// this line is to then enable or disable dropdowns for this player and not all of them at the same time
+			let player_index = specializedLayerBinder.ranking['findClosestIndex'](this);
+			// only show the other dropdown when a name is selected
+			if(user_name !== ''){
+				specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'hide', 2);
+				// specializedLayerBinder.ranking['cleanPlayerName'](player_index);
+				$.ajax({
+					method: "POST",
+					url: base_url + "/users/dropdowns",
+					data: {
+						field: 'lastname',
+						control_field: 'name',
+						control_value: user_name
+					},
+					dataType: "json"
+				}).done(function (response){
+					if(response.status === 'success'){
+						let dd_options = '<option value="">Select a user lastname</option>';
+						$.each(response.message, function(key,value){
+							// should print something like 'k: 0 - v: Strang'
+							// console.log('k: ' + key + ' - v: ' + value);
+							dd_options += '<option value="' + value + '">' + value + '</option>';
+						});
+						$("." + player_index).find(".user-lastname").html(dd_options);
+						specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'show', 1);
+					}
+				});
+				thirdLayerBinder['ranking']();
+			}else{
+				specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'hide', 1);
+			}
+		});
+		}
+	}
+};
+
 let thirdLayerBinder = {
 	ranking: function(){
 		$(".user-lastname").change(function(){
-			let player_details = $(this).closest("div.details");
-			let player_index = player_details.attr('class').match(/player-\d+/);
+			let player_index = specializedLayerBinder.ranking['findClosestIndex'](this);
 			let user_lastname = $(this).val();
 			let user_name = $(this).prev().prev("select.user-name").find(":selected").val(); // with only 1 "prev()" it would check the label instead of the select
 			let control_field = ['name', 'lastname'];
 			let control_value = [user_name, user_lastname];
-			console.log('player index: ' + player_index);
-			console.log('user name selected: ' + user_name);
-			console.log('user lastname selected: ' + user_lastname);
+
+			if(user_lastname !== ''){
+				$.ajax({
+					method: "POST",
+					url: base_url + "/users/dropdowns",
+					data: {
+						field: 'nickname',
+						control_field: control_field,
+						control_value: control_value
+					},
+					dataType: 'json'
+				}).done(function(response){
+					if(response.status === 'success'){
+						let dd_options = '<option value="">Select a user nickname</option>';
+						if(!$.isEmptyObject(response.message)){ // if there are no nicknames, there's no point in doing the dropdown
+							$.each(response.message, function(key,value){
+								dd_options += '<option value="' + value + '">' + value + '</option>';
+							});
+							$("." + player_index).find(".user-nickname").html(dd_options);
+							specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'show', 2);
+							fourthLayerBinder['ranking']();
+						}else{
+							$("." + player_index).find(".user-nickname").html(dd_options);
+							$("." + player_index).find(' > label.hide-detail[for="user-nickname"]').css('display', 'none');
+							$("." + player_index).find(' > select.user-nickname').css('display', 'none').prop('disabled', 'disabled');
+						}
+						specializedLayerBinder.ranking['setBasicPlayerName'](player_index);
+						specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'show', 3);
+					}
+				});
+			}else{
+				$("span." + player_index + ".display-name").html('');
+				specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'hide', 2);
+			}
+		})
+	}
+};
+
+let fourthLayerBinder = {
+	ranking: function () {
+		$(".user-nickname").change(function(){
+			let player_index = specializedLayerBinder.ranking['findClosestIndex'](this);
+			let user_nickname = $(this).val();
+			console.log();
+			if(user_nickname !== ''){
+				specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'show', 4);
+				specializedLayerBinder.ranking['userDisplayNameOptions']();
+			}else{
+				specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'hide', 4);
+				specializedLayerBinder.ranking['setBasicPlayerName'](player_index);
+				specializedLayerBinder.ranking['resetRadioButtons'](player_index);
+			}
+		})
+	}
+};
+
+let specializedLayerBinder = {
+	ranking: {
+		buildUserNameDropDown: function(selector){
+			let dd_options = '<option value="">Select a user name</option>';
 			$.ajax({
 				method: "POST",
 				url: base_url + "/users/dropdowns",
 				data: {
-					field: 'nickname',
-					control_field: control_field,
-					control_value: control_value
+					field: 'name'
 				},
-				dataType: 'json'
-			}).done(function(response){
-				console.log('resp2: ' + response.message);
-				if(response.status === 'success'){
-					let dd_options = '<option value="">Select a user nickname</option>';
-					$.each(response.message, function(key,value){
-						// should print something like 'k: 0 - v: Strang'
-						// console.log('k: ' + key + ' - v: ' + value);
+				dataType: "json",
+			}).done(function(response) {
+				if (response.status === 'success') {
+					// let dd_options = '<option value="">Select a user name</option>';
+					$.each(response.message, function (key, value) {
 						dd_options += '<option value="' + value + '">' + value + '</option>';
 					});
-					$("." + player_index).find(".user-nickname").html(dd_options);
-					// to show the rest of the fields
-					$("." + player_index).find(' > label.hide-detail[for="user-nickname"]').removeClass('hide-detail');
-					$("." + player_index).find(' > select.user-nickname').removeClass('hide-detail');
-					$("." + player_index).find(' > label.hide-detail[for="user-score"]').removeClass('hide-detail');
-					$("." + player_index).find(' > input.user-score').removeClass('hide-detail');
-					$("." + player_index).find(' > label.hide-detail[for="user-display"]').removeClass('hide-detail');
-					$("." + player_index).find(' > div.user-display').removeClass('hide-detail');
+					$(selector).html(dd_options);
 				}
 			});
-		})
-	}
-}
+		},
+		addOrRemovePlayers: function(new_tops){
+			let current_players_number = $(".ranking-players .details").length;
+			if(new_tops > current_players_number){
+				while (current_players_number < new_tops){
+					++current_players_number;
+					let player_details = '<label for="player-' + current_players_number + '">Player ' + current_players_number + ': <span class="player-' + current_players_number + ' display-name"></span></label>' +
+						'<div class="player-' + current_players_number + ' details">' +
+						'<label for="user-name">Name:</label>' +
+						'<select class="user-name" name="user-name_player' + current_players_number + '" required></select>' +
+						'<label class="hide-detail" for="user-lastname">Lastname:</label>' +
+						'<select class="user-lastname hide-detail" name="user-lastname_player' + current_players_number + '" required><option>Select a user name to unlock</option></select>' +
+						'<label class="hide-detail" for="user-nickname">Nickname:</label>' +
+						'<select class="user-nickname hide-detail" name="user-nickname_player' + current_players_number + '"><option>Select a user lastname to unlock</option></select>' +
+						'<label class="hide-detail" for="user-score">Score:</label>' +
+						'<input type="number" class="user-score hide-detail" name="user-score_player' + current_players_number + '" placeholder="Player\'s ' + current_players_number + ' score" required>' +
+						'<label class="hide-detail" for="user-display">Display name options:</label>' +
+						'<div class="user-display hide-detail">' +
+						'<div class="display-option">' +
+						'<input type="radio" name="user-name-display_player' + current_players_number + '" value="name">' +
+						'<label for="name">Only name</label>' +
+						'</div>' +
+						'<div class="display-option">' +
+						'<input type="radio" name="user-name-display_player' + current_players_number + '" value="combined">' +
+						'<label for="combined">Combined</label>' +
+						'</div>' +
+						'<div class="display-option">' +
+						'<input type="radio" name="user-name-display_player' + current_players_number + '" value="nickname">' +
+						'<label for="nickname">Only nickname</label>' +
+						'</div>' +
+						'</div>' +
+						'</div>';
 
-let specializedLayerBinder = {
-
-	ranking: {
-		userNameSelectClick: function(){
-			$(".user-name").change(function(){
-				let user_name = $(this).val();
-				let player_details = $(this).closest("div.details");
-				// i'm keeping this here just to remember :P
-				// let player_index = $.grep(player_details.attr('class').split(" "), function(key, value){
-				// 	return "key: " + key + " - value: " + value;
-				// });
-				// this line is to then enable or disable dropdowns for this player and not all of them at the same time
-				let player_index = player_details.attr('class').match(/player-\d+/);
-				console.log("player index: " + player_index);
-				console.log("player details classes: " + player_details.attr('class'));
-				// only show the other dropdown when a name is selected
-				if(user_name !== ''){
-					console.log('user name selected: ' + user_name);
-					$.ajax({
-						method: "POST",
-						url: base_url + "/users/dropdowns",
-						data: {
-							field: 'lastname',
-							control_field: 'name',
-							control_value: user_name
-						},
-						dataType: "json"
-					}).done(function (response){
-						console.log('resp: ' + response.message);
-						if(response.status === 'success'){
-							let dd_options = '<option value="">Select a user lastname</option>';
-							$.each(response.message, function(key,value){
-								// should print something like 'k: 0 - v: Strang'
-								// console.log('k: ' + key + ' - v: ' + value);
-								dd_options += '<option value="' + value + '">' + value + '</option>';
-							});
-							$("." + player_index).find(".user-lastname").html(dd_options);
-							// to show the field lastname
-							$("." + player_index).find(' > label.hide-detail[for="user-lastname"]').removeClass('hide-detail');
-							$("." + player_index).find(' > select.user-lastname').removeClass('hide-detail');
-						}
-					});
-					// this.userLastnameSelectClick();
-					thirdLayerBinder['ranking']();
-				}else{
-					// if the name drop down gets selected to "Select user name", then remove the lastname drop down until a name is selected
-					$("." + player_index).find(' > label[for="user-lastname"]').addClass('hide-detail');
-					$("." + player_index).find(' > select.user-lastname').addClass('hide-detail');
+					$(".ranking-players").append(player_details);
+					specializedLayerBinder.ranking['buildUserNameDropDown'](".player-" + current_players_number + " > .user-name");
+					secondLayerBinder.ranking['rankingUserName']();
+				}
+			}else{
+				while (current_players_number > new_tops){
+					console.log('remove - current players: ' + current_players_number);
+					$("label[for=player-" + current_players_number + "]").remove();
+					$("div.player-" + current_players_number).remove();
+					current_players_number--;
+				}
+			}
+		},
+		userDisplayNameOptions: function(){
+			// $("input[name=user-name-display]").click(function(){
+			$("input[type=radio]").click(function(){
+				let player_index = specializedLayerBinder.ranking['findClosestIndex'](this);
+				let user_display_name = $(this).val();
+				let user_name = $('.' + player_index).find('select.user-name').val();
+				let user_lastname = $('.' + player_index).find('select.user-lastname').val();
+				let user_nickname = $('.' + player_index).find('select.user-nickname').val();
+				switch (user_display_name) {
+					case 'name':
+						$("span." + player_index + ".display-name").html(user_name + " " + user_lastname);
+						break;
+					case 'combined':
+						$("span." + player_index + ".display-name").html(user_name + ' "' + user_nickname + '" ' + user_lastname);
+						break;
+					case 'nickname':
+						$("span." + player_index + ".display-name").html('"' + user_nickname + '"');
+						break;
 				}
 			});
+		},
+		findClosestIndex: function(current_node){
+			let player_details = $(current_node).closest("div.details");
+			let player_index = player_details.attr('class').match(/player-\d+/);
+			return player_index;
+		},
+		resetRadioButtons: function(player_node){
+			$("." + player_node).find(":radio").prop('checked', false);
+		},
+		resetNicknameSection: function(player_node){
+			$("." + player_node).find(' > select.user-nickname').prop('disabled', false);
+			$("." + player_node).find(' > label.hide-detail[for="user-nickname"]').css('display', '');
+			$("." + player_node).find(' > select.user-nickname').css('display', '');
+		},
+		resetScoreSection: function(player_node){
+			$("." + player_node).find(' > input.user-score').val('');
+		},
+		cleanPlayerName: function(player_node){
+			$("span." + player_node + ".display-name").html('');
+		},
+		setBasicPlayerName: function(player_node){
+			let user_name = $('.' + player_node).find('select.user-name').val();
+			let user_lastname = $('.' + player_node).find('select.user-lastname').val();
+			$("span." + player_node + ".display-name").html(user_name + " " + user_lastname);
+		},
+		hideShowUserSections: function(player_node, show_hide, section){
+			if(show_hide === 'hide'){
+				if(section <= 4){
+					$("." + player_node).find(' > label[for="user-display"]').addClass('hide-detail');
+					$("." + player_node).find(' > div.user-display').addClass('hide-detail');
+					specializedLayerBinder.ranking['resetRadioButtons'](player_node);
+				}
+				if(section <= 3){
+					$("." + player_node).find(' > label[for="user-score"]').addClass('hide-detail');
+					$("." + player_node).find(' > input.user-score').addClass('hide-detail');
+					specializedLayerBinder.ranking['resetScoreSection'](player_node);
+				}
+				if(section <= 2){
+					$("." + player_node).find(' > label[for="user-nickname"]').addClass('hide-detail');
+					$("." + player_node).find(' > select.user-nickname').addClass('hide-detail');
+					specializedLayerBinder.ranking['resetNicknameSection'](player_node);
+					specializedLayerBinder.ranking['cleanPlayerName'](player_node);
+				}
+				if(section <= 1){
+					$("." + player_node).find(' > label[for="user-lastname"]').addClass('hide-detail');
+					$("." + player_node).find(' > select.user-lastname').addClass('hide-detail');
+				}
+			}
+
+			if(show_hide === 'show') {
+				switch (section) {
+					case 1:
+						$("." + player_node).find(' > label.hide-detail[for="user-lastname"]').removeClass('hide-detail');
+						$("." + player_node).find(' > select.user-lastname').removeClass('hide-detail');
+						break;
+					case 2:
+						$("." + player_node).find(' > label.hide-detail[for="user-nickname"]').removeClass('hide-detail');
+						$("." + player_node).find(' > select.user-nickname').removeClass('hide-detail');
+						break;
+					case 3:
+						$("." + player_node).find(' > label.hide-detail[for="user-score"]').removeClass('hide-detail');
+						$("." + player_node).find(' > input.user-score').removeClass('hide-detail');
+						break;
+					case 4:
+						$("." + player_node).find(' > label.hide-detail[for="user-display"]').removeClass('hide-detail');
+						$("." + player_node).find(' > div.user-display').removeClass('hide-detail');
+						break;
+				}
+			}
 		}
 	},
 

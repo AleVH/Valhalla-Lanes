@@ -71,6 +71,7 @@ $route['menusections/updatestatus'] = 'Backend/frontmenu/updatemenusectionstatus
 $route['news/savenews'] = 'Backend/news/savenews';
 $route['news/updatenewsstatus'] = 'Backend/news/updatenewsstatus';
 $route['ranking/create'] = 'Backend/ranking/create';
+$route['ranking/edit'] = 'Backend/ranking/edit';
 $route['ranking/getranktoedit/(:num)'] = 'Backend/ranking/getranktoedit/$1';
 $route['ranking/undaterankingstatus'] = 'Backend/ranking/updaterankingstatus';
 $route['users/saveuser'] = 'Backend/users/saveuser';

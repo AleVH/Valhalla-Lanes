@@ -107,11 +107,11 @@ class Ranking extends Admin {
 //		var_dump($xxx);
 	}
 
-	public function edit($id){
+	public function edit(){
 
 		if($this->input->is_ajax_request()){
 			$this->load->helpers('response');
-
+			var_dump($this->input->post());
 		}
 	}
 

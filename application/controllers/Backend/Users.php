@@ -140,7 +140,9 @@ class Users extends Admin {
 			if($results){
 				$dropDownArray = array();
 				foreach ($results->result() as $eachFieldValue){
-					$dropDownArray[] = $eachFieldValue->{$dropDownField};
+					if(!empty($eachFieldValue->{$dropDownField})){ // this if is in case the search returns no values, to avoid creating an array with only 1 entry and an empty value
+						$dropDownArray[] = $eachFieldValue->{$dropDownField};
+					}
 				}
 				echo returnResponse('success', $dropDownArray, 'jsonizeResponse');
 			}else{

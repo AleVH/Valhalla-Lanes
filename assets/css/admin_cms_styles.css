@@ -265,6 +265,7 @@ body .admin__body .admin__content .admin__rankings .tab-content .subcontent.edit
   margin-bottom: 10px;
   display: flex;
   align-items: center;
+  height: 60px;
 }
 body .admin__body .admin__content .admin__rankings .tab-content .subcontent.edit form .form-line .ranking-players .details .hide-detail {
   visibility: hidden;
