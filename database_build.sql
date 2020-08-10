@@ -20,7 +20,7 @@ CREATE TABLE `admin_users` (
 CREATE TABLE `admin_permissions` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `admin_user_id` int(11) NOT NULL,
-  `password` varchar(255) DEFAULT '24444666666',
+  `password` varchar(255) DEFAULT '2444666666',
   PRIMARY KEY (`id`),
   KEY `admin user foreign key` (`admin_user_id`),
   CONSTRAINT `admin user foreign key` FOREIGN KEY (`admin_user_id`) REFERENCES `admin_users` (`id`) ON UPDATE CASCADE
@@ -80,7 +80,8 @@ CREATE TABLE `users` (
   `name` varchar(50) NOT NULL,
   `lastname` varchar(50) NOT NULL,
   `nickname` varchar(50),
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_index` (`name`,`lastname`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `rankings_results` (
@@ -88,6 +89,7 @@ CREATE TABLE `rankings_results` (
   `ranking_id` int(11) NOT NULL,
   `users_id` int(11) NOT NULL,
   `player_score` int(11) NOT NULL,
+  `player_name_display` set('NAME', 'COMBINED', 'NICKNAME') NOT NULL DEFAULT 'NAME',
   PRIMARY KEY (`id`),
   KEY `ranking foreign key` (`ranking_id`),
   CONSTRAINT `ranking foreign key` FOREIGN KEY (`ranking_id`) REFERENCES `rankings` (`id`) ON UPDATE CASCADE,

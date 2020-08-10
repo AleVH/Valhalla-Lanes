@@ -78,7 +78,7 @@ class Users extends Admin {
 
 	public function saveUser(){
 		if($this->input->is_ajax_request()){
-			$this->load->helpers('response');
+			$this->load->helper('response');
 			// simple sanitation
 			$name = filter_var($this->input->post('user-name'), FILTER_SANITIZE_STRING);
 			$lastname = filter_var($this->input->post('user-lastname'), FILTER_SANITIZE_STRING);
@@ -86,9 +86,13 @@ class Users extends Admin {
 			// prevent from saving users without name and surename
 			if(!empty($name) && !empty($lastname)){
 				$result = $this->users->saveNewUser($name, $lastname, $nickname);
-				$this->load->library('../entities/Users_entity');
-				$response = $this->users->getUserByField('id', $result);
-				echo returnResponse('success', $response->row(0, 'users_entity'), 'jsonizeResponse');
+				if($result['status'] === 'success'){
+					$this->load->library('../entities/Users_entity');
+					$response = $this->users->getUsersByField('id', $result['message']);
+					echo returnResponse('success', $response->row(0, 'users_entity'), 'jsonizeResponse');
+				}else{
+					echo returnResponse('error', $result['message'], 'jsonizeResponse');
+				}
 			}else{
 				echo returnResponse('error', 'ERROR', 'jsonizeResponse');
 			}

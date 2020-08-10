@@ -27,7 +27,7 @@ class Rankings_results_model extends CI_Model {
 	}
 
 	public function getRankResultsUsersDetailsByRankResultId($rankResultId){
-		$this->db->select("rr.player_score, u.id, u.name, u.lastname, u.nickname")->from($this->table." as rr")->join("users as u", "u.id = rr.users_id")->where("rr.ranking_id", $rankResultId);
+		$this->db->select("rr.player_score, rr.player_name_display, u.id, u.name, u.lastname, u.nickname")->from($this->table." as rr")->join("users as u", "u.id = rr.users_id")->where("rr.ranking_id", $rankResultId);
 
 		$results = $this->db->get();
 
@@ -40,6 +40,14 @@ class Rankings_results_model extends CI_Model {
 		$results = $this->db->get();
 
 		return $results;
+	}
+
+	public function updateRankResults(){
+
+	}
+
+	public function insertRankResults($new_rank_results){
+		$this->db->insert_batch($this->table, $new_rank_results);
 	}
 
 }

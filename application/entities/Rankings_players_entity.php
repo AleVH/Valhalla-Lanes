@@ -9,5 +9,6 @@ class Rankings_players_entity {
 	public $lastname;
 	public $nickname;
 	public $player_score;
+	public $player_name_display;
 
 }

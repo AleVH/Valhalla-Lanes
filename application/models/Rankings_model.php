@@ -36,12 +36,28 @@ class Rankings_model extends CI_Model {
 		return $results;
 	}
 
-	public function updateRankingStatus($rankId, $rankStatus){
+	public function updateRankingStatus($rank_id, $rank_status){
 		$this->db->trans_start();
-		$this->db->set('is_enabled', $rankStatus)->set('updated', 'NOW()', false)->where("id", $rankId)->update($this->table);
+		$this->db->set('is_enabled', $rank_status)->set('updated', 'NOW()', false)->where("id", $rank_id)->update($this->table);
 		$this->db->trans_complete();
 		if($this->db->trans_status() === FALSE){
 			// generate an error... or use the log_message() function to log your error
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+	public function updateRanking($rank_id, array $rank_new_details){
+		if(!is_array($rank_new_details)){
+			return '$rank_new_details must be an array';
+		}
+		$this->db->trans_start();
+
+		$this->set($rank_new_details)->where('id', $rank_id)->update($this->table);
+
+		$this->db->trans_complete();
+		if($this->db->trans_status() === FALSE){
 			return false;
 		}else{
 			return true;

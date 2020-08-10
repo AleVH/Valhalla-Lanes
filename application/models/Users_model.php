@@ -16,21 +16,43 @@ class Users_model extends CI_Model {
 		return $results;
 	}
 
-	public function getUserByField($field, $value){
+	public function getUsersByField($field, $value){
 		$this->db->select("*")->from($this->table)->where($field, $value);
 		$results = $this->db->get();
 
 		return $results;
 	}
 
+	public function getUserIdByNameAndLastname($user_name, $user_lastname){
+		$constraints = array(
+			'name' => $user_name,
+			'lastname' => $user_lastname
+		);
+		$this->db->select('id')->from($this->table)->where($constraints);
+		$results = $this->db->get();
+		return $results;
+	}
+
 	public function saveNewUser($name, $lastname, $nickname){
+		$this->load->helper('dberror');
 		$data = array(
 			'name' => $name,
 			'lastname' => $lastname,
 			'nickname' => $nickname
 		);
-		$this->db->insert($this->table, $data);
-		return $this->db->insert_id();
+		if($this->db->insert($this->table, $data)){
+			$results = array(
+				'status' => 'success',
+				'message' => $this->db->insert_id()
+			);
+		}else{
+			$results = array(
+				'status' => 'error',
+				'message' => standardisedMessage($this->db->error()['message'])
+			);
+		}
+
+		return $results;
 	}
 
 	public function deleteUserById($id){

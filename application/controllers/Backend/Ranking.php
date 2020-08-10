@@ -10,6 +10,7 @@ class Ranking extends Admin {
 		$this->load->helper(array('form', 'url'));
 		$this->load->model('rankings_model', 'rankings', true);
 		$this->load->model('rankings_results_model', 'rankings_results', true);
+		$this->load->model('users_model', 'users', true);
 	}
 
 	/**
@@ -88,13 +89,15 @@ class Ranking extends Admin {
 	public function create(){
 
 		if($this->input->is_ajax_request()){
-			$this->load->helpers('response');
+			$this->load->helpers(array('response', 'input'));
 			// simple sanitation
-			$title = filter_var($this->input->post('ranking-title'), FILTER_SANITIZE_STRING);
-			$tops = filter_var($this->input->post('ranking-tops'), FILTER_SANITIZE_NUMBER_INT);
-//			$start = filter_var($this->input->post('ranking-start'), FILTER_SA)
-			$start =  (new DateTime(preg_replace("([^0-9/] | [^0-9-])","",htmlentities($this->input->post('ranking-start')))))->format('Y-m-d H:i:s');
-			$end = (empty($this->input->post('ranking-end')))?null:(new DateTime(preg_replace("([^0-9/] | [^0-9-])","",htmlentities($this->input->post('ranking-end')))))->format('Y-m-d H:i:s');
+			$title = sanitizeString($this->input->post('ranking-title'));
+			$tops = sanitizeInteger($this->input->post('ranking-tops'));
+			// the next two lines should be equivalent to the ones below. i just moved the sanitation to the helper (remove this when you are sure it's working ok
+//			$start =  (new DateTime(preg_replace("([^0-9/] | [^0-9-])","" ,htmlentities($this->input->post('ranking-start')))))->format('Y-m-d H:i:s');
+//			$end = (empty($this->input->post('ranking-end')))?null:(new DateTime(preg_replace("([^0-9/] | [^0-9-])","" ,htmlentities($this->input->post('ranking-end')))))->format('Y-m-d H:i:s');
+			$start =  (new DateTime(sanitizeDate($this->input->post('ranking-start'))))->format('Y-m-d H:i:s');
+			$end = (empty($this->input->post('ranking-end'))) ? null : (new DateTime(sanitizeDate($this->input->post('ranking-end'))))->format('Y-m-d H:i:s');
 			$result = $this->rankings->saveNewRanking($title, $tops, $start, $end);
 
 			$this->load->library('../entities/Rankings_entity');
@@ -110,8 +113,35 @@ class Ranking extends Admin {
 	public function edit(){
 
 		if($this->input->is_ajax_request()){
-			$this->load->helpers('response');
+			$this->load->helpers(array('response', 'input'));
 			var_dump($this->input->post());
+			// rank related params
+			$rank_id = sanitizeInteger($this->input->post('ranking-id'));
+			$rank_title = sanitizeString($this->input->post('ranking-title'));
+			$rank_start = (new DateTime(sanitizeDate($this->input->post('ranking-start'))))->format('Y-m-d H:i:s');
+			$rank_end = (empty($this->input->post('ranking-end'))) ? null : (new DateTime(sanitizeDate($this->input->post('ranking-end'))))->format('Y-m-d H:i:s');
+			$rank_tops = sanitizeInteger($this->input->post('ranking-tops'));
+			$update_ranking = array(
+				'title' => $rank_title,
+				'tops' => $rank_tops,
+				'start_date' => $rank_start,
+				'end_date' => $rank_end
+			);
+			// there are 2 things to save, the ranking modifications and the ranking results modifications
+			// ranking modifications
+			$response_ranking = $this->rankings->updateRanking($rank_id, $update_ranking);
+
+			//ranking results modifications
+			$update_ranking_results = array();
+			// player related params
+			for($i = 1; $i <= $rank_tops; $i++){
+				echo "Player ".$i;
+				$user_name = sanitizeString($this->input->post('user-name_player'.$i));
+				$user_lastname = sanitizeString($this->input->post('user-lastname_player'.$i));
+				$response_user = $this->users->getUserIdByNameAndLastname($user_name, $user_lastname);
+
+			}
+
 		}
 	}
 
