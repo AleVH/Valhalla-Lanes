@@ -2,6 +2,10 @@ let base_url = window.location.origin;
 
 $(document).ready(function(){
 
+	let currentSection = (window.location.pathname).split("/");
+	// load current section
+	binder[currentSection[2]]();
+
 	console.log('loading Valhalla-Lanes admin javascript');
 	let content_wrapper = $('.content');
 
@@ -258,7 +262,6 @@ let binder = {
 		$('form.admin_ranking-edit').submit(function(e){
 			e.preventDefault();
 			let formdata = new FormData($('form.admin_ranking-edit').get(0));
-			console.log(formdata);
 
 			$.ajax({
 				method: "POST",
@@ -269,6 +272,10 @@ let binder = {
 				dataType: "json"
 			}).done(function (response) {
 				console.log(response);
+				if(response.status === 'success'){
+					// re-click on the ranking to refresh the data
+					$(".ranking-wrapper.item[data-rank-id='" + response.message.id + "']").trigger('click');
+				}
 			})
 		})
 
@@ -519,85 +526,110 @@ let commonLayerBinder =  {
 
 	ranking: {
 		editRanking: function(){
-			// this bit is to manage the selection of the ranking to edit
-			$(".ranking-wrapper.item").click(function () {
+
+			$(".ranking-wrapper.item").click( async function () {
+
 				let rank_id = $(this).data('rank-id');
+				let rank_to_edit = await specializedLayerBinder.ranking['getRankToEditPromise'](rank_id);
 
-				$.ajax({
-					method: "GET",
-					url: base_url + "/ranking/getranktoedit/" + rank_id,
-					dataType: 'json'
-				}).done(function(response){
-					// this bit is to handle the rank id
-					$(".subcontent.edit .ranking-id").val(rank_id);
-					// this bit is to handle the title
-					$(".subcontent.edit .ranking-title").val(response.message.title);
+				// this bit is to handle the rank id
+				$(".subcontent.edit .ranking-id").val(rank_id);
+				// this bit is to handle the title
+				$(".subcontent.edit .ranking-title").val(rank_to_edit.message.title);
 
-					// this bit is to handle start and end dates
-					// datepicker deserves a bit of explanation. the first line defines how the format is in the datepicker widget. the second line sets the new date. this is where it gets tricky, specially with the parsing. when parsin a data, the string must have the exact format defined, otherwise will throw errors everywhere. so if the date string is 2020-05-30 12:30:12, the hours minutes and seconds must be removed since datepicker parser doesn't support time, only year, month and date, plus you will see that when adding the hours, minutes and seconds to ("hh:ii:ss") the format definition when parsing a date, will tell you "Uncaught Unexpected literal at position 11" or another number, depending on how many shit you added that is not supported
-					$(".subcontent.edit .ranking-start").datepicker({dateFormat: "yy-mm-dd"});
-					$(".subcontent.edit .ranking-start").datepicker("setDate", $.datepicker.parseDate("yy-mm-dd", response.message.start_date.substring(0, response.message.start_date.indexOf(' '))));
+				// this bit is to handle start and end dates
+				// datepicker deserves a bit of explanation. the first line defines how the format is in the datepicker widget. the second line sets the new date. this is where it gets tricky, specially with the parsing. when parsin a data, the string must have the exact format defined, otherwise will throw errors everywhere. so if the date string is 2020-05-30 12:30:12, the hours minutes and seconds must be removed since datepicker parser doesn't support time, only year, month and date, plus you will see that when adding the hours, minutes and seconds to ("hh:ii:ss") the format definition when parsing a date, will tell you "Uncaught Unexpected literal at position 11" or another number, depending on how many shit you added that is not supported
+				$(".subcontent.edit .ranking-start").datepicker({dateFormat: "yy-mm-dd"});
+				$(".subcontent.edit .ranking-start").datepicker("setDate", $.datepicker.parseDate("yy-mm-dd", rank_to_edit.message.start_date.substring(0, rank_to_edit.message.start_date.indexOf(' '))));
 
-					if(response.message.end_date !== null){
-						$(".subcontent.edit .ranking-end").datepicker({dateFormat: "yy-mm-dd"});
-						$(".subcontent.edit .ranking-end").datepicker("setDate", $.datepicker.parseDate("yy-mm-dd", response.message.end_date.substring(0, response.message.end_date.indexOf(' '))));
-					}else{
-						// if there is not an end date defined, reset the datepicker
-						$(".subcontent.edit .ranking-end").datepicker("setDate", null);
+				if(rank_to_edit.message.end_date !== null){
+					$(".subcontent.edit .ranking-end").datepicker({dateFormat: "yy-mm-dd"});
+					$(".subcontent.edit .ranking-end").datepicker("setDate", $.datepicker.parseDate("yy-mm-dd", rank_to_edit.message.end_date.substring(0, rank_to_edit.message.end_date.indexOf(' '))));
+				}else{
+					// if there is not an end date defined, reset the datepicker
+					$(".subcontent.edit .ranking-end").datepicker("setDate", null);
+				}
+
+				// this bit is to handle the select part
+				$(".subcontent.edit .ranking-tops option:selected").prop("selected", false);
+				$(".subcontent.edit .ranking-tops option[value='" + rank_to_edit.message.tops + "']").prop('selected', true);
+
+				// clean players list if any
+				$(".ranking-players").empty();
+
+				let user_name_values = await specializedLayerBinder.ranking['getUsersNamesPromise']();
+
+				// this bit is to handle the players
+				if(rank_to_edit.message.players === null){
+
+					// this first bit is when the players haven't been assigned yet
+					for(let i = 0; i < rank_to_edit.message.tops; i++){
+						let player_number = i + 1;
+						let player_details = specializedLayerBinder.ranking['getPlayerDetails'](player_number);
+						$(".ranking-players").append(player_details);
+						let user_name_dd = specializedLayerBinder.ranking['buildUserNameDropDown'](user_name_values.message);
+						$(".player-" + player_number + ".details > .user-name").html(user_name_dd);
 					}
 
-					// this bit is to handle the select part
-					$(".subcontent.edit .ranking-tops option:selected").prop("selected", false);
-					$(".subcontent.edit .ranking-tops option[value='" + response.message.tops + "']").prop('selected', true);
+				}else{
 
-					// clean players list if any
-					$(".ranking-players").empty();
+					// this is to help the backend side to know if to update or insert or both
+					let update_switch = '<input type="hidden" class="rank_result_update" name="rank_result_update" value="1">';
+					$(".ranking-players").append(update_switch);
 
-					// this bit is to handle the players
-					if(response.message.players === null){
+					// this second bit is when the player were assigned and the admin wants to do some editing
+					for(let i = 0; i < Object.keys(rank_to_edit.message.players).length; i++) {
+						let player_number = i + 1;
+						let player_details = specializedLayerBinder.ranking['getPlayerDetails'](player_number, rank_to_edit.message.players[i].rank_result_id);
 
-						// this first bit is when the players haven't been assigned yet
-						for(let i = 0; i < response.message.tops; i++){
-							let player_number = i + 1;
-							let player_details = specializedLayerBinder.ranking['getPlayerDetails'](player_number);
-							$(".ranking-players").append(player_details);
-						}
-						specializedLayerBinder.ranking['buildUserNameDropDown'](".user-name");
+						$(".ranking-players").append(player_details);
 
-					}else{
+						// name selection
+						let user_name_dd = specializedLayerBinder.ranking['buildUserNameDropDown'](user_name_values.message, rank_to_edit.message.players[i].name);
+						$(".player-" + player_number + ".details > .user-name").html(user_name_dd);
 
-						// this second bit is when the player were assigned and the admin wants to do some editing
-						for(let i = 0; i < Object.keys(response.message.players).length; i++) {
-							let player_number = i + 1;
-							let player_details = specializedLayerBinder.ranking['getPlayerDetails'](player_number);
 
-							$(".ranking-players").append(player_details);
+						// lastname selection
+						let user_lastname_values = await specializedLayerBinder.ranking['getUsersLastnamesPromise'](rank_to_edit.message.players[i].name);
+						let user_lastname_dd = specializedLayerBinder.ranking['buildUserLastnameDropDown'](user_lastname_values.message, rank_to_edit.message.players[i].lastname);
+						$(".player-" + player_number).find(" > .user-lastname").html(user_lastname_dd);
+						specializedLayerBinder.ranking['hideShowUserSections']("player-" + player_number, 'show', 1);
 
-							specializedLayerBinder.ranking['buildUserNameDropDown'](".player-" + player_number + ".details > .user-name", response.message.players[i].name);
-							specializedLayerBinder.ranking['buildUserLastnameDropDown'](response.message.players[i].name, "player-" + player_number, response.message.players[i].lastname);
-							specializedLayerBinder.ranking['hideShowUserSections']("player-" + player_number, 'show', 1);
-							specializedLayerBinder.ranking['buildUserNicknameDropDown'](response.message.players[i].name, response.message.players[i].lastname, "player-" + player_number, response.message.players[i].player_name_display);
+						// show the display name options only if there is a nickname
+						if(!$.isEmptyObject(rank_to_edit.message.players[i].nickname)){
+							// nickname selection
+							let user_nickname_values = await specializedLayerBinder.ranking['getUsersNicknamesPromise'](rank_to_edit.message.players[i].name, rank_to_edit.message.players[i].lastname);
+							let user_nickname_dd = specializedLayerBinder.ranking['buildUserNicknameDropDown'](user_nickname_values.message, rank_to_edit.message.players[i].player_name_display);
+							$(".player-" + player_number).find(".user-nickname").html(user_nickname_dd);
+							specializedLayerBinder.ranking['hideShowUserSections']("player-" + player_number, 'show', 2);
 
-							// show the display name options only if there is a nickname
-							if(!$.isEmptyObject(response.message.players[i].nickname)){
-								if(response.message.players[i].player_name_display !== 'NAME'){
-									specializedLayerBinder.ranking['hideShowUserSections']("player-" + player_number, 'show', 4);
-								}
-								specializedLayerBinder.ranking['userDisplayNameOptions'](i+1);
+							if(rank_to_edit.message.players[i].player_name_display !== 'NAME'){
+								specializedLayerBinder.ranking['hideShowUserSections']("player-" + player_number, 'show', 4);
+								specializedLayerBinder.ranking['userDisplayNameOptions']();
 							}
-							specializedLayerBinder.ranking['forceRadioCheck']("player-" + player_number, response.message.players[i].player_name_display);
-							specializedLayerBinder.ranking['setPlayerScore']("player-" + player_number, response.message.players[i].player_score);
+							fourthLayerBinder.ranking();
+
 						}
 
-					}
-					// specializedLayerBinder.ranking['checkForNameDisplayOptions']();
-					// i will have to bind two different options depending on if there are users selected or if they need to be selected
-					// this is when you select the user for the first time
-					secondLayerBinder.ranking['rankingUserName']();
-					secondLayerBinder.ranking['rankingTops']();
-				});
+						// set player score
+						specializedLayerBinder.ranking['setPlayerScore']("player-" + player_number, rank_to_edit.message.players[i].player_score);
+						specializedLayerBinder.ranking['hideShowUserSections']("player-" + player_number, 'show', 3);
 
-				specializedLayerBinder.ranking['checkForNameDisplayOptions']();
+						// set player name display options
+						specializedLayerBinder.ranking['forceRadioCheck']("player-" + player_number, rank_to_edit.message.players[i].player_name_display);
+						specializedLayerBinder.ranking['playerNameOptions']("player-" + player_number, rank_to_edit.message.players[i].player_name_display);
+
+						// then activate all the features
+						thirdLayerBinder.ranking();
+
+					}
+
+				}
+				// i will have to bind two different options depending on if there are users selected or if they need to be selected
+				// this is when you select the user for the first time
+				secondLayerBinder.ranking['rankingUserName']();
+				secondLayerBinder.ranking['rankingTops']();
+
 				// this last bit is to leave out the buttons from the clicking
 			}).children().not(".rank-actions.item, .status-modifier, .rank-delete");
 
@@ -607,8 +639,6 @@ let commonLayerBinder =  {
 				e.stopPropagation();
 				let rank_id = $(this).closest(".ranking-wrapper.item").data('rank-id');
 				let status_value = $(this).attr("future-rank-stat");
-				console.log('status modifier clicked for rank ' + rank_id);
-				// console.log('status value: ' + status_value)
 				let server_response;
 
 				$.ajax({
@@ -620,7 +650,6 @@ let commonLayerBinder =  {
 					},
 					dataType: "json"
 				}).done(function(response){
-					console.log('status update response: ' + response.message);
 					if(response.status === 'success'){
 						server_response = 'Updated';
 					}else{
@@ -710,41 +739,59 @@ let secondLayerBinder = {
 			})
 		},
 		rankingUserName: function(){
-			$(".user-name").change(function(){
-			let user_name = $(this).val();
-			// i'm keeping this here just to remember :P
-			// let player_index = $.grep(player_details.attr('class').split(" "), function(key, value){
-			// 	return "key: " + key + " - value: " + value;
-			// });
-			// this line is to then enable or disable dropdowns for this player and not all of them at the same time
-			let player_index = specializedLayerBinder.ranking['findClosestIndex'](this); // return example: "player-1"
-			// only show the other dropdown when a name is selected
-			if(user_name !== ''){
-				// first clear existent values
-				specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'hide', 2);
-				specializedLayerBinder.ranking['cleanPlayerName'](player_index);
-				// then do the build for new ones
-				specializedLayerBinder.ranking['buildUserLastnameDropDown'](user_name, player_index);
-				specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'show', 1);
-				thirdLayerBinder['ranking']();
-			}else{
-				specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'hide', 1);
-			}
-		});
+			$(".user-name").change( async function(){
+				let user_name = $(this).val();
+				// i'm keeping this here just to remember :P
+				// let player_index = $.grep(player_details.attr('class').split(" "), function(key, value){
+				// 	return "key: " + key + " - value: " + value;
+				// });
+				// this line is to then enable or disable dropdowns for this player and not all of them at the same time
+				let player_index = specializedLayerBinder.ranking['findClosestIndex'](this); // return example: "player-1"
+				// only show the other dropdown when a name is selected
+				if(user_name !== ''){
+					// first clear existent values
+					specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'hide', 2);
+					specializedLayerBinder.ranking['cleanPlayerName'](player_index);
+					// then do the build for new ones
+					let user_lastname_values = await specializedLayerBinder.ranking['getUsersLastnamesPromise'](user_name);
+					let user_lastname_dd = specializedLayerBinder.ranking['buildUserLastnameDropDown'](user_lastname_values.message);
+					$("." + player_index).find(" > .user-lastname").html(user_lastname_dd);
+
+					specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'show', 1);
+					thirdLayerBinder['ranking']();
+				}else{
+					specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'hide', 1);
+				}
+			});
 		}
 	}
 };
 
 let thirdLayerBinder = {
 	ranking: function(){
-		$(".user-lastname").change(function(){
+		$(".user-lastname").change(async function(){
 			let player_index = specializedLayerBinder.ranking['findClosestIndex'](this);
 			let user_lastname = $(this).val();
 			let user_name = $(this).prev().prev("select.user-name").find(":selected").val(); // with only 1 "prev()" it would check the label instead of the select
 			if(user_lastname !== ''){
-				specializedLayerBinder.ranking['buildUserNicknameDropDown'](user_name, user_lastname, player_index);
+				let user_nickname_values = await specializedLayerBinder.ranking['getUsersNicknamesPromise'](user_name, user_lastname);
 
-				specializedLayerBinder.ranking['playerNameOptions'](player_index)
+				if(!$.isEmptyObject(user_nickname_values.message)){ // if there are no nicknames, there's no point in doing the dropdown
+					let user_nickname_dd = specializedLayerBinder.ranking['buildUserNicknameDropDown'](user_nickname_values.message);
+
+					$("." + player_index).find(".user-nickname").html(user_nickname_dd);
+					specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'show', 2);
+					fourthLayerBinder['ranking']();
+				}else{
+					$("." + player_index).find(".user-nickname").html('');
+					$("." + player_index).find(' > label.hide-detail[for="user-nickname"]').css('display', 'none');
+					$("." + player_index).find(' > select.user-nickname').css('display', 'none').prop('disabled', 'disabled');
+				}
+				if(user_nickname_values.message !== null){
+					specializedLayerBinder.ranking['playerNameOptions'](player_index, user_nickname_values.message);
+				}else{
+					specializedLayerBinder.ranking['playerNameOptions'](player_index);
+				}
 				specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'show', 3);
 			}else{
 				$("span." + player_index + ".display-name").html('');
@@ -760,6 +807,7 @@ let fourthLayerBinder = {
 			let player_index = specializedLayerBinder.ranking['findClosestIndex'](this);
 			let player_number = specializedLayerBinder.ranking['getPlayerNumber'](player_index + '');
 			let user_nickname = $(this).val();
+
 			if(user_nickname !== ''){
 				specializedLayerBinder.ranking['hideShowUserSections'](player_index, 'show', 4);
 				specializedLayerBinder.ranking['userDisplayNameOptions'](player_number);
@@ -774,25 +822,118 @@ let fourthLayerBinder = {
 
 let specializedLayerBinder = {
 	ranking: {
-		checkForNameDisplayOptions: function(){
-			let default_players = $(".ranking-tops").val();
-			console.log('tops: ' + default_players);
-			let player_details = $(".ranking-players > .details");
-			console.log('player details: ' + player_details);
-			$.each(player_details, function(key, value){
-				console.log('key: ' + key + ' - value: ' + value);
-				let name_option = $(value).find(".input[type=radio]").val();
-				console.log('name option selected: ' + name_option);
+		getRankToEditPromise: async function(rank_id){
+			return new Promise(function(resolve, reject){
+				$.ajax({
+					method: "GET",
+					url: base_url + "/ranking/getranktoedit/" + rank_id,
+					dataType: 'json'
+				}).then((response) => {
+					resolve(response);
+				});
 			});
-			let lalala = [];
-			for(let i=1; i <= default_players; i++){
-				lalala.push($('.player-' + i).find(".input[name=user-name-display_player" + i + "]").val());
-			}
-			console.log(lalala);
 		},
-		getPlayerDetails: function(player_number){
+		getUsersNamesPromise: async function(){
+			return new Promise(function(resolve, reject){
+				$.ajax({
+					method: "POST",
+					url: base_url + "/users/dropdowns",
+					data: {
+						field: "name"
+					},
+					dataType: "json"
+				}).then(function(response){
+					resolve(response);
+				});
+			});
+		},
+		getUsersLastnamesPromise: async function(user_name){
+			return new Promise(function (resolve, reject){
+				$.ajax({
+					method: "POST",
+					url: base_url + "/users/dropdowns",
+					data: {
+						field: 'lastname',
+						control_field: 'name',
+						control_value: user_name
+					},
+					dataType: "json"
+				}).then(function(response){
+					resolve(response);
+				})
+			});
+		},
+		getUsersNicknamesPromise: async function(user_name, user_lastname){
+			return new Promise(function(resolve, reject){
+				let control_field = ['name', 'lastname'];
+				let control_value = [user_name, user_lastname];
+				$.ajax({
+					method: "POST",
+					url: base_url + "/users/dropdowns",
+					data: {
+						field: 'nickname',
+						control_field: control_field,
+						control_value: control_value
+					},
+					dataType: "json"
+				}).then(function(response){
+					resolve(response);
+				});
+			});
+		},
+		buildUserNameDropDown: function(dd_values, selected_option = null){
+			let dd_options = '<option value="">Select a user name</option>';
+			$.each(dd_values, function (key, value) {
+				if(selected_option != null){
+					let selected_indicator = '';
+					if(value === selected_option){
+						selected_indicator = 'selected';
+					}
+					dd_options += '<option value="' + value + '" ' + selected_indicator + '>' + value + '</option>';
+				}else{
+					dd_options += '<option value="' + value + '">' + value + '</option>';
+				}
+			});
+			return dd_options;
+		},
+		buildUserLastnameDropDown: function(dd_values, selected_option = null){
+			let dd_options = '<option value="">Select a user lastname</option>';
+			$.each(dd_values, function (key, value) {
+				if(selected_option != null){
+					let selected_indicator = '';
+					if(value === selected_option){
+						selected_indicator = 'selected';
+					}
+					dd_options += '<option value="' + value + '" ' + selected_indicator + '>' + value + '</option>';
+				}else{
+					dd_options += '<option value="' + value + '">' + value + '</option>';
+				}
+			});
+			return dd_options;
+		},
+		buildUserNicknameDropDown: function(dd_values, selected_option = null){
+			let dd_options = '<option value="">Select a user nickname</option>';
+			$.each(dd_values, function(key,value){
+				if(selected_option !== null){
+					let selected_indicator = '';
+					if(selected_option !== 'NAME'){
+						selected_indicator = 'selected';
+					}
+					dd_options += '<option value="' + value + '" ' + selected_indicator + '>' + value + '</option>';
+				}else{
+					dd_options += '<option value="' + value + '">' + value + '</option>';
+				}
+			});
+			return dd_options;
+		},
+		getPlayerDetails: function(player_number, rank_result_row_id = null){
+			let rank_result_id = '';
+			if(rank_result_row_id !== null){
+				rank_result_id = '<input type="hidden" class="rank_result_row" name="rank_result_row-player' + player_number + '" value="' + rank_result_row_id + '">';
+			}
 			let player_details = '<label for="player-' + player_number + '">Player ' + player_number + ': <span class="player-' + player_number + ' display-name"></span></label>' +
 				'<div class="player-' + player_number + ' details">' +
+				rank_result_id +
 				'<label for="user-name">Name:</label>' +
 				'<select class="user-name" name="user-name_player' + player_number + '" required></select>' +
 				'<label class="hide-detail" for="user-lastname">Lastname:</label>' +
@@ -804,7 +945,7 @@ let specializedLayerBinder = {
 				'<label class="hide-detail" for="user-display">Display name options:</label>' +
 				'<div class="user-display hide-detail">' +
 				'<div class="display-option">' +
-				'<input type="radio" name="user-name-display_player' + player_number + '" value="name">' +
+				'<input type="radio" name="user-name-display_player' + player_number + '" value="name" selected>' +
 				'<label for="name">Only name</label>' +
 				'</div>' +
 				'<div class="display-option">' +
@@ -819,108 +960,7 @@ let specializedLayerBinder = {
 				'</div>';
 			return player_details;
 		},
-		buildUserNicknameDropDown: function(user_name, user_lastname, selector, selected_option = null){
-			let control_field = ['name', 'lastname'];
-			let control_value = [user_name, user_lastname];
-			let dd_options = '<option value="">Select a user nickname</option>';
-
-			$.ajax({
-				method: "POST",
-				url: base_url + "/users/dropdowns",
-				data: {
-					field: 'nickname',
-					control_field: control_field,
-					control_value: control_value
-				},
-				dataType: 'json'
-			}).done(function(response){
-				if(response.status === 'success'){
-					if(!$.isEmptyObject(response.message)){ // if there are no nicknames, there's no point in doing the dropdown
-						$.each(response.message, function(key,value){
-							if(selected_option !== null){
-								let selected_indicator = '';
-								if(selected_option !== 'NAME'){
-									selected_indicator = 'selected';
-								}
-								dd_options += '<option value="' + value + '" ' + selected_indicator + '>' + value + '</option>';
-							}else{
-								dd_options += '<option value="' + value + '">' + value + '</option>';
-							}
-						});
-						$("." + selector).find(".user-nickname").html(dd_options);
-						specializedLayerBinder.ranking['hideShowUserSections'](selector, 'show', 2);
-						fourthLayerBinder['ranking']();
-					}else{
-						$("." + selector).find(".user-nickname").html(dd_options);
-						$("." + selector).find(' > label.hide-detail[for="user-nickname"]').css('display', 'none');
-						$("." + selector).find(' > select.user-nickname').css('display', 'none').prop('disabled', 'disabled');
-					}
-					if(selected_option !== null){
-						specializedLayerBinder.ranking['playerNameOptions'](selector, selected_option.toLowerCase());
-					}else{
-						specializedLayerBinder.ranking['playerNameOptions'](selector);
-					}
-					specializedLayerBinder.ranking['hideShowUserSections'](selector, 'show', 3);
-				}
-			});
-		},
-		buildUserLastnameDropDown: function(user_name, selector, selected_option = null){
-			let dd_options = '<option value="">Select a user lastname</option>';
-
-			$.ajax({
-				method: "POST",
-				url: base_url + "/users/dropdowns",
-				data: {
-					field: 'lastname',
-					control_field: 'name',
-					control_value: user_name
-				},
-				dataType: "json"
-			}).done(function (response){
-				if(response.status === 'success'){
-					$.each(response.message, function(key,value){
-						if(selected_option != null){
-							let selected_indicator = '';
-							if(value === selected_option){
-								selected_indicator = 'selected';
-							}
-							dd_options += '<option value="' + value + '" ' + selected_indicator + '>' + value + '</option>';
-						}else{
-							dd_options += '<option value="' + value + '">' + value + '</option>';
-						}
-					});
-					$("." + selector).find(" > .user-lastname").html(dd_options);
-				}
-			});
-		},
-		buildUserNameDropDown: function(selector, selected_option = null){
-			let dd_options = '<option value="">Select a user name</option>';
-			$.ajax({
-				method: "POST",
-				url: base_url + "/users/dropdowns",
-				data: {
-					field: 'name'
-				},
-				dataType: "json",
-			}).done(function(response) {
-				if (response.status === 'success') {
-					// let dd_options = '<option value="">Select a user name</option>';
-					$.each(response.message, function (key, value) {
-						if(selected_option != null){
-							let selected_indicator = '';
-							if(value === selected_option){
-								selected_indicator = 'selected';
-							}
-							dd_options += '<option value="' + value + '" ' + selected_indicator + '>' + value + '</option>';
-						}else{
-							dd_options += '<option value="' + value + '">' + value + '</option>';
-						}
-					});
-					$(selector).html(dd_options);
-				}
-			});
-		},
-		addOrRemovePlayers: function(new_tops){
+		addOrRemovePlayers: async function(new_tops){
 			let current_players_number = $(".ranking-players .details").length;
 			if(new_tops > current_players_number){
 				while (current_players_number < new_tops){
@@ -953,7 +993,11 @@ let specializedLayerBinder = {
 						'</div>';
 
 					$(".ranking-players").append(player_details);
-					specializedLayerBinder.ranking['buildUserNameDropDown'](".player-" + current_players_number + " > .user-name");
+					let user_name_values = await specializedLayerBinder.ranking['getUsersNamesPromise']();
+					let user_name_dd = specializedLayerBinder.ranking['buildUserNameDropDown'](user_name_values.message);
+					$(".player-" + current_players_number + " > .user-name").html(user_name_dd);
+
+					// bind with the function that controls the use of that bit
 					secondLayerBinder.ranking['rankingUserName']();
 				}
 			}else{
@@ -989,10 +1033,10 @@ let specializedLayerBinder = {
 			let user_nickname = $('.' + player_node).find('select.user-nickname').val();
 			let player_name = user_name + " " + user_lastname;
 			switch(option){
-				case 'combined':
+				case 'COMBINED':case 'combined':
 					player_name = user_name + ' "' + user_nickname + '" ' + user_lastname;
 					break;
-				case 'nickname':
+				case 'NICKNAME':case 'nickname':
 					player_name = '"' + user_nickname + '"';
 					break;
 			}
@@ -1011,7 +1055,7 @@ let specializedLayerBinder = {
 			$("." + player_node).find(":radio").prop('checked', false);
 		},
 		forceRadioCheck: function(player_node, radio_value){
-			$("." + player_node).find("input[type=radio][value=" + radio_value.toLowerCase() + "]").prop('checked', true);
+			$("." + player_node).find("input[type=radio][value='" + radio_value.toLowerCase() + "']").prop('checked', true);
 		},
 		setPlayerScore: function(player_node, value){
 			$("." + player_node).find(" > .user-score").val(value);

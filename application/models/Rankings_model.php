@@ -54,7 +54,7 @@ class Rankings_model extends CI_Model {
 		}
 		$this->db->trans_start();
 
-		$this->set($rank_new_details)->where('id', $rank_id)->update($this->table);
+		$this->db->set($rank_new_details)->where('id', $rank_id)->update($this->table);
 
 		$this->db->trans_complete();
 		if($this->db->trans_status() === FALSE){
@@ -62,5 +62,12 @@ class Rankings_model extends CI_Model {
 		}else{
 			return true;
 		}
+	}
+
+	public function getRankingTops($rank_id){
+		$this->db->select("tops")->from($this->table)->where("id", $rank_id);
+		$result = $this->db->get();
+
+		return $result;
 	}
 }

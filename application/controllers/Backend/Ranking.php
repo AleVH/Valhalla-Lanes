@@ -110,11 +110,15 @@ class Ranking extends Admin {
 //		var_dump($xxx);
 	}
 
+	/**
+	 * This method does the ranking update that includes ranking and ranking results
+	 * @throws Exception
+	 */
 	public function edit(){
 
 		if($this->input->is_ajax_request()){
 			$this->load->helpers(array('response', 'input'));
-			var_dump($this->input->post());
+
 			// rank related params
 			$rank_id = sanitizeInteger($this->input->post('ranking-id'));
 			$rank_title = sanitizeString($this->input->post('ranking-title'));
@@ -127,33 +131,98 @@ class Ranking extends Admin {
 				'start_date' => $rank_start,
 				'end_date' => $rank_end
 			);
+
+			// before updating check if there's any difference in the number of players
+			$previous_tops_result = $this->rankings->getRankingTops($rank_id);
+			$previous_tops = $previous_tops_result->row(0);
+
 			// there are 2 things to save, the ranking modifications and the ranking results modifications
 			// ranking modifications
 			$response_ranking = $this->rankings->updateRanking($rank_id, $update_ranking);
 
 			//ranking results modifications
 			$update_ranking_results = array();
+			$add_ranking_results = array();
+			$remove_ranking_results = array();
+
 			// player related params
 			for($i = 1; $i <= $rank_tops; $i++){
-				echo "Player ".$i;
+				// this first param is if the record exists in the table, otherwise means it's a new row
+				$rank_result_row = sanitizeInteger($this->input->post('rank_result_row-player'.$i));
 				$user_name = sanitizeString($this->input->post('user-name_player'.$i));
 				$user_lastname = sanitizeString($this->input->post('user-lastname_player'.$i));
 				$response_user = $this->users->getUserIdByNameAndLastname($user_name, $user_lastname);
+//				$user_name_display = sanitizeString($this->input->post('user-nickname_player'.$i)); // this value is not used, but i forgot to remove from the form
+				$user_score = sanitizeInteger($this->input->post('user-score_player'.$i));
+				$user_name_display = sanitizeString($this->input->post('user-name-display_player'.$i));
 
+				if($rank_result_row){
+					$update_ranking_results[] = array(
+						'id' => $rank_result_row,
+						'users_id' => $response_user->row(0)->id,
+						'player_score' => $user_score,
+						'player_name_display' => $user_name_display
+					);
+				}else{
+					$add_ranking_results[] = array(
+						'ranking_id' => $rank_id,
+						'users_id' => $response_user->row(0)->id,
+						'player_score' => $user_score,
+						'player_name_display' => $user_name_display
+					);
+				}
+
+				if($previous_tops->tops > $rank_tops){
+					$remove_ranking_results[] = $rank_result_row;
+				}
+
+			}
+
+			// if there are things to update, update them
+			if(!empty($update_ranking_results)){
+				$response_update_ranking_results = $this->rankings_results->updateRankResultsBatch($update_ranking_results, 'id');
+			}else{
+				$response_update_ranking_results = true;
+			}
+
+			// if there are things to add, ad them
+			if(!empty($add_ranking_results)){
+				$response_insert_ranking_results = $this->rankings_results->insertRankResultsBatch($add_ranking_results);
+			}else{
+				$response_insert_ranking_results = true;
+			}
+
+			// check if there are players that need to be removed
+			if($previous_tops->tops > $rank_tops){
+				$response_remove_ranking_results = $this->rankings_results->deleteRankResultsBatch($remove_ranking_results, $rank_id);
+			}else{
+				$response_remove_ranking_results = true;
+			}
+
+			if($response_ranking && $response_update_ranking_results && $response_insert_ranking_results && $response_remove_ranking_results){
+				echo returnResponse('success', array('id' => $rank_id), 'jsonizeResponse');
+			}else{
+				echo returnResponse('error', 'ERROR', 'jsonizeResponse');
 			}
 
 		}
 	}
 
+	/**
+	 * gets the rank details in order to edit it
+	 * @param $id
+	 */
 	public function getRankToEdit($id){
 
 		if($this->input->is_ajax_request()){
 			$this->load->helpers('response');
 			$this->load->library('../entities/Rankings_results_entity');
 			$this->load->library('../entities/Rankings_players_entity');
+
 			$response_players = $this->rankings_results->getRankResultsUsersDetailsByRankResultId($id);
 			$response_ranking = $this->rankings->getARanking($id);
 			$rankingResultsData = $response_ranking->custom_row_object(0, 'Rankings_results_entity');
+
 			foreach ($response_players->custom_result_object('Rankings_players_entity') as $eachPlayer){
 				$rankingResultsData->players[] = $eachPlayer;
 			}
@@ -162,6 +231,9 @@ class Ranking extends Admin {
 		}
 	}
 
+	/**
+	 * method to update only the status of a ranking
+	 */
 	public function updateRankingStatus(){
 
 		if($this->input->is_ajax_request()){
