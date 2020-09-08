@@ -4,7 +4,8 @@
 
 class Rankings_players_entity {
 
-	public $id;
+	public $user_id;
+	public $rank_result_id;
 	public $name;
 	public $lastname;
 	public $nickname;

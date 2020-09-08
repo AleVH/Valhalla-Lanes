@@ -55,6 +55,7 @@
 
 				<?= form_open('ranking/edit', $form_attr_2) ?>
 				<div class="form-line">
+					<input type="hidden" class="ranking-id" name="ranking-id" value="" required/>
 					<label for="ranking-title">Ranking name: </label>
 					<input type="text" class="ranking-title" name="ranking-title" placeholder="Ranking name here" required />
 				</div>

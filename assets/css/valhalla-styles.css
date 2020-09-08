@@ -173,68 +173,68 @@
     color: var(--main_text_color);
     font-size: var(--font_size_big);
   }
-  body .body {
+  body .vl_body {
     margin-top: 0.5%;
     margin-bottom: 0.5%;
     display: flex;
     flex-direction: column;
   }
-  body .body .body__content .body__wrapper {
+  body .vl_body .body__content .body__wrapper {
     margin-right: 0.5%;
     margin-left: 0.5%;
   }
-  body .body .body__content .body__wrapper .home__wrapper .news-article__wrapper .news-article__header {
+  body .vl_body .body__content .body__wrapper .home__wrapper .news-article__wrapper .news-article__header {
     display: flex;
     flex-direction: row;
     align-content: flex-start;
     align-items: baseline;
     margin-bottom: 1%;
   }
-  body .body .body__content .body__wrapper .home__wrapper .news-article__wrapper .news-article__header .news-article__title {
+  body .vl_body .body__content .body__wrapper .home__wrapper .news-article__wrapper .news-article__header .news-article__title {
     font-size: var(--font_size_huge_320);
     margin-right: 1%;
   }
-  body .body .body__content .body__wrapper .home__wrapper .news-article__wrapper .news-article__header .news-article__date {
+  body .vl_body .body__content .body__wrapper .home__wrapper .news-article__wrapper .news-article__header .news-article__date {
     font-size: var(--font_size_small_320);
   }
-  body .body .body__content .body__wrapper .home__wrapper .news-article__wrapper .news-article__text {
+  body .vl_body .body__content .body__wrapper .home__wrapper .news-article__wrapper .news-article__text {
     font-size: var(--font_size_normal_320);
   }
-  body .body .body__content .body__wrapper .home__wrapper .viking-line-break {
+  body .vl_body .body__content .body__wrapper .home__wrapper .viking-line-break {
     display: flex;
     justify-content: center;
   }
-  body .body .body__content .body__wrapper .home__wrapper .viking-line-break .front-img {
+  body .vl_body .body__content .body__wrapper .home__wrapper .viking-line-break .front-img {
     width: 30%;
   }
-  body .body .body__content .body__wrapper .rules__wrapper .rules__subtitle {
+  body .vl_body .body__content .body__wrapper .rules__wrapper .rules__subtitle {
     color: var(--alert_color);
   }
-  body .body .body__content .body__wrapper .booking__wrapper p {
+  body .vl_body .body__content .body__wrapper .booking__wrapper p {
     font-size: var(--font_size_big_320);
   }
-  body .body .body__content .body__wrapper .booking__wrapper .small_print {
+  body .vl_body .body__content .body__wrapper .booking__wrapper .small_print {
     font-size: var(--font_size_normal_320);
   }
-  body .body .body__content .body__wrapper .gallery__wrapper {
+  body .vl_body .body__content .body__wrapper .gallery__wrapper {
     width: 100%;
   }
-  body .body .body__content .body__wrapper .gallery__wrapper .gallery__image_wrapper {
+  body .vl_body .body__content .body__wrapper .gallery__wrapper .gallery__image_wrapper {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
   }
-  body .body .body__content .body__wrapper .gallery__wrapper .gallery__image_wrapper .image_wrapper {
+  body .vl_body .body__content .body__wrapper .gallery__wrapper .gallery__image_wrapper .image_wrapper {
     width: 30%;
   }
-  body .body .body__content .body__wrapper .gallery__wrapper .gallery__image_wrapper .image_wrapper img.gallery__img {
+  body .vl_body .body__content .body__wrapper .gallery__wrapper .gallery__image_wrapper .image_wrapper img.gallery__img {
     width: 98%;
   }
-  body .body .body__sidebar {
+  body .vl_body .body__sidebar {
     text-align: center;
   }
-  body .body .body__sidebar .calendar {
+  body .vl_body .body__sidebar .calendar {
     /* Month header */
     /* Month list */
     /* Previous button inside month header */
@@ -243,53 +243,53 @@
     /* Days (1-31) */
     /* Highlight the "current" day */
   }
-  body .body .body__sidebar .calendar ul {
+  body .vl_body .body__sidebar .calendar ul {
     list-style-type: none;
   }
-  body .body .body__sidebar .calendar body {
+  body .vl_body .body__sidebar .calendar body {
     font-family: Verdana, sans-serif;
   }
-  body .body .body__sidebar .calendar .month {
+  body .vl_body .body__sidebar .calendar .month {
     padding: 25px;
     background: var(--third_color);
     text-align: center;
   }
-  body .body .body__sidebar .calendar .month ul {
+  body .vl_body .body__sidebar .calendar .month ul {
     margin: 0;
     padding: 0;
   }
-  body .body .body__sidebar .calendar .month ul li {
+  body .vl_body .body__sidebar .calendar .month ul li {
     color: white;
     font-size: 20px;
     text-transform: uppercase;
     letter-spacing: 3px;
   }
-  body .body .body__sidebar .calendar .month .prev {
+  body .vl_body .body__sidebar .calendar .month .prev {
     float: left;
     padding-top: 10px;
   }
-  body .body .body__sidebar .calendar .month .next {
+  body .vl_body .body__sidebar .calendar .month .next {
     float: right;
     padding-top: 10px;
   }
-  body .body .body__sidebar .calendar .weekdays {
+  body .vl_body .body__sidebar .calendar .weekdays {
     margin: 0;
     padding: 10px 0;
     background-color: #ddd;
   }
-  body .body .body__sidebar .calendar .weekdays li {
+  body .vl_body .body__sidebar .calendar .weekdays li {
     display: inline-block;
     width: 12.6%;
     color: #666;
     text-align: center;
   }
-  body .body .body__sidebar .calendar .days {
+  body .vl_body .body__sidebar .calendar .days {
     padding: 10px 0;
     background: #eee;
     margin: 0;
     text-align: justify !important;
   }
-  body .body .body__sidebar .calendar .days li {
+  body .vl_body .body__sidebar .calendar .days li {
     list-style-type: none;
     display: inline-block;
     width: 14.2%;
@@ -298,12 +298,12 @@
     font-size: 12px;
     color: #777;
   }
-  body .body .body__sidebar .calendar .days li .active {
+  body .vl_body .body__sidebar .calendar .days li .active {
     padding: 5px;
     background: var(--third_color);
     color: white !important;
   }
-  body .body .body__sidebar .facebook {
+  body .vl_body .body__sidebar .facebook {
     background-image: linear-gradient(to right, var(--main_color), var(--secondary_color) 5%, var(--secondary_color) 95%, var(--main_color));
   }
   body .footer {
@@ -508,45 +508,45 @@
     transition: transform 3s;
     transform: rotateX(180deg);
   }
-  body .body {
+  body .vl_body {
     margin-top: 0.5%;
     margin-bottom: 0.5%;
     display: grid;
     grid-template-columns: 4fr 1fr;
   }
-  body .body .body__content .body__wrapper {
+  body .vl_body .body__content .body__wrapper {
     margin-right: 0.5%;
     margin-left: 0.5%;
   }
-  body .body .body__content .body__wrapper .home__wrapper .news-article__wrapper .news-article__header .news-article__title {
+  body .vl_body .body__content .body__wrapper .home__wrapper .news-article__wrapper .news-article__header .news-article__title {
     font-size: var(--font_size_normal);
     margin-right: 1%;
   }
-  body .body .body__content .body__wrapper .home__wrapper .news-article__wrapper .news-article__header .news-article__date {
+  body .vl_body .body__content .body__wrapper .home__wrapper .news-article__wrapper .news-article__header .news-article__date {
     font-size: var(--font_size_small);
   }
-  body .body .body__content .body__wrapper .rules__wrapper .rules__subtitle {
+  body .vl_body .body__content .body__wrapper .rules__wrapper .rules__subtitle {
     color: var(--alert_color);
   }
-  body .body .body__content .body__wrapper .gallery__wrapper {
+  body .vl_body .body__content .body__wrapper .gallery__wrapper {
     width: 100%;
   }
-  body .body .body__content .body__wrapper .gallery__wrapper .gallery__image_wrapper {
+  body .vl_body .body__content .body__wrapper .gallery__wrapper .gallery__image_wrapper {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
   }
-  body .body .body__content .body__wrapper .gallery__wrapper .gallery__image_wrapper .image_wrapper {
+  body .vl_body .body__content .body__wrapper .gallery__wrapper .gallery__image_wrapper .image_wrapper {
     width: 30%;
   }
-  body .body .body__content .body__wrapper .gallery__wrapper .gallery__image_wrapper .image_wrapper img.gallery__img {
+  body .vl_body .body__content .body__wrapper .gallery__wrapper .gallery__image_wrapper .image_wrapper img.gallery__img {
     width: 98%;
   }
-  body .body .body__sidebar {
+  body .vl_body .body__sidebar {
     text-align: center;
   }
-  body .body .body__sidebar .calendar {
+  body .vl_body .body__sidebar .calendar {
     /* Month header */
     /* Month list */
     /* Previous button inside month header */
@@ -555,53 +555,53 @@
     /* Days (1-31) */
     /* Highlight the "current" day */
   }
-  body .body .body__sidebar .calendar ul {
+  body .vl_body .body__sidebar .calendar ul {
     list-style-type: none;
   }
-  body .body .body__sidebar .calendar body {
+  body .vl_body .body__sidebar .calendar body {
     font-family: Verdana, sans-serif;
   }
-  body .body .body__sidebar .calendar .month {
+  body .vl_body .body__sidebar .calendar .month {
     padding: 25px;
     background: var(--third_color);
     text-align: center;
   }
-  body .body .body__sidebar .calendar .month ul {
+  body .vl_body .body__sidebar .calendar .month ul {
     margin: 0;
     padding: 0;
   }
-  body .body .body__sidebar .calendar .month ul li {
+  body .vl_body .body__sidebar .calendar .month ul li {
     color: white;
     font-size: 20px;
     text-transform: uppercase;
     letter-spacing: 3px;
   }
-  body .body .body__sidebar .calendar .month .prev {
+  body .vl_body .body__sidebar .calendar .month .prev {
     float: left;
     padding-top: 10px;
   }
-  body .body .body__sidebar .calendar .month .next {
+  body .vl_body .body__sidebar .calendar .month .next {
     float: right;
     padding-top: 10px;
   }
-  body .body .body__sidebar .calendar .weekdays {
+  body .vl_body .body__sidebar .calendar .weekdays {
     margin: 0;
     padding: 10px 0;
     background-color: #ddd;
   }
-  body .body .body__sidebar .calendar .weekdays li {
+  body .vl_body .body__sidebar .calendar .weekdays li {
     display: inline-block;
     width: 12.6%;
     color: #666;
     text-align: center;
   }
-  body .body .body__sidebar .calendar .days {
+  body .vl_body .body__sidebar .calendar .days {
     padding: 10px 0;
     background: #eee;
     margin: 0;
     text-align: justify !important;
   }
-  body .body .body__sidebar .calendar .days li {
+  body .vl_body .body__sidebar .calendar .days li {
     list-style-type: none;
     display: inline-block;
     width: 14.2%;
@@ -610,12 +610,12 @@
     font-size: 12px;
     color: #777;
   }
-  body .body .body__sidebar .calendar .days li .active {
+  body .vl_body .body__sidebar .calendar .days li .active {
     padding: 5px;
     background: var(--third_color);
     color: white !important;
   }
-  body .body .body__sidebar .facebook {
+  body .vl_body .body__sidebar .facebook {
     background-image: linear-gradient(to right, var(--main_color), var(--secondary_color) 5%, var(--secondary_color) 95%, var(--main_color));
   }
   body .footer {

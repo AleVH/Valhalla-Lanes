@@ -246,7 +246,7 @@ body .admin__body .admin__content .admin__rankings .tab-content .subcontent.crea
   margin-top: 5%;
 }
 body .admin__body .admin__content .admin__rankings .tab-content .subcontent.edit form {
-  width: 60%;
+  width: 85%;
   padding: 2%;
   border: 1px solid var(--fifth_color);
   border-radius: 3px;
@@ -258,11 +258,34 @@ body .admin__body .admin__content .admin__rankings .tab-content .subcontent.edit
 body .admin__body .admin__content .admin__rankings .tab-content .subcontent.edit form .form-line .ranking-players {
   margin-top: 10px;
 }
+body .admin__body .admin__content .admin__rankings .tab-content .subcontent.edit form .form-line .ranking-players .display-name {
+  color: var(--main_color);
+}
 body .admin__body .admin__content .admin__rankings .tab-content .subcontent.edit form .form-line .ranking-players .details {
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  height: 60px;
+}
+body .admin__body .admin__content .admin__rankings .tab-content .subcontent.edit form .form-line .ranking-players .details .hide-detail {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 2s linear 300ms, opacity 300ms;
+}
+body .admin__body .admin__content .admin__rankings .tab-content .subcontent.edit form .form-line .ranking-players .details .show-detail {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 2s linear 0s, opacity 300ms;
+}
+body .admin__body .admin__content .admin__rankings .tab-content .subcontent.edit form .form-line .ranking-players .details select {
+  margin-right: 15px;
+  margin-left: 5px;
 }
 body .admin__body .admin__content .admin__rankings .tab-content .subcontent.edit form .form-line .ranking-players .details input {
   margin-right: 10px;
+}
+body .admin__body .admin__content .admin__rankings .tab-content .subcontent.edit form .form-line .ranking-players .details .user-display {
+  width: 15%;
 }
 body .admin__body .admin__content .admin__rankings .tab-content .subcontent.edit form input[type=submit] {
   margin-top: 5%;

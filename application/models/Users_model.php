@@ -16,21 +16,43 @@ class Users_model extends CI_Model {
 		return $results;
 	}
 
-	public function getUserByField($field, $value){
+	public function getUsersByField($field, $value){
 		$this->db->select("*")->from($this->table)->where($field, $value);
 		$results = $this->db->get();
 
 		return $results;
 	}
 
+	public function getUserIdByNameAndLastname($user_name, $user_lastname){
+		$constraints = array(
+			'name' => $user_name,
+			'lastname' => $user_lastname
+		);
+		$this->db->select('id')->from($this->table)->where($constraints);
+		$results = $this->db->get();
+		return $results;
+	}
+
 	public function saveNewUser($name, $lastname, $nickname){
+		$this->load->helper('dberror');
 		$data = array(
 			'name' => $name,
 			'lastname' => $lastname,
 			'nickname' => $nickname
 		);
-		$this->db->insert($this->table, $data);
-		return $this->db->insert_id();
+		if($this->db->insert($this->table, $data)){
+			$results = array(
+				'status' => 'success',
+				'message' => $this->db->insert_id()
+			);
+		}else{
+			$results = array(
+				'status' => 'error',
+				'message' => standardisedMessage($this->db->error()['message'])
+			);
+		}
+
+		return $results;
 	}
 
 	public function deleteUserById($id){
@@ -45,8 +67,21 @@ class Users_model extends CI_Model {
 		}
 	}
 
-	public function getFieldValues($field){
-		$this->db->select($field)->from($this->table)->order_by($field, "asc");
+	/**
+	 * This method is to retrieve the data to build dropdowns that involve users data such as name, surname and nickname
+	 * @param $field
+	 * @param array|null $controlField
+	 * @param array|null $controlValue
+	 * @return mixed
+	 */
+	public function getFieldValues($field, array $controlField = null, array $controlValue = null){
+		// this bit is to be able to search all names or then surnames based on an existing name, or a nickname based on the
+		if($controlField === null && $controlValue === null){
+			$constraintsArray = array(1 => 1);
+		}else{
+			$constraintsArray = array_combine($controlField, $controlValue);
+		}
+		$this->db->select($field)->from($this->table)->where($constraintsArray)->order_by($field, "asc");
 		$results = $this->db->get();
 
 		return $results;
