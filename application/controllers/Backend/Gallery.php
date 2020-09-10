@@ -8,6 +8,7 @@ class Gallery extends Admin {
 	public function __construct(){
 		parent::__construct();
 		$this->load->helper(array('url'));
+		$this->load->model('images_model', 'images', true);
 	}
 
 	/**
@@ -24,6 +25,9 @@ class Gallery extends Admin {
 			$data['status'] = ($section->is_enabled)?'Enabled':"Disabled";
 			$data['disabled'] = ($section->is_enabled)?'':'disabled';
 			$data['error'] = '';
+
+			// get images enabled in gallery
+			$data['gallery_images'] = $this->getGalleryImages();
 
 			// then i check if it's an ajax request, if it's not means the user just logged in
 			if($this->input->is_ajax_request()){
@@ -57,6 +61,33 @@ class Gallery extends Admin {
 		// this would mean that somebody is trying to access this url without being logged in, so redirect to log in area
 			redirect('/admin');
 		}
+
+	}
+
+	public function getExistingMedia(){
+		// load the right helper for the task
+		$this->load->helper('directory');
+		$upload_folder = directory_map('./uploads/');
+
+		return $upload_folder;
+	}
+
+	public function getGalleryImages(){
+		$galleryImagesArray = array();
+		$galleryImages = $this->images->getGalleryImages();
+
+		// change for images and all that shit
+		$this->load->library('../entities/Images_entity');
+		foreach ($galleryImages->result('images_entity') as $galleryImagesDetails){
+			$galleryImagesArray[$galleryImagesDetails->id]['filename'] = $galleryImagesDetails->filename;
+			$galleryImagesArray[$galleryImagesDetails->id]['in_gallery'] = $galleryImagesDetails->in_gallery;
+			$galleryImagesArray[$galleryImagesDetails->id]['is_enabled'] = $galleryImagesDetails->is_enabled;
+			$galleryImagesArray[$galleryImagesDetails->id]['image_order'] = $galleryImagesDetails->image_order;
+		}
+		return $galleryImagesArray;
+	}
+
+	public function getMediaDetails(){
 
 	}
 

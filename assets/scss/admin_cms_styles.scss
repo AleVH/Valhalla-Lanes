@@ -21,7 +21,6 @@ body {
 
 	.admin__header {
 	  height: 100%;
-	  //background-color: red;
 	  display: flex;
 	  flex-direction: row;
 
@@ -53,9 +52,24 @@ body {
 		width: 8%;
 		display: flex;
 		flex-direction: column;
+		cursor: pointer;
 
 		span {
 		  margin: auto;
+
+		  a {
+			text-decoration: none;
+			color: var(--main_text_color);
+
+			&:visited {
+			  color: var(--main_text_color);
+			}
+		  }
+
+		}
+
+		&:hover {
+		  background-color: rgb(32,32,32);
 		}
 
 	  }
@@ -67,7 +81,6 @@ body {
   .admin__body {
 	border-bottom: 1px solid var(--secondary_color);
 	height: calc((100vh - 40px) - 20px);
-	//background-color: blue;
 	display: flex;
 	flex-direction: row;
 	min-height: 700px;
@@ -86,12 +99,10 @@ body {
 		height: 20px;
 
 		&:hover {
-		  //background-color: #2e8ece;
 		  background-color: rgb(32,32,32);
 		}
 
 		&:focus, &.selected {
-		  //background-color: #1abc9c;
 		  background-color: rgb(64,64,64);
 		}
 
@@ -108,6 +119,141 @@ body {
 	  .admin__front-menu {
 
 		.front-menu__content {
+
+		}
+
+	  }
+
+	  .admin__gallery {
+
+		.gallery__display-files {
+		  .gallery_images__wrapper {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: space-between;
+
+			&::after {
+			  content: '';
+			  flex: auto;
+			}
+
+			/*
+			 1/5  - 5 columns per row
+			 10px - spacing between columns
+		  	*/
+			.uploaded_image {
+			  margin: 10px 10px 0 0;
+			  width: calc(1/5*100% - (1 - 1/5)*10px); // the 4 represents the number of columns
+			  // the next 3 lines are to put the elements in the center of the row, comment them to see the effect
+			  display: flex;
+			  flex-direction: column;
+			  justify-content: center;
+
+			  &:first-child {
+				//padding: 0 1vw 0 0;
+			  }
+
+			  &:last-child {
+				//padding: 0 0 0 1vw;
+			  }
+
+			  &:not(:first-child):not(:last-child){
+				//padding: 0 1vw 0 1vw;
+			  }
+
+			  /*
+				align last row columns to the left
+				4n - 4 columns per row
+			  */
+			  &:nth-child(5n){
+				margin-right: 0;
+			  }
+
+			  /*
+				remove top margin from first row
+				-n+3 - 3 columns per row
+			  */
+			  &:nth-child(-n+5){
+				margin-top: 0;
+			  }
+
+			  img {
+				//width: 15vw;
+				max-width: 100%;
+				height: auto;
+				max-height: 250px;
+				object-fit: cover;
+			  }
+
+			}
+		  }
+		}
+
+		.gallery__existing-files {
+
+		  .uploaded_images__wrapper {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: space-between;
+
+			&::after {
+			  content: '';
+			  flex: auto;
+			}
+
+			/*
+			 1/5  - 5 columns per row
+			 10px - spacing between columns
+		  	*/
+			.uploaded_image {
+			  margin: 10px 10px 0 0;
+			  width: calc(1/5*100% - (1 - 1/5)*10px); // the 4 represents the number of columns
+			  // the next 3 lines are to put the elements in the center of the row, comment them to see the effect
+			  display: flex;
+			  flex-direction: column;
+			  justify-content: center;
+
+			  &:first-child {
+				//padding: 0 1vw 0 0;
+			  }
+
+			  &:last-child {
+				//padding: 0 0 0 1vw;
+			  }
+
+			  &:not(:first-child):not(:last-child){
+				//padding: 0 1vw 0 1vw;
+			  }
+
+			  /*
+				align last row columns to the left
+				4n - 4 columns per row
+			  */
+			  &:nth-child(5n){
+				margin-right: 0;
+			  }
+
+			  /*
+				remove top margin from first row
+				-n+3 - 3 columns per row
+			  */
+			  &:nth-child(-n+5){
+				margin-top: 0;
+			  }
+
+			  img {
+				//width: 15vw;
+				max-width: 100%;
+				height: auto;
+				max-height: 250px;
+				object-fit: cover;
+			  }
+
+			}
+
+		  }
 
 		}
 
@@ -527,23 +673,99 @@ body {
 			display: flex;
 			flex-direction: row;
 			flex-wrap: wrap;
+			justify-content: space-between;
 
+			&::after {
+			  content: '';
+			  flex: auto;
+			}
+
+			/*
+			 1/5  - 5 columns per row
+			 10px - spacing between columns
+		  	*/
 			.uploaded_image {
+			  margin: 10px 10px 0 0;
+			  width: calc(1/5*100% - (1 - 1/5)*10px); // the 4 represents the number of columns
+			  // the next 3 lines are to put the elements in the center of the row, comment them to see the effect
+			  display: flex;
+			  flex-direction: column;
+			  justify-content: center;
 
 			  &:first-child {
-				padding: 0 1vw 0 0;
+				//padding: 0 1vw 0 0;
 			  }
 
 			  &:last-child {
-				padding: 0 0 0 1vw;
+				//padding: 0 0 0 1vw;
 			  }
 
 			  &:not(:first-child):not(:last-child){
-				padding: 0 1vw 0 1vw;
+				//padding: 0 1vw 0 1vw;
+			  }
+
+			  /*
+				align last row columns to the left
+				4n - 4 columns per row
+			  */
+			  &:nth-child(5n){
+				margin-right: 0;
+			  }
+
+			  /*
+				remove top margin from first row
+				-n+3 - 3 columns per row
+			  */
+			  &:nth-child(-n+5){
+				margin-top: 0;
+			  }
+
+			  .image_actions {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				margin-bottom: 3px;
+
+				.actions_button {
+				  cursor: pointer;
+				  text-align: center;
+				  padding: 2px 5px;
+				  border: 1px solid var(--main_text_color);
+				  background: var(--secondary_color);
+
+				  &.published {
+					background: var(--enabled_section);
+
+					&:hover {
+					  background: var(--enabled_section_highlight);
+					}
+
+				  }
+
+				  &.unpublished, &.delete {
+					background: var(--disabled_section);
+
+					&:hover {
+					  background: var(--disabled_section_highlight);
+					}
+				  }
+
+				  &:hover {
+					background: #1f1d1d;
+				  }
+				}
 			  }
 
 			  img {
-				width: 15vw;
+				//width: 15vw;
+				max-width: 100%;
+				height: auto;
+				max-height: 250px;
+				object-fit: cover;
+			  }
+
+			  .image_name {
+				margin-top: 3px;
 			  }
 
 			}

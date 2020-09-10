@@ -73,9 +73,20 @@ body header .admin__header .header__logout {
   width: 8%;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 }
 body header .admin__header .header__logout span {
   margin: auto;
+}
+body header .admin__header .header__logout span a {
+  text-decoration: none;
+  color: var(--main_text_color);
+}
+body header .admin__header .header__logout span a:visited {
+  color: var(--main_text_color);
+}
+body header .admin__header .header__logout:hover {
+  background-color: #202020;
 }
 body .admin__body {
   border-bottom: 1px solid var(--secondary_color);
@@ -108,6 +119,88 @@ body .admin__body .admin__content {
   width: 82%;
   padding: 1%;
   overflow: auto;
+}
+body .admin__body .admin__content .admin__gallery .gallery__display-files .gallery_images__wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  /*
+   1/5  - 5 columns per row
+   10px - spacing between columns
+   	*/
+}
+body .admin__body .admin__content .admin__gallery .gallery__display-files .gallery_images__wrapper::after {
+  content: "";
+  flex: auto;
+}
+body .admin__body .admin__content .admin__gallery .gallery__display-files .gallery_images__wrapper .uploaded_image {
+  margin: 10px 10px 0 0;
+  width: calc(1/5*100% - (1 - 1/5)*10px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /*
+  align last row columns to the left
+  4n - 4 columns per row
+   */
+  /*
+  remove top margin from first row
+  -n+3 - 3 columns per row
+   */
+}
+body .admin__body .admin__content .admin__gallery .gallery__display-files .gallery_images__wrapper .uploaded_image:nth-child(5n) {
+  margin-right: 0;
+}
+body .admin__body .admin__content .admin__gallery .gallery__display-files .gallery_images__wrapper .uploaded_image:nth-child(-n+5) {
+  margin-top: 0;
+}
+body .admin__body .admin__content .admin__gallery .gallery__display-files .gallery_images__wrapper .uploaded_image img {
+  max-width: 100%;
+  height: auto;
+  max-height: 250px;
+  object-fit: cover;
+}
+body .admin__body .admin__content .admin__gallery .gallery__existing-files .uploaded_images__wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  /*
+   1/5  - 5 columns per row
+   10px - spacing between columns
+   	*/
+}
+body .admin__body .admin__content .admin__gallery .gallery__existing-files .uploaded_images__wrapper::after {
+  content: "";
+  flex: auto;
+}
+body .admin__body .admin__content .admin__gallery .gallery__existing-files .uploaded_images__wrapper .uploaded_image {
+  margin: 10px 10px 0 0;
+  width: calc(1/5*100% - (1 - 1/5)*10px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /*
+  align last row columns to the left
+  4n - 4 columns per row
+   */
+  /*
+  remove top margin from first row
+  -n+3 - 3 columns per row
+   */
+}
+body .admin__body .admin__content .admin__gallery .gallery__existing-files .uploaded_images__wrapper .uploaded_image:nth-child(5n) {
+  margin-right: 0;
+}
+body .admin__body .admin__content .admin__gallery .gallery__existing-files .uploaded_images__wrapper .uploaded_image:nth-child(-n+5) {
+  margin-top: 0;
+}
+body .admin__body .admin__content .admin__gallery .gallery__existing-files .uploaded_images__wrapper .uploaded_image img {
+  max-width: 100%;
+  height: auto;
+  max-height: 250px;
+  object-fit: cover;
 }
 body .admin__body .admin__content .admin__news .news__articles .news__articles-reference {
   display: flex;
@@ -388,18 +481,73 @@ body .admin__body .admin__content .admin__upload .upload__existing-files .upload
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: space-between;
+  /*
+   1/5  - 5 columns per row
+   10px - spacing between columns
+   	*/
 }
-body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image:first-child {
-  padding: 0 1vw 0 0;
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper::after {
+  content: "";
+  flex: auto;
 }
-body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image:last-child {
-  padding: 0 0 0 1vw;
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image {
+  margin: 10px 10px 0 0;
+  width: calc(1/5*100% - (1 - 1/5)*10px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /*
+  align last row columns to the left
+  4n - 4 columns per row
+   */
+  /*
+  remove top margin from first row
+  -n+3 - 3 columns per row
+   */
 }
-body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image:not(:first-child):not(:last-child) {
-  padding: 0 1vw 0 1vw;
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image:nth-child(5n) {
+  margin-right: 0;
+}
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image:nth-child(-n+5) {
+  margin-top: 0;
+}
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image .image_actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 3px;
+}
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image .image_actions .actions_button {
+  cursor: pointer;
+  text-align: center;
+  padding: 2px 5px;
+  border: 1px solid var(--main_text_color);
+  background: var(--secondary_color);
+}
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image .image_actions .actions_button.published {
+  background: var(--enabled_section);
+}
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image .image_actions .actions_button.published:hover {
+  background: var(--enabled_section_highlight);
+}
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image .image_actions .actions_button.unpublished, body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image .image_actions .actions_button.delete {
+  background: var(--disabled_section);
+}
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image .image_actions .actions_button.unpublished:hover, body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image .image_actions .actions_button.delete:hover {
+  background: var(--disabled_section_highlight);
+}
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image .image_actions .actions_button:hover {
+  background: #1f1d1d;
 }
 body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image img {
-  width: 15vw;
+  max-width: 100%;
+  height: auto;
+  max-height: 250px;
+  object-fit: cover;
+}
+body .admin__body .admin__content .admin__upload .upload__existing-files .uploaded_images__wrapper .uploaded_image .image_name {
+  margin-top: 3px;
 }
 body .admin__body .admin__content .admin__users .tabs {
   height: 45px;

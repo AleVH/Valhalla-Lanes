@@ -131,7 +131,7 @@ if ( ! function_exists('delete_files'))
 
 		if ( ! $current_dir = @opendir($path))
 		{
-			return FALSE;
+			return 'no funca';//FALSE;
 		}
 
 		while (FALSE !== ($filename = @readdir($current_dir)))

@@ -15,7 +15,7 @@ class Imagerender extends Admin {
 	 * this method is to display images that are protected and should not be display everywhere
 	 * @param $file
 	 */
-	public function renderProtectedImage($file){ //echo 'checkpoint image render class';
+	public function renderProtectedImage($file){
 
 		// there should be an instance before rendering the image to check there is a session active, otherwise would be the same as putting the images in public
 		// need to check if there is a user logged in

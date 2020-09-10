@@ -32,11 +32,12 @@ class News_model extends CI_Model {
 	}
 
 	public function saveNewNews($title, $text){
+		$user_logged = $this->session->userdata('verified');
 		$data = array(
 			'news_title' => $title,
 			'news_text' => $text,
 			'is_enabled' => "0",
-			'admin_user_id' => 1
+			'admin_user_id' => $user_logged['user_id']
 		);
 		$this->db->insert($this->table, $data);
 		return $this->db->insert_id();
