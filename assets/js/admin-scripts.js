@@ -105,6 +105,23 @@ let binder = {
 
 	gallery : function(){
 		console.log('gallery scripts binded');
+		$(".gallery_action").click( async function(){
+			let image_id = $(this).closest("[data-image-id]").data("image-id");
+			let image_activation = await specializedLayerBinder.gallery['toggleImageDisplay'](image_id, 1);
+
+			if(image_activation.status === 'success'){
+				$(".sidebar__item.gallery").trigger('click');
+			}
+		});
+
+		$(".gallery_show").click( async function(){
+			let image_id = $(this).closest("[data-image-id]").data("image-id");
+			let image_deactivation = await specializedLayerBinder.gallery['toggleImageDisplay'](image_id, 0);
+
+			if(image_deactivation.status === 'success'){
+				$(".sidebar__item.gallery").trigger('click');
+			}
+		});
 	},
 
 	merchandise : function(){
@@ -870,6 +887,23 @@ let fourthLayerBinder = {
 };
 
 let specializedLayerBinder = {
+	gallery:{
+		toggleImageDisplay: async function(image_id, image_gallery_status){
+			return new Promise((resolve, reject) => {
+				$.ajax({
+					method: "POST",
+					url: base_url + "/gallery/toggleimagedisplay",
+					data: {
+						id: image_id,
+						status: image_gallery_status
+					},
+					dataType: "json"
+				}).then((response) => {
+					resolve(response);
+				});
+			})
+		}
+	},
 	ranking: {
 		getRankToEditPromise: async function(rank_id){
 			return new Promise(function(resolve, reject){

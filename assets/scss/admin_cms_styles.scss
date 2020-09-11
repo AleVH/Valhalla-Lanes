@@ -186,6 +186,16 @@ body {
 				object-fit: cover;
 			  }
 
+			  .gallery_show {
+				cursor: pointer;
+				text-align: center;
+				background: var(--disabled_section);
+
+				&:hover {
+				  background: var(--disabled_section_highlight);
+				}
+			  }
+
 			}
 		  }
 		}
@@ -249,6 +259,16 @@ body {
 				height: auto;
 				max-height: 250px;
 				object-fit: cover;
+			  }
+
+			  .gallery_action {
+				cursor: pointer;
+				text-align: center;
+				background: var(--enabled_section);
+
+				&:hover {
+				  background: var(--enabled_section_highlight);
+				}
 			  }
 
 			}

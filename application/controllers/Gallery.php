@@ -7,6 +7,7 @@ class Gallery extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->load->library('../entities/Menu_sections_entity');
+		$this->load->model('images_model', 'images', true);
 	}
 
     public function index(){
@@ -14,27 +15,10 @@ class Gallery extends CI_Controller {
         if ( ! file_exists(APPPATH.'views/pages/content-templates/content-gallery.php'))
         {
             // Whoops, we don't have a page for that!
-//            show_404();
-            return "fuck...";
+            show_404();
         }
-        $this->load->library('image_lib');
-		$this->load->helper('directory');
 
-        $map_uploads = directory_map('./assets/media/gallery');
-
-//		$images = scandir('./assets/media/gallery/');
-
-//        $config['image_library'] = 'gd2';
-//        $config['source_image'] = '/assets/media/gallery/1.jpg';
-//        $config['create_thumb'] = TRUE;
-//        $config['maintain_ratio'] = TRUE;
-//        $config['width'] = 75;
-//        $config['height'] = 50;
-
-//        $this->load->library('image_lib', $config);
-
-        $this->image_lib->resize();
-		$data['gallery'] = $map_uploads;
+		$data['gallery'] = $this->getActiveGalleryImages();
 
         if($this->input->is_ajax_request()){
         	$this->load->helpers('response');
@@ -72,14 +56,6 @@ class Gallery extends CI_Controller {
 			$this->load->view('templates/footer', $data);
 		}
 
-//		$data['gallery'] = $map_uploads;
-//
-//		$data['title'] = 'Gallery';
-//
-//		$this->load->helper('url');
-//        $this->load->view('templates/header', $data);
-//        $this->load->view('pages/gallery', $data);
-//        $this->load->view('templates/footer', $data);
     }
 
 	/**
@@ -96,6 +72,19 @@ class Gallery extends CI_Controller {
 			"today" => $calendar->getDate()
 		);
 		return $calendar_array;
+	}
+
+	/**
+	 * This method returns images displayed in the gallery section in the front
+	 * @return array
+	 */
+	private function getActiveGalleryImages(){
+		$galleryImagesResult = $this->images->getFrontGalleryImages();
+		$galleryImages = array();
+		foreach($galleryImagesResult->result() as $eachImage){
+			$galleryImages[] = $eachImage->filename;
+		}
+		return $galleryImages;
 	}
 
 }

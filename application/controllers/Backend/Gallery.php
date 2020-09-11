@@ -64,14 +64,6 @@ class Gallery extends Admin {
 
 	}
 
-	public function getExistingMedia(){
-		// load the right helper for the task
-		$this->load->helper('directory');
-		$upload_folder = directory_map('./uploads/');
-
-		return $upload_folder;
-	}
-
 	public function getGalleryImages(){
 		$galleryImagesArray = array();
 		$galleryImages = $this->images->getGalleryImages();
@@ -79,12 +71,31 @@ class Gallery extends Admin {
 		// change for images and all that shit
 		$this->load->library('../entities/Images_entity');
 		foreach ($galleryImages->result('images_entity') as $galleryImagesDetails){
-			$galleryImagesArray[$galleryImagesDetails->id]['filename'] = $galleryImagesDetails->filename;
-			$galleryImagesArray[$galleryImagesDetails->id]['in_gallery'] = $galleryImagesDetails->in_gallery;
-			$galleryImagesArray[$galleryImagesDetails->id]['is_enabled'] = $galleryImagesDetails->is_enabled;
-			$galleryImagesArray[$galleryImagesDetails->id]['image_order'] = $galleryImagesDetails->image_order;
+			// divide the array in images "in gallery" and "not in gallery"
+			if($galleryImagesDetails->in_gallery){
+				$galleryImagesArray['published'][$galleryImagesDetails->id]['filename'] = $galleryImagesDetails->filename;
+				$galleryImagesArray['published'][$galleryImagesDetails->id]['in_gallery'] = $galleryImagesDetails->in_gallery;
+				$galleryImagesArray['published'][$galleryImagesDetails->id]['is_enabled'] = $galleryImagesDetails->is_enabled;
+				$galleryImagesArray['published'][$galleryImagesDetails->id]['image_order'] = $galleryImagesDetails->image_order;
+			}else{
+				$galleryImagesArray['unpublished'][$galleryImagesDetails->id]['filename'] = $galleryImagesDetails->filename;
+				$galleryImagesArray['unpublished'][$galleryImagesDetails->id]['in_gallery'] = $galleryImagesDetails->in_gallery;
+				$galleryImagesArray['unpublished'][$galleryImagesDetails->id]['is_enabled'] = $galleryImagesDetails->is_enabled;
+				$galleryImagesArray['unpublished'][$galleryImagesDetails->id]['image_order'] = $galleryImagesDetails->image_order;
+			}
 		}
 		return $galleryImagesArray;
+	}
+
+	public function toggleImageDisplay(){
+		$this->load->helper(array('response', 'input'));
+		$imageID = sanitizeInteger($this->input->post('id'));
+		$imageGalleryStatus = sanitizeInteger($this->input->post('status'));
+		if($this->images->toogleInageGalleryStatus($imageID, $imageGalleryStatus)){
+			echo returnResponse('success', 'OK', 'jsonizeResponse');
+		}else{
+			echo returnResponse('error', 'ERROR', 'jsonizeResponse');
+		}
 	}
 
 	public function getMediaDetails(){
