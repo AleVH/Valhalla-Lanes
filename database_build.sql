@@ -105,6 +105,7 @@ CREATE TABLE `images` (
   `admin_user_id` int(11) NOT NULL,
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime DEFAULT NULL,
+  `image_order` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `admin user foreign key` (`admin_user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
