@@ -31,11 +31,20 @@ $(document).ready(function(){
 	});
 
 	// to logout a user
-	$(".logout_user").click(function(e) {
+
+	// $(".logout_user").click(function(e) {
+	// 	e.preventDefault();
+	// 	let confirmation = confirm("Are you sure you want to close you session?");
+	// 	if(confirmation){
+	// 		window.location.href = base_url + $(this).attr('href');
+	// 	}
+	// });
+
+	$(".header__logout").click(function(e) {
 		e.preventDefault();
 		let confirmation = confirm("Are you sure you want to close you session?");
 		if(confirmation){
-			window.location.href = base_url + $(this).attr('href');
+			window.location.href = base_url + $(this).find(".logout_user").attr('href');
 		}
 	});
 
@@ -96,6 +105,23 @@ let binder = {
 
 	gallery : function(){
 		console.log('gallery scripts binded');
+		$(".gallery_action").click( async function(){
+			let image_id = $(this).closest("[data-image-id]").data("image-id");
+			let image_activation = await specializedLayerBinder.gallery['toggleImageDisplay'](image_id, 1);
+
+			if(image_activation.status === 'success'){
+				$(".sidebar__item.gallery").trigger('click');
+			}
+		});
+
+		$(".gallery_show").click( async function(){
+			let image_id = $(this).closest("[data-image-id]").data("image-id");
+			let image_deactivation = await specializedLayerBinder.gallery['toggleImageDisplay'](image_id, 0);
+
+			if(image_deactivation.status === 'success'){
+				$(".sidebar__item.gallery").trigger('click');
+			}
+		});
 	},
 
 	merchandise : function(){
@@ -295,7 +321,7 @@ let binder = {
 		let content_wrapper = $('.content');
 		// let base_url = window.location.origin;
 
-		// Miscellaneous
+		// this was to add more files - assuming you could only select one per time - but it's not used anymore. im just keeping it to remember how to do it :P
 		$('.admin_files .add_more').on('click', function(e){
 			console.log('add more files clicked');
 			// e.stopPropagation();
@@ -329,8 +355,7 @@ let binder = {
 				}
 			).done(function (response) {
 				if(response.status === 'success'){
-					console.log('success response');
-					window.location.replace(response.message);
+					$(".sidebar__item.upload").trigger('click');
 				}else{
 					console.log('error response');
 					// this is for when something is wrong with the credentials
@@ -338,8 +363,49 @@ let binder = {
 					// $('.admin__login.error').fadeOut(3200, function(){
 					// 	$(this).html('&nbsp;').css('display', '');
 					// });
+
+					// trigger click event to load section (click on the sidebar "Upload" button)
 				}
 			});
+		});
+
+		$(".actions_button.delete").click(async function(){
+			// get the image id for the button clicked
+			let image_id = $(this).closest("[data-image-id]").data("image-id");
+			let image_filename = $(this).parent().siblings('div.image_name').text()
+			let confirmation = confirm("This operation cannot be undone.\nAre you sure you want to delete this image?");
+
+			if(confirmation){
+				console.log('deleted!');
+				console.log('data id: ' + image_id);
+				console.log('image name: ' + image_filename);
+				let deletion_response = await specializedLayerBinder.upload['deleteImage'](image_id, image_filename);
+
+				if(deletion_response.status === 'success'){
+					$(".sidebar__item.upload").trigger('click');
+				}
+				// TO-DO needs to handle errors...
+			}
+		});
+
+		$(".actions_button.publish").click(async function (){
+			console.log("publish button clicked");
+			// get the image id for the button clicked
+			let image_id = $(this).closest("[data-image-id]").data("image-id");
+			// get current publish status
+			let image_publish_status = 1;
+			if($(this).hasClass("published")){
+				image_publish_status = 0;
+			}
+			let toggle_publish_status = await specializedLayerBinder.upload['togglePublishStatus'](image_id, image_publish_status);
+			if(toggle_publish_status.status === 'success'){
+				if(image_publish_status){
+					$(this).addClass("published").removeClass("unpublished");
+				}else{
+					$(this).addClass("unpublished").removeClass("published");
+				}
+
+			}
 		});
 	},
 
@@ -821,6 +887,23 @@ let fourthLayerBinder = {
 };
 
 let specializedLayerBinder = {
+	gallery:{
+		toggleImageDisplay: async function(image_id, image_gallery_status){
+			return new Promise((resolve, reject) => {
+				$.ajax({
+					method: "POST",
+					url: base_url + "/gallery/toggleimagedisplay",
+					data: {
+						id: image_id,
+						status: image_gallery_status
+					},
+					dataType: "json"
+				}).then((response) => {
+					resolve(response);
+				});
+			})
+		}
+	},
 	ranking: {
 		getRankToEditPromise: async function(rank_id){
 			return new Promise(function(resolve, reject){
@@ -1115,6 +1198,39 @@ let specializedLayerBinder = {
 						break;
 				}
 			}
+		}
+	},
+
+	upload: {
+		deleteImage: async function(image_id, image_filename){
+			return new Promise((resolve, reject) => {
+				$.ajax({
+					method: "POST",
+					url: base_url + "/upload/delete",
+					data: {
+						id: image_id,
+						filename: image_filename
+					},
+					dataType: "json"
+				}).then((response) => {
+					resolve(response);
+				})
+			});
+		},
+		togglePublishStatus: async function(image_id, image_publish_status){
+			return new Promise((resolve, reject) => {
+				$.ajax({
+					method: "POST",
+					url: base_url + "/upload/togglepublish",
+					data: {
+						id: image_id,
+						publish_status: image_publish_status
+					},
+					dataType: "json"
+				}).then((response) => {
+					resolve(response);
+				});
+			});
 		}
 	},
 

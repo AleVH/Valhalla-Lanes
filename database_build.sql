@@ -96,3 +96,15 @@ CREATE TABLE `rankings_results` (
   KEY `users foreign key` (`users_id`),
   CONSTRAINT `users foreign key` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `images` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `filename` varchar(255) NOT NULL DEFAULT '',
+  `in_gallery` set('0','1') DEFAULT '0',
+  `is_enabled` set('0','1') DEFAULT '0',
+  `admin_user_id` int(11) NOT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `admin user foreign key` (`admin_user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

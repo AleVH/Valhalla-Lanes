@@ -8,6 +8,7 @@ class Gallery extends Admin {
 	public function __construct(){
 		parent::__construct();
 		$this->load->helper(array('url'));
+		$this->load->model('images_model', 'images', true);
 	}
 
 	/**
@@ -24,6 +25,9 @@ class Gallery extends Admin {
 			$data['status'] = ($section->is_enabled)?'Enabled':"Disabled";
 			$data['disabled'] = ($section->is_enabled)?'':'disabled';
 			$data['error'] = '';
+
+			// get images enabled in gallery
+			$data['gallery_images'] = $this->getGalleryImages();
 
 			// then i check if it's an ajax request, if it's not means the user just logged in
 			if($this->input->is_ajax_request()){
@@ -57,6 +61,44 @@ class Gallery extends Admin {
 		// this would mean that somebody is trying to access this url without being logged in, so redirect to log in area
 			redirect('/admin');
 		}
+
+	}
+
+	public function getGalleryImages(){
+		$galleryImagesArray = array();
+		$galleryImages = $this->images->getGalleryImages();
+
+		// change for images and all that shit
+		$this->load->library('../entities/Images_entity');
+		foreach ($galleryImages->result('images_entity') as $galleryImagesDetails){
+			// divide the array in images "in gallery" and "not in gallery"
+			if($galleryImagesDetails->in_gallery){
+				$galleryImagesArray['published'][$galleryImagesDetails->id]['filename'] = $galleryImagesDetails->filename;
+				$galleryImagesArray['published'][$galleryImagesDetails->id]['in_gallery'] = $galleryImagesDetails->in_gallery;
+				$galleryImagesArray['published'][$galleryImagesDetails->id]['is_enabled'] = $galleryImagesDetails->is_enabled;
+				$galleryImagesArray['published'][$galleryImagesDetails->id]['image_order'] = $galleryImagesDetails->image_order;
+			}else{
+				$galleryImagesArray['unpublished'][$galleryImagesDetails->id]['filename'] = $galleryImagesDetails->filename;
+				$galleryImagesArray['unpublished'][$galleryImagesDetails->id]['in_gallery'] = $galleryImagesDetails->in_gallery;
+				$galleryImagesArray['unpublished'][$galleryImagesDetails->id]['is_enabled'] = $galleryImagesDetails->is_enabled;
+				$galleryImagesArray['unpublished'][$galleryImagesDetails->id]['image_order'] = $galleryImagesDetails->image_order;
+			}
+		}
+		return $galleryImagesArray;
+	}
+
+	public function toggleImageDisplay(){
+		$this->load->helper(array('response', 'input'));
+		$imageID = sanitizeInteger($this->input->post('id'));
+		$imageGalleryStatus = sanitizeInteger($this->input->post('status'));
+		if($this->images->toogleInageGalleryStatus($imageID, $imageGalleryStatus)){
+			echo returnResponse('success', 'OK', 'jsonizeResponse');
+		}else{
+			echo returnResponse('error', 'ERROR', 'jsonizeResponse');
+		}
+	}
+
+	public function getMediaDetails(){
 
 	}
 
