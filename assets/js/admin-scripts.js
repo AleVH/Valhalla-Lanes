@@ -407,6 +407,37 @@ let binder = {
 
 			}
 		});
+
+		$(".actions_button.rename").click(function(){
+			console.log('rename!');
+			$(this).closest(".uploaded_image_card").toggleClass("display_edit_form");
+		});
+
+		$(".image_filename_edit .filename_edit_cancel").click(function(){
+			console.log('cancel rename!');
+			$(this).closest(".uploaded_image_card").toggleClass("display_edit_form");
+		});
+
+		$(".image_filename_edit").submit(async function(e){
+			e.preventDefault();
+			let image_id = $(this).find(".new_filename_image_id").val();
+			let new_filename = $(this).find(".image_new_filename").val();
+			// console.log("id: " + image_id);
+			// console.log("new name: " + new_filename);
+			let renaming = await specializedLayerBinder.upload['renameImage'](image_id, new_filename);
+
+			if(renaming.status === 'success'){
+				$(".sidebar__item.upload").trigger('click');
+			}else{
+				if(renaming.message !== 'ERROR'){
+					$(".error-msgs").html(renaming.message).css("color", "red");
+					$(".error-msgs").fadeOut(3000, function(){
+						$(this).html("").css("display", "");
+					});
+				}
+			}
+
+		});
 	},
 
 	users : function(){
@@ -904,6 +935,7 @@ let specializedLayerBinder = {
 			})
 		}
 	},
+
 	ranking: {
 		getRankToEditPromise: async function(rank_id){
 			return new Promise(function(resolve, reject){
@@ -1230,6 +1262,21 @@ let specializedLayerBinder = {
 				}).then((response) => {
 					resolve(response);
 				});
+			});
+		},
+		renameImage: async function(image_id, image_new_filename){
+			return new Promise((resolve, reject) => {
+				$.ajax({
+					method: "POST",
+					url: base_url + "/upload/rename",
+					data: {
+						id: image_id,
+						new_filename: image_new_filename
+					},
+					dataType: "json"
+				}).then((response) => {
+					resolve(response);
+				})
 			});
 		}
 	},

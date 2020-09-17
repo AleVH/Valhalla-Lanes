@@ -91,7 +91,7 @@ class Gallery extends Admin {
 		$this->load->helper(array('response', 'input'));
 		$imageID = sanitizeInteger($this->input->post('id'));
 		$imageGalleryStatus = sanitizeInteger($this->input->post('status'));
-		if($this->images->toogleInageGalleryStatus($imageID, $imageGalleryStatus)){
+		if($this->images->toogleImageGalleryStatus($imageID, $imageGalleryStatus)){
 			echo returnResponse('success', 'OK', 'jsonizeResponse');
 		}else{
 			echo returnResponse('error', 'ERROR', 'jsonizeResponse');

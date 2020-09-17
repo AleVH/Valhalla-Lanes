@@ -135,6 +135,24 @@ class Upload extends Admin {
 					$this->load->library('upload', $config);
 
 					// File upload - the 'file' between brackets makes reference to the 'file' in $_FILES['file'] so needs to match and can't be plural
+//					try{
+//						if($this->upload->do_upload('file')){
+//
+//							// Get data about the file
+//							$uploadData = $this->upload->data();
+//							$filename = $uploadData['file_name'];
+//
+//							// Initialize array
+//							$data['filenames'][] = $filename;
+//
+//							$this->images->saveImageDetails($filename);
+//
+//						}
+//					}catch (Exception $e){
+//						echo 'code: '.$e->getCode().' - message'.$e->getMessage();
+//					}
+
+
 					if($this->upload->do_upload('file')){
 
 						// Get data about the file
@@ -148,6 +166,10 @@ class Upload extends Admin {
 //						echo 'filename2: '.$_FILES['files']['name'][$i];
 //						echo 'filename3: '.$_FILES['file']['name'];
 						$this->images->saveImageDetails($filename);
+					}else{
+						// this displays the error message. needs to be done properly, otherwise in the front of the cms the image doesn't get uploaded but nobody knows why
+						$error = array('error' => $this->upload->display_errors());
+						var_dump($error);
 					}
 				}
 
@@ -196,6 +218,44 @@ class Upload extends Admin {
 		}else{
 			echo returnResponse('error', 'ERROR', 'jsonizeResponse');
 		}
+
+	}
+
+	/**
+	 * this method is to rename image files. DOES NOT include the extension (jpg, jpeg, gif, png, etc)
+	 */
+	public function renameImage(){
+		$this->load->helper(array('response', 'input'));
+
+		// if the filename is empty do nothing
+		if(empty($this->input->post('new_filename'))){
+			return false;
+		}
+
+		$imageId = sanitizeInteger($this->input->post('id'));
+		$newFilename = sanitizeStringRemoveAllNonAlphanumeric($this->input->post('new_filename'));
+		$currentFilenameResult = $this->images->getImageFilename($imageId);
+
+		// the next lines are to get the file extension
+		$extension = substr($currentFilenameResult->row()->filename, strpos($currentFilenameResult->row()->filename, "."));
+
+
+		// check if that name is already used
+		$checkDuplicates = $this->images->checkDuplicatedFilename($newFilename.$extension);
+		if(!$checkDuplicates->row()){
+			// this renames the actual file
+			rename("./uploads/".$currentFilenameResult->row()->filename, "./uploads/".$newFilename.$extension);
+
+			if($this->images->renameImageFile($imageId, $newFilename.$extension)){
+				echo returnResponse('success', 'OK', 'jsonizeResponse');
+			}else{
+				echo returnResponse('error', 'ERROR', 'jsonizeResponse');
+			}
+		}else{
+			echo returnResponse('error', 'Duplicated filename', 'jsonizeResponse');
+		}
+
+
 
 	}
 

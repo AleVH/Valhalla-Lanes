@@ -28,14 +28,35 @@
 				<?php
 				foreach ($existing as $image_id => $eachimage) {
 					?>
-					<div class="uploaded_image">
-						<div class="image_actions" data-image-id="<?= $image_id ?>">
-							<div class="actions_button rename">Rename</div>
-							<div class="actions_button delete">Delete</div>
-							<div class="actions_button publish <?= ($eachimage['is_enabled'])?"published":"unpublished" ?>">Publish</div>
+					<div class="uploaded_image_card">
+						<div class="uploaded_image">
+							<div class="image_actions" data-image-id="<?= $image_id ?>">
+								<div class="actions_button rename">Rename</div>
+								<div class="actions_button delete">Delete</div>
+								<div class="actions_button publish <?= ($eachimage['is_enabled'])?"published":"unpublished" ?>">Publish</div>
+							</div>
+							<img src="/image/<?= $eachimage['filename'] ?>">
+							<div class="image_name"><?= $eachimage['filename'] ?></div>
 						</div>
-						<img src="/image/<?= $eachimage['filename'] ?>">
-						<div class="image_name"><?= $eachimage['filename'] ?></div>
+						<div class="uploaded_image_action">
+							<div class="image_filename">
+								<h4>Current filename:</h4>
+								<span><?= $eachimage['filename'] ?></span>
+							</div>
+							<hr/>
+							<div class="image_filename_edit">
+								<h4>New filename:</h4>
+								<form class="image_form_filename_edit">
+									<input type="hidden" class="new_filename_image_id" name="new_filename_image_id" value="<?= $image_id ?>">
+									<input type="text" class="image_new_filename" name="image_new_filename" placeholder="Type in the new filename" required>
+									<div class="form_filename_edit__buttons">
+										<input type="submit" class="filename_edit_submit" value="Save">
+										<input type="button" class="filename_edit_cancel" value="Cancel">
+									</div>
+								</form>
+							</div>
+							<div class="error-msgs"></div>
+						</div>
 					</div>
 					<?php
 				}

@@ -28,6 +28,13 @@ class Images_model extends CI_Model {
 		return $results;
 	}
 
+	public function getImageFilename($imageId){
+		$this->db->select("filename")->from($this->table)->where("id", $imageId);
+		$result = $this->db->get();
+
+		return $result;
+	}
+
 	public function getFrontGalleryImages(){
 		$this->db->select("*")->from($this->table)->where("in_gallery", "1")->order_by("image_order", "desc");
 		$results = $this->db->get();
@@ -67,7 +74,7 @@ class Images_model extends CI_Model {
 		}
 	}
 
-	public function toogleInageGalleryStatus($imageId, $imageStatus){
+	public function toogleImageGalleryStatus($imageId, $imageStatus){
 		$this->db->trans_start();
 		$this->db->set('in_gallery', $imageStatus)->set('updated', 'NOW()', false)->where("id", $imageId)->update($this->table);
 		$this->db->trans_complete();
@@ -77,5 +84,24 @@ class Images_model extends CI_Model {
 		}else{
 			return true;
 		}
+	}
+
+	public function renameImageFile($imageId, $newFilename){
+		$this->db->trans_start();
+		$this->db->set('filename', $newFilename)->set('updated', 'NOW()', false)->where("id", $imageId)->update($this->table);
+		$this->db->trans_complete();
+		if($this->db->trans_status() === FALSE){
+			// generate an error... or use the log_message() function to log your error
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+	public function checkDuplicatedFilename($filename){
+		$this->db->select("*")->from($this->table)->where("filename", $filename);
+		$results = $this->db->get();
+
+		return $results;
 	}
 }

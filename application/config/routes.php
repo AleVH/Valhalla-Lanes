@@ -67,6 +67,7 @@ $route['admin/(:any)'] = 'Backend/$1';
 
 // AJAX REQUESTS BEGIN
 $route['gallery/toggleimagedisplay'] = 'Backend/gallery/toggleimagedisplay';
+$route['upload/rename'] = 'Backend/upload/renameimage';
 $route['upload/doupload'] = 'Backend/upload/doupload';
 $route['upload/delete'] = 'Backend/upload/deleteimage';
 $route['upload/togglepublish'] = 'Backend/upload/togglepublish';
