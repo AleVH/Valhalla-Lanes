@@ -82,9 +82,31 @@ class Gallery extends CI_Controller {
 		$galleryImagesResult = $this->images->getFrontGalleryImages();
 		$galleryImages = array();
 		foreach($galleryImagesResult->result() as $eachImage){
-			$galleryImages[] = $eachImage->filename;
+			$galleryImages[] = array(
+				'filename' => $eachImage->filename,
+				'image_order' => $eachImage->image_order
+			);
 		}
+		usort($galleryImages, 'self::sortByImageOrder');
 		return $galleryImages;
+	}
+
+	private static function sortByImageOrder($x, $y){
+		// equal items sort equally
+		if ($x['image_order'] === $y['image_order']) {
+			return 0;
+		}
+		// nulls sort after anything else
+		else if ($x['image_order'] === null) {
+			return 1;
+		}
+		else if ($y['image_order'] === null) {
+			return -1;
+		}
+
+		return ($x['image_order'] < $y['image_order']) ? -1 : 1;
+//		return ($x['image_order'] < $y['image_order']) ? 1 : -1;
+
 	}
 
 }

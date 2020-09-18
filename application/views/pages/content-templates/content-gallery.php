@@ -5,8 +5,8 @@
 	if(isset($gallery) && !empty($gallery)){
 		foreach($gallery as $image){ ?>
 			<div class="image_wrapper">
-				<a href="/image/<?= $image ?>" target="_blank">
-					<img class="gallery__img" src="/image/<?= $image ?>" />
+				<a href="/image/<?= $image['filename'] ?>" target="_blank">
+					<img class="gallery__img" src="/image/<?= $image['filename'] ?>" />
 				</a>
 			</div>
 

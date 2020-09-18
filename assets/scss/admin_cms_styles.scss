@@ -138,6 +138,15 @@ body {
 			  flex: auto;
 			}
 
+			&.disabled {
+			  pointer-events: none;
+			  filter: blur(1px);
+			  -webkit-filter: blur(1.5px);
+			  -moz-filter: blur(1.5px);
+			  -o-filter: blur(1.5px);
+			  -ms-filter: blur(1.5px);
+			}
+
 			/*
 			 1/5  - 5 columns per row
 			 10px - spacing between columns
@@ -149,18 +158,6 @@ body {
 			  display: flex;
 			  flex-direction: column;
 			  justify-content: center;
-
-			  &:first-child {
-				//padding: 0 1vw 0 0;
-			  }
-
-			  &:last-child {
-				//padding: 0 0 0 1vw;
-			  }
-
-			  &:not(:first-child):not(:last-child){
-				//padding: 0 1vw 0 1vw;
-			  }
 
 			  /*
 				align last row columns to the left
@@ -194,10 +191,13 @@ body {
 				&:hover {
 				  background: var(--disabled_section_highlight);
 				}
+
 			  }
 
 			}
+
 		  }
+
 		}
 
 		.gallery__existing-files {

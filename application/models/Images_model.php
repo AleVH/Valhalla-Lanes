@@ -22,7 +22,7 @@ class Images_model extends CI_Model {
 	}
 
 	public function getGalleryImages(){
-		$this->db->select("*")->from($this->table)->where("is_enabled", "1")->order_by("image_order", "desc");
+		$this->db->select("*")->from($this->table)->where("is_enabled", "1")->order_by("image_order", "asc");
 		$results = $this->db->get();
 
 		return $results;
@@ -36,7 +36,7 @@ class Images_model extends CI_Model {
 	}
 
 	public function getFrontGalleryImages(){
-		$this->db->select("*")->from($this->table)->where("in_gallery", "1")->order_by("image_order", "desc");
+		$this->db->select("*")->from($this->table)->where("in_gallery", "1")->order_by("image_order", "asc");
 		$results = $this->db->get();
 
 		return $results;
@@ -103,5 +103,28 @@ class Images_model extends CI_Model {
 		$results = $this->db->get();
 
 		return $results;
+	}
+
+	/**
+	 * this method is to update the image position with the id (although could be anything apart from the id,
+	 * but since it's unique, better to use the id)
+	 * @param array $update_batch
+	 * @param $where
+	 * @return bool|string
+	 */
+	public function updateImagePositions(array $update_batch, $where){
+		if(!is_array($update_batch)){
+			return '$update_batch must be an array';
+		}
+
+		$this->db->trans_start();
+		$this->db->update_batch($this->table, $update_batch, $where);
+		$this->db->trans_complete();
+
+		if($this->db->trans_status() === FALSE){
+			return false;
+		}else{
+			return true;
+		}
 	}
 }

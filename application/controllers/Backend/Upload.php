@@ -81,6 +81,10 @@ class Upload extends Admin {
 //
 //	}
 
+	/**
+	 * this method is to get all uploaded images relevant to the upload section
+	 * @return array
+	 */
 	public function getExistingMedia(){
 		$existingImagesArray = array();
 		$existingImages = $this->images->getUploadedImages();
@@ -208,6 +212,9 @@ class Upload extends Admin {
 
 	}
 
+	/**
+	 * this method handles the publish or unpublish of an image
+	 */
 	public function togglePublish(){
 		$this->load->helper(array('response', 'input'));
 		$imageId = sanitizeInteger($this->input->post('id'));
@@ -255,14 +262,6 @@ class Upload extends Admin {
 			echo returnResponse('error', 'Duplicated filename', 'jsonizeResponse');
 		}
 
-
-
 	}
 
-	/**
-	 * this method is to keep the table images updated with all the uploaded images
-	 */
-	public function updateImageDatabase(){
-
-	}
 }

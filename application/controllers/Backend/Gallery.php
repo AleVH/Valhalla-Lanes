@@ -73,10 +73,13 @@ class Gallery extends Admin {
 		foreach ($galleryImages->result('images_entity') as $galleryImagesDetails){
 			// divide the array in images "in gallery" and "not in gallery"
 			if($galleryImagesDetails->in_gallery){
-				$galleryImagesArray['published'][$galleryImagesDetails->id]['filename'] = $galleryImagesDetails->filename;
-				$galleryImagesArray['published'][$galleryImagesDetails->id]['in_gallery'] = $galleryImagesDetails->in_gallery;
-				$galleryImagesArray['published'][$galleryImagesDetails->id]['is_enabled'] = $galleryImagesDetails->is_enabled;
-				$galleryImagesArray['published'][$galleryImagesDetails->id]['image_order'] = $galleryImagesDetails->image_order;
+				$galleryImagesArray['published'][] = array(
+					'id' => $galleryImagesDetails->id,
+					'filename' => $galleryImagesDetails->filename,
+					'in_gallery' => $galleryImagesDetails->in_gallery,
+					'is_enabled' => $galleryImagesDetails->is_enabled,
+					'image_order' => $galleryImagesDetails->image_order
+				);
 			}else{
 				$galleryImagesArray['unpublished'][$galleryImagesDetails->id]['filename'] = $galleryImagesDetails->filename;
 				$galleryImagesArray['unpublished'][$galleryImagesDetails->id]['in_gallery'] = $galleryImagesDetails->in_gallery;
@@ -84,7 +87,32 @@ class Gallery extends Admin {
 				$galleryImagesArray['unpublished'][$galleryImagesDetails->id]['image_order'] = $galleryImagesDetails->image_order;
 			}
 		}
+		usort($galleryImagesArray['published'], 'self::sortByImageOrder');
 		return $galleryImagesArray;
+	}
+
+	/**
+	 * this method is to put in order the subarray $galleryImagesArray['published'] so the images
+	 * get display in the right order in the gallery section
+	 * @param $x
+	 * @param $y
+	 * @return int
+	 */
+	private static function sortByImageOrder($x, $y){
+		// equal items sort equally
+		if ($x['image_order'] === $y['image_order']) {
+			return 0;
+		}
+		// nulls sort after anything else
+		else if ($x['image_order'] === null) {
+			return 1;
+		}
+		else if ($y['image_order'] === null) {
+			return -1;
+		}
+
+		return ($x['image_order'] < $y['image_order']) ? -1 : 1;
+
 	}
 
 	public function toggleImageDisplay(){
@@ -98,8 +126,23 @@ class Gallery extends Admin {
 		}
 	}
 
-	public function getMediaDetails(){
+	public function updateImagePositions(){
+		$this->load->helper(array('response', 'input'));
+		$updateData = $this->input->post('new_positions'); // do the array sanitation
+		$updateArray = array();
 
+		foreach($updateData as $eachRow){
+			$updateArray[] = array(
+				'id' => $eachRow['id'],
+				'image_order' => $eachRow['image_order']
+			);
+		}
+
+		if($this->images->updateImagePositions($updateArray, 'id')){
+			echo returnResponse('success', 'OK', 'jsonizeResponse');
+		}else{
+			echo returnResponse('error', 'ERROR', 'jsonizeResponse');
+		}
 	}
 
 }

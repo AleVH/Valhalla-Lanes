@@ -17,9 +17,9 @@
 					foreach ($gallery_images['published'] as $image_id => $each_active_image) {
 						?>
 
-							<div class="uploaded_image" data-image-id="<?= $image_id ?>">
+							<div class="uploaded_image" data-image-id="<?= $each_active_image['id'] ?>">
 								<div class="gallery_details">
-									<div class="gallery_order"> #<?= ($each_active_image['image_order'])?$each_active_image['image_order']:'no pos' ?> </div>
+									<div class="gallery_order"> <?= ($each_active_image['image_order'])?"#".$each_active_image['image_order']:"No position" ?> </div>
 									<div class="image_filename"><?= $each_active_image['filename'] ?></div>
 								</div>
 								<img src="/image/<?= $each_active_image['filename'] ?>">

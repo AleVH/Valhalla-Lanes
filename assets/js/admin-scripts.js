@@ -103,7 +103,7 @@ let binder = {
 		console.log('front sections scripts binded');
 	},
 
-	gallery : function(){
+	gallery : async function(){
 		console.log('gallery scripts binded');
 		$(".gallery_action").click( async function(){
 			let image_id = $(this).closest("[data-image-id]").data("image-id");
@@ -122,6 +122,19 @@ let binder = {
 				$(".sidebar__item.gallery").trigger('click');
 			}
 		});
+
+		// this bit is to manage gallery image order with drag and drop
+		$(".gallery_images__wrapper").sortable({
+			items: ".uploaded_image",
+			revert: true,
+			tolerance: "pointer",
+			opacity: 0.5,
+			stop: (event, ui) => {
+				specializedLayerBinder.gallery['reviewGalleryImagePositions']();
+			}
+		});
+		$(".gallery_images__wrapper").disableSelection();
+
 	},
 
 	merchandise : function(){
@@ -919,6 +932,49 @@ let fourthLayerBinder = {
 
 let specializedLayerBinder = {
 	gallery:{
+		reviewGalleryImagePositions: async function(){
+			// blur the screen
+			$(".gallery_images__wrapper").addClass("disabled");
+			// get all images displayed in the gallery
+			let gallery_images = $(".gallery_images__wrapper").children(".uploaded_image");
+			// let update_obj = {};
+			let update_arr = [];
+			$.each(gallery_images, function(index){
+				// I need the id and position of each image
+				// update_obj[(index + 1)] = $(this).data("image-id"); // option with object
+				// option with mix of array an object
+				update_arr.push({
+					id: $(this).data("image-id"),
+					image_order: (index + 1)
+				});
+
+			});
+			// let update_position_reponse = await specializedLayerBinder.gallery['updateGalleryImagePosition'](update_obj);
+			let update_position_reponse = await specializedLayerBinder.gallery['updateGalleryImagePosition'](update_arr);
+			if(update_position_reponse.status === 'success'){
+				console.log('update positions ok');
+				// unblur the screen
+				$(".gallery_images__wrapper").removeClass("disabled");
+				$(".sidebar__item.gallery").trigger('click');
+			}else{
+				console.log('error while updating positions');
+			}
+
+		},
+		updateGalleryImagePosition: async function(images_position){
+			return new Promise( (resolve, reject) => {
+				$.ajax({
+					method: "POST",
+					url: base_url + "/gallery/updateimagepositions",
+					data: {
+						new_positions: images_position,
+					},
+					dataType: "json"
+				}).then( (response) => {
+					resolve(response);
+				})
+			});
+		},
 		toggleImageDisplay: async function(image_id, image_gallery_status){
 			return new Promise((resolve, reject) => {
 				$.ajax({
