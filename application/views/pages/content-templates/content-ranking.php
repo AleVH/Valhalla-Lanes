@@ -23,7 +23,7 @@
 								<?php
 							}else{
 								?>
-								<div>Until: No end date</div>
+								<div>Until: we all reach valhalla</div>
 								<?php
 							}
 							?>
