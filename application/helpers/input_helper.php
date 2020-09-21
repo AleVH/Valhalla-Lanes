@@ -22,3 +22,11 @@ function sanitizeStringRemoveAllNonAlphanumeric($input_value){
 	return preg_replace("/[^A-Za-z0-9]/", '_', $input_value); // this will replace everything that is not a letter or a number with an underscore
 //	return preg_replace("/[^A-Za-z0-9 ]/", '_', $input_value); // this will replace everything is not a letter, number or space with an underscore
 }
+
+/**
+ * this method is to sanitize arrays. the arguments are the array and how to sanitize it // needs more work
+ * @return mixed
+ */
+function sanitizeArray($arrayToSanitize, $argsToSanitize){
+	return filter_var_array($arrayToSanitize, $argsToSanitize);
+}

@@ -26,7 +26,6 @@ class Home extends CI_Controller {
 			echo returnResponse('success', $load_section, 'jsonizeResponse');
 		}else{
 			// check sections
-			$sections = new Menu_sectionsmodel();
 			$results = $this->menu_sections->getEnabledMenuSections();
 			$data['menu'] = array();
 			if(count($results->result_array()) > 0){

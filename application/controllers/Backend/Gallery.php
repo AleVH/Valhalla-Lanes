@@ -128,14 +128,16 @@ class Gallery extends Admin {
 
 	public function updateImagePositions(){
 		$this->load->helper(array('response', 'input'));
-		$updateData = $this->input->post('new_positions'); // do the array sanitation
-		$updateArray = array();
+		$updateData = $this->input->post('new_positions');
+		if($updateData){
+			$updateArray = array();
 
-		foreach($updateData as $eachRow){
-			$updateArray[] = array(
-				'id' => $eachRow['id'],
-				'image_order' => $eachRow['image_order']
-			);
+			foreach($updateData as $eachRow){
+				$updateArray[] = array(
+					'id' => sanitizeInteger($eachRow['id']),
+					'image_order' => sanitizeInteger($eachRow['image_order'])
+				);
+			}
 		}
 
 		if($this->images->updateImagePositions($updateArray, 'id')){

@@ -268,6 +268,62 @@
 
 		  }
 
+		  .ranking__wrapper {
+
+			.ranking_tables__wrapper {
+			  display: flex;
+			  flex-direction: row;
+			  flex-wrap: wrap;
+			  justify-content: center;
+
+			  .ranking_table {
+				width: 30%;
+				height: auto;
+				padding: .5%;
+				margin: .5%;
+				border: 1px solid var(--main_text_color);
+
+				.ranking_table__rank_details {
+
+				  .rank_details_row {
+					display: flex;
+					flex-direction: row;
+					justify-content: center;
+					margin-top: 1%;
+					margin-bottom: 1%;
+				  }
+				}
+
+				.ranking_table__players_details {
+				  padding-top: 2%;
+
+				  .rank_player_row {
+					display: flex;
+					flex-direction: row;
+					justify-content: space-between;
+					margin-top: 1%;
+					margin-bottom: 1%;
+
+					.player_position {
+					  flex-basis: 10%;
+					  text-align: center;
+					}
+
+					.player_name {
+					  flex-basis: 70%;
+					  text-align: left;
+					}
+
+					.player_score {
+					  flex-basis: 20%;
+					  text-align: right;
+					}
+				  }
+				}
+			  }
+			}
+		  }
+
 		}
 
 	  }

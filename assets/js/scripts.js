@@ -39,11 +39,9 @@ $(document).ready(function(){
 			dataType: "json"
 		}).done(function(response){
 			if(response.status === "success"){
-				console.log("success");
 				$(".body__wrapper").html(response.message);
 			}else{
-				console.log("error");
-				$(".body__wrapper").html("ERROR" + response.message);
+				$(".body__wrapper").html("ERROR: " + response.message);
 			}
 		});
 	});

@@ -70,4 +70,11 @@ class Rankings_model extends CI_Model {
 
 		return $result;
 	}
+
+	public function getActiveRankings(){
+		$this->db->select('r.id, r.title, r.tops, r.start_date, r.end_date, rr.player_score, rr.player_name_display, u.name, u.lastname, u.nickname')->from($this->table." as r")->join("rankings_results as rr", "r.id = rr.ranking_id")->join("users as u", "rr.users_id = u.id")->where("r.is_enabled", "1");
+		$results = $this->db->get();
+
+		return $results;
+	}
 }

@@ -235,6 +235,48 @@
     object-fit: cover;
     object-position: center top;
   }
+  body .vl_body .body__content .body__wrapper .ranking__wrapper .ranking_tables__wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  body .vl_body .body__content .body__wrapper .ranking__wrapper .ranking_tables__wrapper .ranking_table {
+    width: 30%;
+    height: auto;
+    padding: 0.5%;
+    margin: 0.5%;
+    border: 1px solid var(--main_text_color);
+  }
+  body .vl_body .body__content .body__wrapper .ranking__wrapper .ranking_tables__wrapper .ranking_table .ranking_table__rank_details .rank_details_row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 1%;
+    margin-bottom: 1%;
+  }
+  body .vl_body .body__content .body__wrapper .ranking__wrapper .ranking_tables__wrapper .ranking_table .ranking_table__players_details {
+    padding-top: 2%;
+  }
+  body .vl_body .body__content .body__wrapper .ranking__wrapper .ranking_tables__wrapper .ranking_table .ranking_table__players_details .rank_player_row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 1%;
+    margin-bottom: 1%;
+  }
+  body .vl_body .body__content .body__wrapper .ranking__wrapper .ranking_tables__wrapper .ranking_table .ranking_table__players_details .rank_player_row .player_position {
+    flex-basis: 10%;
+    text-align: center;
+  }
+  body .vl_body .body__content .body__wrapper .ranking__wrapper .ranking_tables__wrapper .ranking_table .ranking_table__players_details .rank_player_row .player_name {
+    flex-basis: 70%;
+    text-align: left;
+  }
+  body .vl_body .body__content .body__wrapper .ranking__wrapper .ranking_tables__wrapper .ranking_table .ranking_table__players_details .rank_player_row .player_score {
+    flex-basis: 20%;
+    text-align: right;
+  }
   body .vl_body .body__sidebar {
     text-align: center;
   }

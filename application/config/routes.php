@@ -57,6 +57,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['test'] = 'pages/test'; // use this one to test shit, uncomment when necessary
 $route['home'] = 'home';
 $route['gallery'] = 'gallery';
+$route['ranking'] = 'ranking';
 $route['admin'] = 'Backend/admin';
 $route['admin/login'] = 'Backend/admin/login';
 $route['admin/logout'] = 'Backend/admin/logout';

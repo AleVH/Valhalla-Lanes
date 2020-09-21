@@ -156,24 +156,28 @@ class Ranking extends Admin {
 				$user_score = sanitizeInteger($this->input->post('user-score_player'.$i));
 				$user_name_display = sanitizeString($this->input->post('user-name-display_player'.$i));
 
+				// if there is a $rank_result_row means the rank already has players and we are updating
 				if($rank_result_row){
 					$update_ranking_results[] = array(
 						'id' => $rank_result_row,
 						'users_id' => $response_user->row(0)->id,
 						'player_score' => $user_score,
-						'player_name_display' => $user_name_display
+						'player_name_display' => (empty($user_name_display))?'NAME':$user_name_display
 					);
 				}else{
+					//otherwise means we are adding a new row
 					$add_ranking_results[] = array(
 						'ranking_id' => $rank_id,
 						'users_id' => $response_user->row(0)->id,
 						'player_score' => $user_score,
-						'player_name_display' => $user_name_display
+						'player_name_display' => (empty($user_name_display))?'NAME':$user_name_display
 					);
 				}
-
 				if($previous_tops->tops > $rank_tops){
-					$remove_ranking_results[] = $rank_result_row;
+					// only add row's id if there are existing lines, otherwise means there's no need to remove any line because there is no existing line
+					if(!empty($rank_result_row)){
+						$remove_ranking_results[] = $rank_result_row;
+					}
 				}
 
 			}
@@ -193,7 +197,7 @@ class Ranking extends Admin {
 			}
 
 			// check if there are players that need to be removed
-			if($previous_tops->tops > $rank_tops){
+			if($previous_tops->tops > $rank_tops && !empty($remove_ranking_results)){
 				$response_remove_ranking_results = $this->rankings_results->deleteRankResultsBatch($remove_ranking_results, $rank_id);
 			}else{
 				$response_remove_ranking_results = true;
