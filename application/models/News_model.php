@@ -2,15 +2,6 @@
 
 class News_model extends CI_Model {
 
-	// this params are unnecessary, they are in the entity
-	public $id;
-	public $admin_user_id;
-	public $author; // this is the same as the admin user id but with the name
-	public $news_title;
-	public $news_text;
-	public $created;
-	public $is_enabled;
-
 	private $table = 'news'; // name of the table of this mode
 
 	public function __construct(){

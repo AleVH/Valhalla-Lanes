@@ -213,6 +213,89 @@ let binder = {
 
 	promotions : function(){
 		console.log('promotions scripts binded');
+
+		// this bit controls the clicks on the tab
+		$('.admin__promotions .tab').click(function(){
+			$('.tab').removeClass('active');
+			let tab_name = $(this).text().toLowerCase();
+			// console.log('tab title is: ' + tab_name);
+			$(this).addClass('active');
+			$(".tab-content").removeClass('active');
+			$(".tab-content.promotions-" + tab_name).addClass('active');
+		});
+
+		// this controls the limit in characters in the title and the message
+		$(".promo-title").on("keyup", function(){
+			console.log('title characters: ' +  this.value.length);
+			if(this.value.length > 0){
+				if(this.value.length > 19){
+					$(".promo-title-counter").html(30 - this.value.length);
+					if(this.value.length > 24){
+						$(".promo-title-counter").css("color", "#FF0000");
+					}else{
+						$(".promo-title-counter").css("color", "");
+					}
+				}else{
+					$(".promo-title-counter").html("");
+				}
+			}else{
+				$(".promo-title-counter").html("");
+			}
+		});
+
+		$(".promo-text").on("keyup", function(){
+			console.log('message characters: ' + this.value.length);
+			console.log('message: ' + this.value);
+			if(this.value.length > 0){
+				$(".promotions__promo-preview .example").html(this.value);
+				if(this.value.length > 89){
+					$(".promo-text-counter").html(100 - this.value.length);
+					if(this.value.length > 94){
+						$(".promo-text-counter").css("color", "#FF0000");
+					}else{
+						$(".promo-text-counter").css("color", "");
+					}
+				}else{
+					$(".promo-text-counter").html("");
+				}
+			}else{
+				$(".promo-text-counter").html("");
+				$(".promotions__promo-preview .example").html("Example text");
+			}
+		});
+
+		// this bit is to check the value selected and apply it to the example text, so you can see in the admin, before publishing, how it looks like
+		$(".promo-format_color").on("change", function(){
+			$(".promotions__promo-preview .example").css("color", this.value);
+		});
+
+		$(".promo-format_font-size").on("change", function(){
+			$(".promotions__promo-preview .example").css("font-size", this.value + "px");
+		});
+
+		$(".promo-format_speed").on("change", function(){
+			let marquee_speed = 33;
+			$(".promotions__promo-preview .example").css("animation-duration", (marquee_speed - this.value) + "s");
+		})
+
+		// this controls the form submit
+		$('form.admin_promotions').submit(function(e){
+			e.preventDefault();
+			let formdata = new FormData($(this).get(0));
+			console.log(formdata.get("promo-title")); // this works
+
+			$.ajax({
+				method: "POST",
+				url: base_url + "/promotions/create",
+				data: formdata,
+				processData: false,
+				contentType: false,
+				dataType: "json"
+			}).then((response) => {
+				console.log(response);
+			});
+		});
+
 	},
 
 	ranking : function(){

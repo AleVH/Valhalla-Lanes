@@ -64,8 +64,8 @@
     -moz-transform: translateX(100%);
     -webkit-transform: translateX(100%);
     transform: translateX(100%);
-    -moz-animation: scroll-left 2s linear infinite;
-    -webkit-animation: scroll-left 2s linear infinite;
+    -moz-animation: scroll-left 20s linear infinite;
+    -webkit-animation: scroll-left 20s linear infinite;
     animation: scroll-left 20s linear infinite;
   }
   @-moz-keyframes scroll-left {
@@ -281,6 +281,7 @@
     text-align: center;
   }
   body .vl_body .body__sidebar .calendar {
+    -webkit-border-image: -webkit-gradient(linear, left top, left bottom, from(#00abeb), to(#fff), color-stop(0.5, #fff), color-stop(0.5, #66cc00)) 21 30 30 21 repeat repeat;
     /* Month header */
     /* Month list */
     /* Previous button inside month header */

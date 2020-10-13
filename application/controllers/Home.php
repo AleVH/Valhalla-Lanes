@@ -8,6 +8,7 @@ class Home extends CI_Controller {
 		$this->load->model('menu_sections_model', 'menu_sections', true);
 		$this->load->library('../entities/Menu_sections_entity');
 		$this->load->model('news_model', 'news', true);
+		$this->load->model('promotions_model', 'promotions', true);
 	}
 
 	public function index(){
@@ -77,6 +78,14 @@ class Home extends CI_Controller {
 			$newsArray[$eachNews->id]['author'] = $eachNews->admin_user_id;
 		}
 		return $newsArray;
+	}
+
+	/**
+	 * This method gets the promo that hisplays in the front. right now it can only display one promo
+	 * at the time, this should be developed to be able to show multiple if necessary
+	 */
+	private function getPromo(){
+		$promoDetailsArray = array();
 	}
 
 }

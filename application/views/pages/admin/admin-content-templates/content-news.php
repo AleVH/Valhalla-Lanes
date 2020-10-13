@@ -1,7 +1,7 @@
 <div class="admin__news">
 	<div class="section_status <?= $disabled ?>">
 		<div class="current_status"><?= $status ?></div>
-		News content
+		<div>News</div>
 		<?= form_open_multipart('news/savenews', $form_attr) ?>
 		<div class="news__form">
 			<div class="news__form-row">

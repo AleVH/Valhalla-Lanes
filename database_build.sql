@@ -109,3 +109,19 @@ CREATE TABLE `images` (
   PRIMARY KEY (`id`),
   KEY `admin user foreign key` (`admin_user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `promotions` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(30) NOT NULL,
+  `message` varchar(100) NOT NULL,
+  `promo_format` json DEFAULT NULL,
+  `start_date` datetime DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL,
+  `admin_user_id` int(11) NOT NULL,
+  `updated` datetime DEFAULT NULL,
+  `is_enabled` set('0','1') NOT NULL DEFAULT '0',
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `is_default` set('0','1') NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `admin user foreign key` (`admin_user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

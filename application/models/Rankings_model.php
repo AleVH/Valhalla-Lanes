@@ -26,6 +26,7 @@ class Rankings_model extends CI_Model {
 			'end_date' => $end
 		);
 		$this->db->insert($this->table, $data);
+
 		return $this->db->insert_id();
 	}
 
