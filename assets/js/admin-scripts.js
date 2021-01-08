@@ -214,6 +214,13 @@ let binder = {
 	promotions : function(){
 		console.log('promotions scripts binded');
 
+		if(promotest != 'undefined'){
+			console.log('lo lee!!!!');
+			console.log('y dice: ' + promotest);
+		}else{
+			console.log('la mierda esta no funca');
+		}
+
 		// this bit controls the clicks on the tab
 		$('.admin__promotions .tab').click(function(){
 			$('.tab').removeClass('active');

@@ -112,7 +112,7 @@ Class Admin extends CI_Controller {
 					'path'   => '/',
 					'prefix' => 'admin_sess-',
 					'secure' => FALSE,
-					'httponly' => FALSE
+					'httponly' => TRUE // this is to prevent XSS
 				];
 
 //				$this->response->setCookie($cookie);

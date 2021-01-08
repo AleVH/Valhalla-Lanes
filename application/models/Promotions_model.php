@@ -2,7 +2,7 @@
 
 class Promotions_model extends CI_Model {
 
-	private $table = 'promotions';
+	private $table = 'promotions'; // why not protected?
 
 	public function __construct() {
 		parent::__construct();
@@ -38,6 +38,18 @@ class Promotions_model extends CI_Model {
 //		echo "QUERY:" . $this->db->set($data)->get_compiled_insert($this->table);
 
 		return $this->db->insert_id();
+	}
+
+	/**
+	 * this method gets the promos that have a start date in a specific month name, i.e. 'November'
+	 * @param $month
+	 * @return mixed
+	 */
+	public function getActivePromotionsForMonth($month){
+		$this->db->select("*")->from($this->table)->where("monthname(`start_date`)", $month);
+		$results = $this->db->get();
+
+		return $results;
 	}
 
 }

@@ -28,6 +28,8 @@ class Promotions extends Admin {
 			$data['calendar'] = $this->getCalendarDetails();
 			$data['error'] = '';
 			$data['promotions'] = $this->getAllPromos();
+			$data['xxx'] = $this->getActiveCurrentMonthPromos();
+			$data['jstest'] = 'esto viene del controller';
 
 			// then i check if it's an ajax request, if it's not means the user just logged in
 			if($this->input->is_ajax_request()){
@@ -122,11 +124,27 @@ class Promotions extends Admin {
 			$promosArray[$eachPromo->id]["start_date"] = $eachPromo->start_date;
 			$promosArray[$eachPromo->id]["end_date"] = $eachPromo->end_date;
 			$promosArray[$eachPromo->id]["is_enabled"] = $eachPromo->is_enabled;
+			$promosArray[$eachPromo->id]["is_default"] = $eachPromo->is_default;
 			$promosArray[$eachPromo->id]["created"] = $eachPromo->created;
 			$promosArray[$eachPromo->id]["author"] = $eachPromo->author;
 		}
 
 		return $promosArray;//$results->result();
+	}
+
+	private function getActiveCurrentMonthPromos(){
+		$currentMonthPromosArray = array();
+		$results = $this->promotions->getActivePromotionsForMonth('October');
+		$this->load->library("../entities/Promotions_entity");
+
+		foreach ($results->result() as $eachPromo){
+			$currentMonthPromosArray[$eachPromo->id]["start_day"] = date("d", strtotime($eachPromo->start_date));
+			$currentMonthPromosArray[$eachPromo->id]["full_start_date"] = $eachPromo->start_date;
+			$currentMonthPromosArray[$eachPromo->id]["end_day"] = date("d", strtotime($eachPromo->end_date));
+			$currentMonthPromosArray[$eachPromo->id]["full_end_date"] = $eachPromo->end_date;
+		}
+
+		return $currentMonthPromosArray;
 	}
 
 }
